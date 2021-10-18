@@ -5,7 +5,7 @@ class Validator {
     }
 
     if (name.isEmpty) {
-      return 'Name can\'t be empty';
+      return 'Podaj nazwę';
     }
 
     return null;
@@ -16,13 +16,12 @@ class Validator {
       return null;
     }
 
-    RegExp emailRegExp = RegExp(
-        r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$");
+    RegExp emailRegExp = RegExp(r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$");
 
     if (email.isEmpty) {
-      return 'Email can\'t be empty';
+      return 'Uzupełnij email';
     } else if (!emailRegExp.hasMatch(email)) {
-      return 'Enter a correct email';
+      return 'Podaj poprawny adres email';
     }
 
     return null;
@@ -34,9 +33,9 @@ class Validator {
     }
 
     if (password.isEmpty) {
-      return 'Password can\'t be empty';
+      return 'Uzupełnij hasło';
     } else if (password.length < 6) {
-      return 'Enter a password with length at least 6';
+      return 'Hasło musi posiadać przynajmniej 6 znaków';
     }
 
     return null;
