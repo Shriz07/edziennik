@@ -1,6 +1,5 @@
+import 'package:edziennik/Screens/Authentication/login_page.dart';
 import 'package:flutter/material.dart';
-
-import 'screens/login_page.dart';
 
 void main() {
   runApp(MyApp());

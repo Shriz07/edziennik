@@ -1,7 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:edziennik/screens/login_page.dart';
 import 'package:edziennik/utils/fire_auth.dart';
+
+import 'Authentication/login_page.dart';
 
 class ProfilePage extends StatefulWidget {
   final User user;
@@ -47,17 +48,11 @@ class _ProfilePageState extends State<ProfilePage> {
             _currentUser.emailVerified
                 ? Text(
                     'Email verified',
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyText1!
-                        .copyWith(color: Colors.green),
+                    style: Theme.of(context).textTheme.bodyText1!.copyWith(color: Colors.green),
                   )
                 : Text(
                     'Email not verified',
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyText1!
-                        .copyWith(color: Colors.red),
+                    style: Theme.of(context).textTheme.bodyText1!.copyWith(color: Colors.red),
                   ),
             SizedBox(height: 16.0),
             _isSendingVerification
