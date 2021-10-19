@@ -1,11 +1,12 @@
 import 'package:edziennik/Screens/Authentication/register_page.dart';
 import 'package:edziennik/Screens/profile_page.dart';
+import 'package:edziennik/Utils/fire_auth.dart';
 import 'package:edziennik/style/MyColors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:edziennik/utils/fire_auth.dart';
 import 'package:edziennik/utils/validator.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -22,6 +23,8 @@ class _LoginPageState extends State<LoginPage> {
   final _focusPassword = FocusNode();
 
   bool _isProcessing = false;
+
+  String _errorMessage = '';
 
   Future<FirebaseApp> _initializeFirebase() async {
     FirebaseApp firebaseApp = await Firebase.initializeApp();
@@ -51,10 +54,6 @@ class _LoginPageState extends State<LoginPage> {
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: MyColors.darkGrey,
-        appBar: AppBar(
-          backgroundColor: MyColors.brightNavyBlue,
-          title: Text('Zaloguj'),
-        ),
         body: FutureBuilder(
           future: _initializeFirebase(),
           builder: (context, snapshot) {
@@ -63,7 +62,7 @@ class _LoginPageState extends State<LoginPage> {
                 padding: const EdgeInsets.only(left: 24.0, right: 24.0),
                 child: Column(
                   children: [
-                    SizedBox(height: 50.0),
+                    SizedBox(height: 75.0),
                     Center(
                       child: Image(
                         image: AssetImage('assets/edziennik_logo_transparent.png'),
@@ -106,20 +105,36 @@ class _LoginPageState extends State<LoginPage> {
                                         setState(() {
                                           _isProcessing = true;
                                         });
-
-                                        User? user = await FireAuth.signInUsingEmailPassword(
-                                          email: _emailTextController.text,
-                                          password: _passwordTextController.text,
-                                        );
-
-                                        setState(() {
-                                          _isProcessing = false;
-                                        });
+                                        User? user;
+                                        try {
+                                          user = await FireAuth.signInUsingEmailPassword(
+                                            email: _emailTextController.text,
+                                            password: _passwordTextController.text,
+                                          );
+                                          setState(() {
+                                            _isProcessing = false;
+                                          });
+                                        } on UserNotFoundException catch (e) {
+                                          setState(() {
+                                            _errorMessage = e.errorMessage();
+                                            _isProcessing = false;
+                                          });
+                                        } on WrongPasswordException catch (e) {
+                                          setState(() {
+                                            _errorMessage = e.errorMessage();
+                                            _isProcessing = false;
+                                          });
+                                        } on LoginException catch (e) {
+                                          setState(() {
+                                            _errorMessage = e.errorMessage();
+                                            _isProcessing = false;
+                                          });
+                                        }
 
                                         if (user != null) {
                                           Navigator.of(context).pushReplacement(
                                             MaterialPageRoute(
-                                              builder: (context) => ProfilePage(user: user),
+                                              builder: (context) => ProfilePage(user: user!),
                                             ),
                                           );
                                         }
@@ -133,6 +148,8 @@ class _LoginPageState extends State<LoginPage> {
                                         ),
                                       );
                                     }, 'Stwórz konto'),
+                                    SizedBox(height: 12.0),
+                                    if (_errorMessage != '') errorMessageBox(),
                                   ],
                                 )
                         ],
@@ -189,6 +206,31 @@ class _LoginPageState extends State<LoginPage> {
       child: Text(
         text,
         style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+      ),
+    );
+  }
+
+  Widget errorMessageBox() {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      color: MyColors.carrotOrange,
+      child: ListTile(
+        title: Text(
+          _errorMessage,
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+        leading: Icon(
+          Icons.error,
+          color: Colors.white,
+        ),
+        trailing: IconButton(
+            icon: Icon(
+              Icons.close,
+              color: Colors.white,
+            ),
+            onPressed: () => setState(() {
+                  _errorMessage = '';
+                })),
       ),
     );
   }
