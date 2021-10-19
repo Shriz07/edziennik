@@ -1,4 +1,6 @@
 import 'package:edziennik/Screens/Authentication/register_page.dart';
+import 'package:edziennik/Screens/Home_Screen/home_screen.dart';
+import 'package:edziennik/Screens/Screen1/screen1.dart';
 import 'package:edziennik/Screens/profile_page.dart';
 import 'package:edziennik/Utils/fire_auth.dart';
 import 'package:edziennik/style/MyColors.dart';
@@ -6,7 +8,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:edziennik/utils/validator.dart';
-import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -34,9 +35,7 @@ class _LoginPageState extends State<LoginPage> {
     if (user != null) {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) => ProfilePage(
-            user: user,
-          ),
+          builder: (context) => HomeScreen(),
         ),
       );
     }
@@ -134,7 +133,7 @@ class _LoginPageState extends State<LoginPage> {
                                         if (user != null) {
                                           Navigator.of(context).pushReplacement(
                                             MaterialPageRoute(
-                                              builder: (context) => ProfilePage(user: user!),
+                                              builder: (context) => HomeScreen(),
                                             ),
                                           );
                                         }
