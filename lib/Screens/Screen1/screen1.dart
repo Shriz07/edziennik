@@ -1,3 +1,4 @@
+import 'package:edziennik/Screens/Drawer/drawer.dart';
 import 'package:edziennik/style/MyColors.dart';
 import 'package:flutter/material.dart';
 
@@ -12,6 +13,7 @@ class Screen1 extends StatelessWidget {
           backgroundColor: MyColors.dodgerBlue,
           title: const Text('Screen 1'),
         ),
+        drawer: MyDrawer(),
         body: const Center(
           child: Text(
             'Screen 1',
