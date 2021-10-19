@@ -22,14 +22,16 @@ class MyDrawer extends StatelessWidget {
                 ),
               ),
             ),
-            CustomListTile(Icons.logout, 'Wyloguj', () async {
-              await FirebaseAuth.instance.signOut();
-              Navigator.of(context).pushReplacement(
-                MaterialPageRoute(
-                  builder: (context) => LoginPage(),
-                ),
-              );
-            }),
+            CustomListTile(
+              Icons.logout,
+              'Wyloguj',
+              () async {
+                await FirebaseAuth.instance.signOut();
+                Navigator.of(context, rootNavigator: true).pushReplacement(
+                  MaterialPageRoute(builder: (context) => new LoginPage()),
+                );
+              },
+            ),
           ],
         ),
       ),
