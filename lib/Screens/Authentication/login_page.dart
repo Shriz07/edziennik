@@ -59,102 +59,104 @@ class _LoginPageState extends State<LoginPage> {
             if (snapshot.connectionState == ConnectionState.done) {
               return Padding(
                 padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-                child: Column(
-                  children: [
-                    SizedBox(height: 75.0),
-                    Center(
-                      child: Image(
-                        image: AssetImage('assets/edziennik_logo_transparent.png'),
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      SizedBox(height: 75.0),
+                      Center(
+                        child: Image(
+                          image: AssetImage('assets/edziennik_logo_transparent.png'),
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 50.0),
-                    Form(
-                      key: _formKey,
-                      child: Column(
-                        children: <Widget>[
-                          myFormField(
-                            _emailTextController,
-                            'Email',
-                            Icon(Icons.mail),
-                            _focusEmail,
-                            (value) => Validator.validateEmail(
-                              email: value,
+                      SizedBox(height: 50.0),
+                      Form(
+                        key: _formKey,
+                        child: Column(
+                          children: <Widget>[
+                            myFormField(
+                              _emailTextController,
+                              'Email',
+                              Icon(Icons.mail),
+                              _focusEmail,
+                              (value) => Validator.validateEmail(
+                                email: value,
+                              ),
                             ),
-                          ),
-                          SizedBox(height: 8.0),
-                          myFormField(
-                            _passwordTextController,
-                            'Hasło',
-                            Icon(Icons.vpn_key),
-                            _focusPassword,
-                            (value) => Validator.validatePassword(
-                              password: value,
+                            SizedBox(height: 8.0),
+                            myFormField(
+                              _passwordTextController,
+                              'Hasło',
+                              Icon(Icons.vpn_key),
+                              _focusPassword,
+                              (value) => Validator.validatePassword(
+                                password: value,
+                              ),
                             ),
-                          ),
-                          SizedBox(height: 50.0),
-                          _isProcessing
-                              ? CircularProgressIndicator()
-                              : Column(
-                                  children: <Widget>[
-                                    applyButton(() async {
-                                      _focusEmail.unfocus();
-                                      _focusPassword.unfocus();
+                            SizedBox(height: 50.0),
+                            _isProcessing
+                                ? CircularProgressIndicator()
+                                : Column(
+                                    children: <Widget>[
+                                      applyButton(() async {
+                                        _focusEmail.unfocus();
+                                        _focusPassword.unfocus();
 
-                                      if (_formKey.currentState!.validate()) {
-                                        setState(() {
-                                          _isProcessing = true;
-                                        });
-                                        User? user;
-                                        try {
-                                          user = await FireAuth.signInUsingEmailPassword(
-                                            email: _emailTextController.text,
-                                            password: _passwordTextController.text,
-                                          );
+                                        if (_formKey.currentState!.validate()) {
                                           setState(() {
-                                            _isProcessing = false;
+                                            _isProcessing = true;
                                           });
-                                        } on UserNotFoundException catch (e) {
-                                          setState(() {
-                                            _errorMessage = e.errorMessage();
-                                            _isProcessing = false;
-                                          });
-                                        } on WrongPasswordException catch (e) {
-                                          setState(() {
-                                            _errorMessage = e.errorMessage();
-                                            _isProcessing = false;
-                                          });
-                                        } on LoginException catch (e) {
-                                          setState(() {
-                                            _errorMessage = e.errorMessage();
-                                            _isProcessing = false;
-                                          });
-                                        }
+                                          User? user;
+                                          try {
+                                            user = await FireAuth.signInUsingEmailPassword(
+                                              email: _emailTextController.text,
+                                              password: _passwordTextController.text,
+                                            );
+                                            setState(() {
+                                              _isProcessing = false;
+                                            });
+                                          } on UserNotFoundException catch (e) {
+                                            setState(() {
+                                              _errorMessage = e.errorMessage();
+                                              _isProcessing = false;
+                                            });
+                                          } on WrongPasswordException catch (e) {
+                                            setState(() {
+                                              _errorMessage = e.errorMessage();
+                                              _isProcessing = false;
+                                            });
+                                          } on LoginException catch (e) {
+                                            setState(() {
+                                              _errorMessage = e.errorMessage();
+                                              _isProcessing = false;
+                                            });
+                                          }
 
-                                        if (user != null) {
-                                          Navigator.of(context).pushReplacement(
-                                            MaterialPageRoute(
-                                              builder: (context) => HomeScreen(),
-                                            ),
-                                          );
+                                          if (user != null) {
+                                            Navigator.of(context).pushReplacement(
+                                              MaterialPageRoute(
+                                                builder: (context) => HomeScreen(),
+                                              ),
+                                            );
+                                          }
                                         }
-                                      }
-                                    }, 'Zaloguj'),
-                                    SizedBox(height: 12.0),
-                                    applyButton(() {
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                          builder: (context) => RegisterPage(),
-                                        ),
-                                      );
-                                    }, 'Stwórz konto'),
-                                    SizedBox(height: 12.0),
-                                    if (_errorMessage != '') errorMessageBox(),
-                                  ],
-                                )
-                        ],
-                      ),
-                    )
-                  ],
+                                      }, 'Zaloguj'),
+                                      SizedBox(height: 12.0),
+                                      applyButton(() {
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (context) => RegisterPage(),
+                                          ),
+                                        );
+                                      }, 'Stwórz konto'),
+                                      SizedBox(height: 12.0),
+                                      if (_errorMessage != '') errorMessageBox(),
+                                    ],
+                                  )
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               );
             }
