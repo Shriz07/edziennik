@@ -49,9 +49,11 @@ class FireAuth {
       user = userCredential.user;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
-        print('No user found for that email.');
+        throw new UserNotFoundException();
       } else if (e.code == 'wrong-password') {
-        print('Wrong password provided.');
+        throw new WrongPasswordException();
+      } else {
+        throw new LoginException();
       }
     }
 
@@ -65,5 +67,23 @@ class FireAuth {
     User? refreshedUser = auth.currentUser;
 
     return refreshedUser;
+  }
+}
+
+class UserNotFoundException implements Exception {
+  String errorMessage() {
+    return 'Użytkownik nie istnieje';
+  }
+}
+
+class WrongPasswordException implements Exception {
+  String errorMessage() {
+    return 'Nieprawidłowe hasło';
+  }
+}
+
+class LoginException implements Exception {
+  String errorMessage() {
+    return 'Wystąpił błąd. Sprawdź wprowadzone dane.';
   }
 }
