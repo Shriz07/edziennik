@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "298924601377",
+    "project_id": "e-dziennik-bd5b0",
+    "storage_bucket": "e-dziennik-bd5b0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:298924601377:android:20d7181f232cb41b99b360",
+        "android_client_info": {
+          "package_name": "com.example.edziennik"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "298924601377-6k9lkfsnvb27tvrmq7no98ldk3mch7ij.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDu3evIy1xU0UO3fwjw9a9c0nwKDxgfOY0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "298924601377-6k9lkfsnvb27tvrmq7no98ldk3mch7ij.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
