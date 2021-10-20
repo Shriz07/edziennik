@@ -1,8 +1,6 @@
-import 'package:edziennik/Screens/Home_Screen/home_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:edziennik/screens/profile_page.dart';
 import 'package:edziennik/utils/fire_auth.dart';
 import 'package:edziennik/utils/validator.dart';
 
@@ -121,12 +119,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                         });
 
                                         if (user != null) {
-                                          Navigator.of(context).pushAndRemoveUntil(
-                                            MaterialPageRoute(
-                                              builder: (context) => HomeScreen(),
-                                            ),
-                                            ModalRoute.withName('/'),
-                                          );
+                                          //FireAuth().authorizeAccess(context);
                                         }
                                       }
                                     },
