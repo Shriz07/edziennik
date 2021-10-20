@@ -1,7 +1,5 @@
 import 'package:edziennik/Screens/Authentication/register_page.dart';
 import 'package:edziennik/Screens/Home_Screen/home_screen.dart';
-import 'package:edziennik/Screens/Screen1/screen1.dart';
-import 'package:edziennik/Screens/profile_page.dart';
 import 'package:edziennik/Utils/fire_auth.dart';
 import 'package:edziennik/style/MyColors.dart';
 import 'package:firebase_auth/firebase_auth.dart';

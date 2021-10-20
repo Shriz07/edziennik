@@ -1,6 +1,8 @@
-import 'package:edziennik/Screens/Screen1/screen1.dart';
-import 'package:edziennik/Screens/Screen2/screen2.dart';
-import 'package:edziennik/Screens/Screen3/screen3.dart';
+import 'package:edziennik/Screens/Admin_panel/admin_home.dart';
+import 'package:edziennik/Screens/Calendar/calendar.dart';
+import 'package:edziennik/Screens/Student_panel/student_home.dart';
+import 'package:edziennik/Screens/Teacher_panel/teacher_home.dart';
+import 'package:edziennik/Screens/Test_screen/test_screen.dart';
 import 'package:edziennik/style/MyColors.dart';
 import 'package:flutter/material.dart';
 
@@ -14,9 +16,11 @@ class HomeScreen extends StatefulWidget {
 class _MyStatefulWidgetState extends State<HomeScreen> {
   int _selectedIndex = 0;
   static final List<Widget> _widgetOptions = <Widget>[
-    Screen1(),
-    Screen2(),
-    Screen3(),
+    TestScreen(),
+    AdminHome(),
+    TeacherHome(),
+    StudentHome(),
+    Calendar(),
   ];
 
   void _onItemTapped(int index) {
@@ -34,18 +38,27 @@ class _MyStatefulWidgetState extends State<HomeScreen> {
       bottomNavigationBar: Container(
         decoration: BoxDecoration(color: MyColors.dodgerBlue),
         child: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
           items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-              icon: Icon(Icons.calendar_today),
-              label: 'Screen 1',
+              icon: Icon(Icons.build),
+              label: 'Test',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.outlined_flag),
+              label: 'Admin',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.access_alarm),
-              label: 'Screen 2',
+              label: 'Nauczyciel',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.notifications),
-              label: 'Screen 3',
+              icon: Icon(Icons.account_circle),
+              label: 'Uczeń',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.calendar_today),
+              label: 'Kalendarz',
             ),
           ],
           selectedItemColor: MyColors.carrotOrange,

@@ -2,22 +2,20 @@ import 'package:edziennik/Screens/Drawer/drawer.dart';
 import 'package:edziennik/style/MyColors.dart';
 import 'package:flutter/material.dart';
 
-class Screen3 extends StatelessWidget {
+class AdminHome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Screen 3',
+      title: 'Admin panel',
       home: Scaffold(
-        backgroundColor: MyColors.darkGrey,
         appBar: AppBar(
           backgroundColor: MyColors.dodgerBlue,
-          title: const Text('Screen 3'),
+          title: const Text('EDziennik Admin'),
         ),
         drawer: MyDrawer(),
         body: const Center(
           child: Text(
-            'Screen 3',
-            style: TextStyle(color: Colors.white),
+            'ADMIN',
           ),
         ),
       ),
