@@ -82,36 +82,7 @@ class _UsersManageState extends State<UsersManage> {
                     customDropdownButton(),
                     usersListHeaders(),
                     usersListContainer(),
-                    Padding(
-                      padding: const EdgeInsets.all(15.0),
-                      child: Container(
-                        height: 70,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: Colors.black, width: 2.0),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: <Widget>[
-                            IconButton(
-                                onPressed: () {
-                                  print('Icon 1 pressed');
-                                },
-                                icon: Icon(Icons.person_add_alt_1, size: 30, color: MyColors.carrotOrange)),
-                            IconButton(
-                                onPressed: () {
-                                  print('Icon 2 pressed');
-                                },
-                                icon: Icon(Icons.edit, size: 30, color: MyColors.carrotOrange)),
-                            IconButton(
-                                onPressed: () {
-                                  print('Icon 3 pressed');
-                                },
-                                icon: Icon(Icons.delete, size: 30, color: MyColors.carrotOrange)),
-                          ],
-                        ),
-                      ),
-                    ),
+                    bottomOptionsMenu(),
                   ],
                 ),
               );
@@ -119,6 +90,39 @@ class _UsersManageState extends State<UsersManage> {
               return Center(child: CircularProgressIndicator());
             }
           },
+        ),
+      ),
+    );
+  }
+
+  Widget bottomOptionsMenu() {
+    return Padding(
+      padding: const EdgeInsets.all(15.0),
+      child: Container(
+        height: 70,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: Colors.black, width: 2.0),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            IconButton(
+                onPressed: () {
+                  print('Icon 1 pressed');
+                },
+                icon: Icon(Icons.person_add_alt_1, size: 30, color: MyColors.carrotOrange)),
+            IconButton(
+                onPressed: () {
+                  print('Icon 2 pressed');
+                },
+                icon: Icon(Icons.edit, size: 30, color: MyColors.carrotOrange)),
+            IconButton(
+                onPressed: () {
+                  print('Icon 3 pressed');
+                },
+                icon: Icon(Icons.delete, size: 30, color: MyColors.carrotOrange)),
+          ],
         ),
       ),
     );
