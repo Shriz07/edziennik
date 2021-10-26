@@ -1,6 +1,9 @@
+import 'package:edziennik/Screens/Admin_panel/add_user.dart';
+import 'package:edziennik/Screens/Admin_panel/edit_user.dart';
 import 'package:edziennik/Screens/Drawer/drawer.dart';
 import 'package:edziennik/Utils/firestoreDB.dart';
 import 'package:edziennik/custom_widgets/panel_widgets.dart';
+import 'package:edziennik/custom_widgets/popup_dialog.dart';
 import 'package:edziennik/models/user.dart';
 import 'package:edziennik/style/MyColors.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +23,7 @@ class _UsersManageState extends State<UsersManage> {
   late List<User> currentList;
   final FirestoreDB _db = FirestoreDB();
   bool loaded = false;
+  int _selectedItem = -1;
 
   Future<List> getUsers() async {
     if (!loaded) {
@@ -109,17 +113,23 @@ class _UsersManageState extends State<UsersManage> {
           children: <Widget>[
             IconButton(
                 onPressed: () {
-                  print('Icon 1 pressed');
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => new AddUser()));
                 },
                 icon: Icon(Icons.person_add_alt_1, size: 30, color: MyColors.carrotOrange)),
             IconButton(
                 onPressed: () {
-                  print('Icon 2 pressed');
+                  if (_selectedItem == -1) {
+                    showDialog(context: context, builder: (context) => PopupDialog(title: 'Informacja', message: 'Najpierw wybierz użytkownika', close: 'Zamknij'));
+                  } else {
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => new EditUser(user: currentList[_selectedItem])));
+                  }
                 },
                 icon: Icon(Icons.edit, size: 30, color: MyColors.carrotOrange)),
             IconButton(
                 onPressed: () {
-                  print('Icon 3 pressed');
+                  if (_selectedItem == -1) {
+                    showDialog(context: context, builder: (context) => PopupDialog(title: 'Informacja', message: 'Najpierw wybierz użytkownika', close: 'Zamknij'));
+                  }
                 },
                 icon: Icon(Icons.delete, size: 30, color: MyColors.carrotOrange)),
           ],
@@ -169,22 +179,28 @@ class _UsersManageState extends State<UsersManage> {
         child: ListView.builder(
           itemCount: currentList.length,
           itemBuilder: (context, index) {
-            return Padding(
-              padding: const EdgeInsets.all(5.0),
-              child: InkWell(
-                child: Center(
-                  child: Container(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        userInfoField(currentList[index].name, true),
-                        userInfoField(currentList[index].surname, true),
-                        userInfoField(currentList[index].role, true),
-                      ],
-                    ),
+            return InkWell(
+              child: Center(
+                child: Container(
+                  color: _selectedItem == index ? Colors.blue.withOpacity(0.5) : Colors.transparent,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      userInfoField(currentList[index].name, true),
+                      userInfoField(currentList[index].surname, true),
+                      userInfoField(currentList[index].role, true),
+                    ],
                   ),
                 ),
               ),
+              onLongPress: () => {
+                if (_selectedItem != index)
+                  {
+                    setState(() {
+                      _selectedItem = index;
+                    })
+                  }
+              },
             );
           },
         ),
