@@ -1,4 +1,3 @@
-import 'package:edziennik/Screens/Drawer/drawer.dart';
 import 'package:edziennik/Utils/firestoreDB.dart';
 import 'package:edziennik/custom_widgets/panel_widgets.dart';
 import 'package:edziennik/models/class.dart';
@@ -39,10 +38,9 @@ class _ClassManageState extends State<ClassManage> {
       ),
       home: Scaffold(
         appBar: AppBar(
-          backgroundColor: MyColors.dodgerBlue,
-          title: const Text('Zarządzanie klasami'),
+          backgroundColor: MyColors.greenAccent,
+          title: const Text('Zarządzanie klasami', style: TextStyle(color: Colors.black)),
         ),
-        drawer: MyDrawer(),
         body: FutureBuilder<List>(
           future: getClasses(),
           builder: (context, AsyncSnapshot<List> snapshot) {
@@ -84,17 +82,17 @@ class _ClassManageState extends State<ClassManage> {
                 onPressed: () {
                   print('Icon 1 pressed');
                 },
-                icon: Icon(Icons.add_box, size: 30, color: MyColors.carrotOrange)),
+                icon: Icon(Icons.add_box, size: 30, color: MyColors.dodgerBlue)),
             IconButton(
                 onPressed: () {
                   print('Icon 2 pressed');
                 },
-                icon: Icon(Icons.edit, size: 30, color: MyColors.carrotOrange)),
+                icon: Icon(Icons.edit, size: 30, color: MyColors.dodgerBlue)),
             IconButton(
                 onPressed: () {
                   print('Icon 3 pressed');
                 },
-                icon: Icon(Icons.delete, size: 30, color: MyColors.carrotOrange)),
+                icon: Icon(Icons.delete, size: 30, color: MyColors.dodgerBlue)),
           ],
         ),
       ),

@@ -1,5 +1,7 @@
 import 'package:edziennik/Screens/Calendar/calendar.dart';
+import 'package:edziennik/Screens/Profile/profile.dart';
 import 'package:edziennik/style/MyColors.dart';
+import 'package:fancy_bottom_navigation/fancy_bottom_navigation.dart';
 import 'package:flutter/material.dart';
 
 import 'teacher_panel.dart';
@@ -26,6 +28,7 @@ class _MyStatefulWidgetState extends State<TeacherHome> {
   static final List<Widget> _widgetOptions = <Widget>[
     TeacherPanel(),
     Calendar(),
+    Profile(),
   ];
 
   void _onItemTapped(int index) {
@@ -43,22 +46,18 @@ class _MyStatefulWidgetState extends State<TeacherHome> {
         ),
         bottomNavigationBar: Container(
           decoration: BoxDecoration(color: MyColors.dodgerBlue),
-          child: BottomNavigationBar(
-            type: BottomNavigationBarType.fixed,
-            items: <BottomNavigationBarItem>[
-              BottomNavigationBarItem(
-                icon: Icon(Icons.home),
-                label: 'Panel nauczyciela',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.calendar_today),
-                label: 'Kalendarz',
-              ),
+          child: FancyBottomNavigation(
+            barBackgroundColor: Colors.greenAccent,
+            tabs: [
+              TabData(iconData: Icons.home, title: 'Menu'),
+              TabData(iconData: Icons.calendar_today, title: 'Kalendarz'),
+              TabData(iconData: Icons.person, title: 'Profil'),
             ],
-            selectedItemColor: MyColors.carrotOrange,
-            backgroundColor: Colors.transparent,
-            currentIndex: _selectedIndex,
-            onTap: _onItemTapped,
+            onTabChangedListener: (position) {
+              setState(() {
+                _onItemTapped(position);
+              });
+            },
           ),
         ),
       ),

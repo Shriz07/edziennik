@@ -1,4 +1,3 @@
-import 'package:edziennik/Screens/Drawer/drawer.dart';
 import 'package:edziennik/Utils/firestoreDB.dart';
 import 'package:edziennik/models/user.dart';
 import 'package:edziennik/style/MyColors.dart';
@@ -31,7 +30,6 @@ class _EditUserState extends State<EditUser> {
           backgroundColor: MyColors.dodgerBlue,
           title: const Text('Edytowanie użytkownika'),
         ),
-        drawer: MyDrawer(),
         body: Scaffold(
           body: Center(
             child: Text(widget.user.name),

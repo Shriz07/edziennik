@@ -1,7 +1,6 @@
 import 'package:edziennik/Screens/Admin_panel/class_manage.dart';
 import 'package:edziennik/Screens/Admin_panel/subjects_manage.dart';
 import 'package:edziennik/Screens/Admin_panel/users_manage.dart';
-import 'package:edziennik/Screens/Drawer/drawer.dart';
 import 'package:edziennik/custom_widgets/panel_widgets.dart';
 import 'package:edziennik/style/MyColors.dart';
 import 'package:flutter/material.dart';
@@ -19,10 +18,9 @@ class AdminPanel extends StatelessWidget {
       ),
       home: Scaffold(
           appBar: AppBar(
-            backgroundColor: MyColors.dodgerBlue,
-            title: const Text('EDziennik'),
+            backgroundColor: MyColors.greenAccent,
+            title: const Text('EDziennik', style: TextStyle(color: Colors.black)),
           ),
-          drawer: MyDrawer(),
           body: Container(
             alignment: AlignmentDirectional.center,
             child: Column(

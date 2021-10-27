@@ -1,5 +1,4 @@
 import 'package:edziennik/Screens/Admin_panel/subjects_manage.dart';
-import 'package:edziennik/Screens/Drawer/drawer.dart';
 import 'package:edziennik/Utils/firestoreDB.dart';
 import 'package:edziennik/custom_widgets/panel_widgets.dart';
 import 'package:edziennik/custom_widgets/popup_dialog.dart';
@@ -53,10 +52,9 @@ class _AddSubjectState extends State<AddSubject> {
         },
         child: Scaffold(
           appBar: AppBar(
-            backgroundColor: MyColors.dodgerBlue,
-            title: const Text('EDziennik'),
+            backgroundColor: MyColors.greenAccent,
+            title: const Text('EDziennik', style: TextStyle(color: Colors.black)),
           ),
-          drawer: MyDrawer(),
           body: FutureBuilder<List>(
             future: getTeachers(),
             builder: (context, AsyncSnapshot<List> snapshot) {
@@ -106,12 +104,12 @@ class _AddSubjectState extends State<AddSubject> {
                     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SubjectsManage()));
                   }
                 },
-                icon: Icon(Icons.save, size: 35, color: MyColors.carrotOrange)),
+                icon: Icon(Icons.save, size: 35, color: MyColors.dodgerBlue)),
             IconButton(
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                icon: Icon(Icons.close_rounded, size: 35, color: MyColors.carrotOrange)),
+                icon: Icon(Icons.close_rounded, size: 35, color: MyColors.dodgerBlue)),
           ],
         ),
       ),

@@ -1,5 +1,4 @@
 import 'package:edziennik/Screens/Admin_panel/add_subject.dart';
-import 'package:edziennik/Screens/Drawer/drawer.dart';
 import 'package:edziennik/Utils/firestoreDB.dart';
 import 'package:edziennik/custom_widgets/panel_widgets.dart';
 import 'package:edziennik/models/subject.dart';
@@ -42,10 +41,9 @@ class _SubjectsManageState extends State<SubjectsManage> {
       ),
       home: Scaffold(
         appBar: AppBar(
-          backgroundColor: MyColors.dodgerBlue,
-          title: const Text('Zarządzanie przedmiotami'),
+          backgroundColor: MyColors.greenAccent,
+          title: const Text('Zarządzanie przedmiotami', style: TextStyle(color: Colors.black)),
         ),
-        drawer: MyDrawer(),
         body: FutureBuilder<List>(
           future: getSubjects(),
           builder: (context, AsyncSnapshot<List> snapshot) {
@@ -83,9 +81,9 @@ class _SubjectsManageState extends State<SubjectsManage> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            IconButton(onPressed: addSubjectIconClick(), icon: Icon(Icons.add_box, size: 30, color: MyColors.carrotOrange)),
-            IconButton(onPressed: editSubjectIconClick(), icon: Icon(Icons.edit, size: 30, color: MyColors.carrotOrange)),
-            IconButton(onPressed: deleteSubjectIconClick(), icon: Icon(Icons.delete, size: 30, color: MyColors.carrotOrange)),
+            IconButton(onPressed: addSubjectIconClick(), icon: Icon(Icons.add_box, size: 30, color: MyColors.dodgerBlue)),
+            IconButton(onPressed: editSubjectIconClick(), icon: Icon(Icons.edit, size: 30, color: MyColors.dodgerBlue)),
+            IconButton(onPressed: deleteSubjectIconClick(), icon: Icon(Icons.delete, size: 30, color: MyColors.dodgerBlue)),
           ],
         ),
       ),

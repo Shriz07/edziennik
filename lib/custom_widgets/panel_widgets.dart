@@ -10,10 +10,10 @@ Widget panelTitle(title) {
       child: Center(
           child: Text(
         title,
-        style: TextStyle(fontSize: 23.0, fontWeight: FontWeight.bold, color: Colors.white),
+        style: TextStyle(fontSize: 23.0, fontWeight: FontWeight.bold, color: Colors.black),
       )),
       decoration: BoxDecoration(
-        color: MyColors.dodgerBlue,
+        color: MyColors.greenAccent,
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(
@@ -39,11 +39,11 @@ Widget panelOption(text, action) {
           padding: const EdgeInsets.all(20.0),
           child: Text(
             text,
-            style: TextStyle(fontSize: 20.0),
+            style: TextStyle(fontSize: 20.0, color: Colors.white),
           ),
         )),
         decoration: BoxDecoration(
-          color: MyColors.carrotOrange,
+          color: MyColors.dodgerBlue,
           borderRadius: BorderRadius.circular(10),
           boxShadow: [
             BoxShadow(

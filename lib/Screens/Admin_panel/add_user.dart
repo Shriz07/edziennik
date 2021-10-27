@@ -1,4 +1,3 @@
-import 'package:edziennik/Screens/Drawer/drawer.dart';
 import 'package:edziennik/Utils/firestoreDB.dart';
 import 'package:edziennik/custom_widgets/panel_widgets.dart';
 import 'package:edziennik/models/class.dart';
@@ -52,10 +51,12 @@ class _AddUserState extends State<AddUser> {
         },
         child: Scaffold(
           appBar: AppBar(
-            backgroundColor: MyColors.dodgerBlue,
-            title: const Text('EDziennik'),
+            backgroundColor: MyColors.greenAccent,
+            title: const Text(
+              'EDziennik',
+              style: TextStyle(color: Colors.black),
+            ),
           ),
-          drawer: MyDrawer(),
           body: FutureBuilder<List>(
             future: getClasses(),
             builder: (context, AsyncSnapshot<List> snapshot) {
@@ -94,9 +95,9 @@ class _AddUserState extends State<AddUser> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            IconButton(onPressed: () {}, icon: Icon(Icons.person_add_alt_1, size: 30, color: MyColors.carrotOrange)),
-            IconButton(onPressed: () {}, icon: Icon(Icons.edit, size: 30, color: MyColors.carrotOrange)),
-            IconButton(onPressed: () {}, icon: Icon(Icons.delete, size: 30, color: MyColors.carrotOrange)),
+            IconButton(onPressed: () {}, icon: Icon(Icons.person_add_alt_1, size: 30, color: MyColors.dodgerBlue)),
+            IconButton(onPressed: () {}, icon: Icon(Icons.edit, size: 30, color: MyColors.dodgerBlue)),
+            IconButton(onPressed: () {}, icon: Icon(Icons.delete, size: 30, color: MyColors.dodgerBlue)),
           ],
         ),
       ),

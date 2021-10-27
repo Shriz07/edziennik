@@ -1,4 +1,3 @@
-import 'package:edziennik/Screens/Drawer/drawer.dart';
 import 'package:edziennik/style/MyColors.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -15,10 +14,9 @@ class TeacherPanel extends StatelessWidget {
       ),
       home: Scaffold(
         appBar: AppBar(
-          backgroundColor: MyColors.dodgerBlue,
-          title: const Text('EDziennik Nauczyciel'),
+          backgroundColor: MyColors.greenAccent,
+          title: const Text('EDziennik Nauczyciel', style: TextStyle(color: Colors.black)),
         ),
-        drawer: MyDrawer(),
         body: const Center(
           child: Text(
             'TEACHER',

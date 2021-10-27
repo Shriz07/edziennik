@@ -28,6 +28,7 @@ dependencies:
   firebase_auth: ^1.1.1
   cloud_firestore: ^2.5.3
   google_fonts: ^2.1.0
+  fancy_bottom_navigation: ^0.3.2
 
   provider: ^6.0.1
 

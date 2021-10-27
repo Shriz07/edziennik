@@ -1,6 +1,5 @@
 import 'package:edziennik/Screens/Admin_panel/add_user.dart';
 import 'package:edziennik/Screens/Admin_panel/edit_user.dart';
-import 'package:edziennik/Screens/Drawer/drawer.dart';
 import 'package:edziennik/Utils/firestoreDB.dart';
 import 'package:edziennik/custom_widgets/panel_widgets.dart';
 import 'package:edziennik/custom_widgets/popup_dialog.dart';
@@ -69,10 +68,9 @@ class _UsersManageState extends State<UsersManage> {
       ),
       home: Scaffold(
         appBar: AppBar(
-          backgroundColor: MyColors.dodgerBlue,
-          title: const Text('Zarządzanie użytkownikami'),
+          backgroundColor: MyColors.greenAccent,
+          title: const Text('Zarządzanie użytkownikami', style: TextStyle(color: Colors.black)),
         ),
-        drawer: MyDrawer(),
         body: FutureBuilder<List>(
           future: getUsers(),
           builder: (context, AsyncSnapshot<List> snapshot) {
@@ -115,7 +113,7 @@ class _UsersManageState extends State<UsersManage> {
                 onPressed: () {
                   Navigator.of(context).push(MaterialPageRoute(builder: (context) => new AddUser()));
                 },
-                icon: Icon(Icons.person_add_alt_1, size: 30, color: MyColors.carrotOrange)),
+                icon: Icon(Icons.person_add_alt_1, size: 30, color: MyColors.dodgerBlue)),
             IconButton(
                 onPressed: () {
                   if (_selectedItem == -1) {
@@ -124,14 +122,14 @@ class _UsersManageState extends State<UsersManage> {
                     Navigator.of(context).push(MaterialPageRoute(builder: (context) => new EditUser(user: currentList[_selectedItem])));
                   }
                 },
-                icon: Icon(Icons.edit, size: 30, color: MyColors.carrotOrange)),
+                icon: Icon(Icons.edit, size: 30, color: MyColors.dodgerBlue)),
             IconButton(
                 onPressed: () {
                   if (_selectedItem == -1) {
                     showDialog(context: context, builder: (context) => PopupDialog(title: 'Informacja', message: 'Najpierw wybierz użytkownika', close: 'Zamknij'));
                   }
                 },
-                icon: Icon(Icons.delete, size: 30, color: MyColors.carrotOrange)),
+                icon: Icon(Icons.delete, size: 30, color: MyColors.dodgerBlue)),
           ],
         ),
       ),
@@ -235,7 +233,7 @@ class _UsersManageState extends State<UsersManage> {
         alignment: AlignmentDirectional.center,
         width: double.infinity,
         decoration: BoxDecoration(
-          color: MyColors.carrotOrange,
+          color: MyColors.dodgerBlue,
           borderRadius: BorderRadius.circular(10),
           boxShadow: [
             BoxShadow(
@@ -248,7 +246,11 @@ class _UsersManageState extends State<UsersManage> {
         ),
         child: DropdownButton<String>(
           value: dropdownValue,
-          icon: Icon(Icons.arrow_drop_down),
+          style: TextStyle(color: Colors.white, fontSize: 20.0),
+          icon: Icon(
+            Icons.arrow_drop_down,
+            color: Colors.white,
+          ),
           iconSize: 42,
           elevation: 16,
           underline: SizedBox(),
