@@ -6,9 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class EditUser extends StatefulWidget {
-  final User user;
+  User user;
 
-  const EditUser({Key? key, required this.user}) : super(key: key);
+  EditUser({Key? key, required this.user}) : super(key: key);
 
   @override
   _EditUserState createState() => _EditUserState();

@@ -15,10 +15,12 @@ class SubjectsManage extends StatefulWidget {
 class _SubjectsManageState extends State<SubjectsManage> {
   final FirestoreDB _db = FirestoreDB();
   bool loaded = false;
-  late List<Subject> subjects;
+  List<Subject> subjects = [];
+  int _selectedSubject = -1;
 
   Future<List> getSubjects() async {
     if (!loaded) {
+      subjects.clear();
       subjects = await _db.getSubjects();
 
       for (var subject in subjects) {
@@ -81,25 +83,41 @@ class _SubjectsManageState extends State<SubjectsManage> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            IconButton(
-                onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => new AddSubject()));
-                },
-                icon: Icon(Icons.add_box, size: 30, color: MyColors.carrotOrange)),
-            IconButton(
-                onPressed: () {
-                  print('Icon 2 pressed');
-                },
-                icon: Icon(Icons.edit, size: 30, color: MyColors.carrotOrange)),
-            IconButton(
-                onPressed: () {
-                  print('Icon 3 pressed');
-                },
-                icon: Icon(Icons.delete, size: 30, color: MyColors.carrotOrange)),
+            IconButton(onPressed: addSubjectIconClick(), icon: Icon(Icons.add_box, size: 30, color: MyColors.carrotOrange)),
+            IconButton(onPressed: editSubjectIconClick(), icon: Icon(Icons.edit, size: 30, color: MyColors.carrotOrange)),
+            IconButton(onPressed: deleteSubjectIconClick(), icon: Icon(Icons.delete, size: 30, color: MyColors.carrotOrange)),
           ],
         ),
       ),
     );
+  }
+
+  VoidCallback addSubjectIconClick() {
+    return () {
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) => new AddSubject(subject: new Subject(subjectID: '', name: '', leadingTeacherID: ''))));
+    };
+  }
+
+  VoidCallback editSubjectIconClick() {
+    return () {
+      if (_selectedSubject != -1) {
+        Subject subject = subjects.elementAt(_selectedSubject);
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) => new AddSubject(subject: subject)));
+      }
+    };
+  }
+
+  VoidCallback deleteSubjectIconClick() {
+    return () {
+      if (_selectedSubject != -1) {
+        Subject subject = subjects.elementAt(_selectedSubject);
+        _db.deleteSubject(subject);
+        setState(() {
+          loaded = false;
+          _selectedSubject = -1;
+        });
+      }
+    };
   }
 
   Widget classesListHeader() {
@@ -142,21 +160,27 @@ class _SubjectsManageState extends State<SubjectsManage> {
         child: ListView.builder(
           itemCount: subjects.length,
           itemBuilder: (context, index) {
-            return Padding(
-              padding: const EdgeInsets.all(5.0),
-              child: InkWell(
-                child: Center(
-                  child: Container(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        classInfoField(subjects[index].name, true),
-                        classInfoField(subjects[index].leadingTeacher.name + ' ' + subjects[index].leadingTeacher.surname, true),
-                      ],
-                    ),
+            return InkWell(
+              child: Center(
+                child: Container(
+                  color: _selectedSubject == index ? Colors.blue.withOpacity(0.5) : Colors.transparent,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      classInfoField(subjects[index].name, true),
+                      classInfoField(subjects[index].leadingTeacher.name + ' ' + subjects[index].leadingTeacher.surname, true),
+                    ],
                   ),
                 ),
               ),
+              onLongPress: () => {
+                if (_selectedSubject != index)
+                  {
+                    setState(() {
+                      _selectedSubject = index;
+                    })
+                  }
+              },
             );
           },
         ),

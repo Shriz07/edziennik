@@ -76,10 +76,11 @@ class FirestoreDB extends ChangeNotifier {
   Future getSubjects() async {
     try {
       List<Subject> subjects = [];
+      Subject subject;
       await _subjectsCollectionReference.get().then((docs) => {
             for (var doc in docs.docs)
               {
-                subjects.add(new Subject(name: doc.get('name'), leadingTeacherID: doc.get('leadingTeacherID'))),
+                subjects.add(new Subject(subjectID: doc.id, name: doc.get('name'), leadingTeacherID: doc.get('leadingTeacherID'))),
               }
           });
       return subjects;
@@ -91,7 +92,20 @@ class FirestoreDB extends ChangeNotifier {
 
   Future addSubject(Subject subject) async {
     try {
-      await _subjectsCollectionReference.add(subject.toMap());
+      if (subject.subjectID != '') {
+        await _subjectsCollectionReference.doc(subject.subjectID).set(subject.toMap());
+      } else {
+        await _subjectsCollectionReference.add(subject.toMap());
+      }
+    } catch (e) {
+      print(e.toString());
+      return e.toString();
+    }
+  }
+
+  Future deleteSubject(Subject subject) async {
+    try {
+      await _subjectsCollectionReference.doc(subject.subjectID).delete();
     } catch (e) {
       print(e.toString());
       return e.toString();

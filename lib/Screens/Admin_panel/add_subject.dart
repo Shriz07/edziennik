@@ -11,6 +11,10 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AddSubject extends StatefulWidget {
+  Subject subject;
+
+  AddSubject({Key? key, required this.subject}) : super(key: key);
+
   @override
   _AddSubjectState createState() => _AddSubjectState();
 }
@@ -27,6 +31,8 @@ class _AddSubjectState extends State<AddSubject> {
   Future<List> getTeachers() async {
     if (!loaded) {
       teachers = await _db.getUsersWithRole('teacher');
+      _nameTextController.text = widget.subject.name;
+      teacherDropdownValue = widget.subject.name != '' ? widget.subject.leadingTeacher.surname : '';
     }
     loaded = true;
     return teachers;
@@ -62,7 +68,7 @@ class _AddSubjectState extends State<AddSubject> {
                         SizedBox(height: 25.0),
                         panelTitle('Dodawanie przedmiotu'),
                         userAddContainer(),
-                        bottomOptionsMenu(),
+                        bottomOptionsMenu(widget.subject),
                       ],
                     ),
                   ),
@@ -77,7 +83,7 @@ class _AddSubjectState extends State<AddSubject> {
     );
   }
 
-  Widget bottomOptionsMenu() {
+  Widget bottomOptionsMenu(Subject subject) {
     return Padding(
       padding: const EdgeInsets.all(15.0),
       child: Container(
@@ -93,7 +99,9 @@ class _AddSubjectState extends State<AddSubject> {
                 onPressed: () async {
                   if (teacherDropdownValue != '' && _nameTextController.text != '') {
                     User teacher = teachers.firstWhere((element) => element.surname == teacherDropdownValue);
-                    await _db.addSubject(Subject(name: _nameTextController.text, leadingTeacherID: teacher.userID));
+                    subject.name = _nameTextController.text;
+                    subject.leadingTeacherID = teacher.userID;
+                    await _db.addSubject(subject);
                     showDialog(context: context, builder: (context) => PopupDialog(title: 'Informacja', message: 'Przedmiot został poprawnie dodany.', close: 'Zamknij'));
                     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SubjectsManage()));
                   }
