@@ -25,6 +25,25 @@ class FirestoreDB extends ChangeNotifier {
     }
   }
 
+  Future getUsersWithRole(role) async {
+    try {
+      List<User> users = [];
+      await _userCollectionReference.get().then((docs) => {
+            for (var doc in docs.docs)
+              {
+                if (doc.get('role') == role)
+                  {
+                    users.add(new User(userID: doc.id, name: doc.get('name'), surname: doc.get('surname'), role: doc.get('role'))),
+                  }
+              }
+          });
+      return users;
+    } catch (e) {
+      print(e.toString());
+      return e.toString();
+    }
+  }
+
   Future getUserWithID(uid) async {
     try {
       late User user;
@@ -60,10 +79,19 @@ class FirestoreDB extends ChangeNotifier {
       await _subjectsCollectionReference.get().then((docs) => {
             for (var doc in docs.docs)
               {
-                subjects.add(new Subject(subjectID: doc.id, name: doc.get('name'), leadingTeacherID: doc.get('leadingTeacherID'))),
+                subjects.add(new Subject(name: doc.get('name'), leadingTeacherID: doc.get('leadingTeacherID'))),
               }
           });
       return subjects;
+    } catch (e) {
+      print(e.toString());
+      return e.toString();
+    }
+  }
+
+  Future addSubject(Subject subject) async {
+    try {
+      await _subjectsCollectionReference.add(subject.toMap());
     } catch (e) {
       print(e.toString());
       return e.toString();

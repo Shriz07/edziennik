@@ -1,3 +1,4 @@
+import 'package:edziennik/Screens/Admin_panel/add_subject.dart';
 import 'package:edziennik/Screens/Drawer/drawer.dart';
 import 'package:edziennik/Utils/firestoreDB.dart';
 import 'package:edziennik/custom_widgets/panel_widgets.dart';
@@ -31,7 +32,7 @@ class _SubjectsManageState extends State<SubjectsManage> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Users manage',
+      title: 'Subjects manage',
       theme: ThemeData(
         textTheme: GoogleFonts.rubikTextTheme(
           Theme.of(context).textTheme,
@@ -82,7 +83,7 @@ class _SubjectsManageState extends State<SubjectsManage> {
           children: <Widget>[
             IconButton(
                 onPressed: () {
-                  print('Icon 1 pressed');
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => new AddSubject()));
                 },
                 icon: Icon(Icons.add_box, size: 30, color: MyColors.carrotOrange)),
             IconButton(
