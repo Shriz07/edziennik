@@ -47,7 +47,6 @@ class _LoginPageState extends State<LoginPage> {
       },
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        backgroundColor: MyColors.darkGrey,
         body: FutureBuilder(
           future: _initializeFirebase(),
           builder: (context, snapshot) {
@@ -76,6 +75,7 @@ class _LoginPageState extends State<LoginPage> {
                               (value) => Validator.validateEmail(
                                 email: value,
                               ),
+                              false,
                             ),
                             SizedBox(height: 8.0),
                             myFormField(
@@ -86,6 +86,7 @@ class _LoginPageState extends State<LoginPage> {
                               (value) => Validator.validatePassword(
                                 password: value,
                               ),
+                              true,
                             ),
                             SizedBox(height: 50.0),
                             _isProcessing
@@ -161,13 +162,14 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget myFormField(TextEditingController controller, String hintText, Icon prefixIcon, FocusNode fnode, FormFieldValidator<String> validator) {
+  Widget myFormField(TextEditingController controller, String hintText, Icon prefixIcon, FocusNode fnode, FormFieldValidator<String> validator, bool obscureText) {
     return TextFormField(
       controller: controller,
       focusNode: fnode,
       validator: validator,
+      obscureText: obscureText,
       decoration: InputDecoration(
-        fillColor: MyColors.frenchLime,
+        fillColor: MyColors.greenAccent,
         hintText: hintText,
         filled: true,
         prefixIcon: prefixIcon,
@@ -178,7 +180,7 @@ class _LoginPageState extends State<LoginPage> {
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(15.0),
-          borderSide: BorderSide(color: MyColors.carrotOrange),
+          borderSide: BorderSide(color: MyColors.carrotOrange, width: 2),
         ),
         errorStyle: TextStyle(fontSize: 15.0),
       ),
