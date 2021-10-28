@@ -1,4 +1,4 @@
-import 'package:edziennik/Screens/Admin_panel/add_subject.dart';
+import 'package:edziennik/Screens/Admin_panel/subject_manage/add_subject.dart';
 import 'package:edziennik/Utils/firestoreDB.dart';
 import 'package:edziennik/custom_widgets/panel_widgets.dart';
 import 'package:edziennik/models/subject.dart';

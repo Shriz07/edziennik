@@ -1,5 +1,5 @@
-import 'package:edziennik/Screens/Admin_panel/add_user.dart';
-import 'package:edziennik/Screens/Admin_panel/edit_user.dart';
+import 'package:edziennik/Screens/Admin_panel/user_manage/add_user.dart';
+import 'package:edziennik/Screens/Admin_panel/user_manage/edit_user.dart';
 import 'package:edziennik/Utils/firestoreDB.dart';
 import 'package:edziennik/custom_widgets/panel_widgets.dart';
 import 'package:edziennik/custom_widgets/popup_dialog.dart';
@@ -15,17 +15,18 @@ class UsersManage extends StatefulWidget {
 
 class _UsersManageState extends State<UsersManage> {
   String dropdownValue = 'Wszyscy';
-  late List<User> users;
+  List<User> users = [];
   List<User> admins = [];
   List<User> teachers = [];
   List<User> students = [];
-  late List<User> currentList;
+  List<User> currentList = [];
   final FirestoreDB _db = FirestoreDB();
   bool loaded = false;
   int _selectedItem = -1;
 
   Future<List> getUsers() async {
     if (!loaded) {
+      users.clear();
       users = await _db.getUsers();
       divideIntoLists();
     }
@@ -46,12 +47,15 @@ class _UsersManageState extends State<UsersManage> {
   }
 
   void divideIntoLists() {
+    admins.clear();
+    teachers.clear();
+    students.clear();
     for (var user in users) {
-      if (user.role == 'admin') {
+      if (user.role == 'administrator') {
         admins.add(user);
-      } else if (user.role == 'teacher') {
+      } else if (user.role == 'nauczyciel') {
         teachers.add(user);
-      } else if (user.role == 'student') {
+      } else if (user.role == 'uczeń') {
         students.add(user);
       }
     }
@@ -127,6 +131,11 @@ class _UsersManageState extends State<UsersManage> {
                 onPressed: () {
                   if (_selectedItem == -1) {
                     showDialog(context: context, builder: (context) => PopupDialog(title: 'Informacja', message: 'Najpierw wybierz użytkownika', close: 'Zamknij'));
+                  } else {
+                    _db.deleteUser(currentList[_selectedItem]);
+                    setState(() {
+                      loaded = false;
+                    });
                   }
                 },
                 icon: Icon(Icons.delete, size: 30, color: MyColors.dodgerBlue)),

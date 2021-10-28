@@ -13,7 +13,7 @@ class User {
 
   Map<String, dynamic> toMap() {
     return {
-      'userID': userID,
+      'uid': userID,
       'name': name,
       'surname': surname,
       'role': role,
@@ -21,7 +21,7 @@ class User {
   }
 
   User.fromMap(Map snapshot)
-      : userID = snapshot['userID'],
+      : userID = snapshot['uid'],
         name = snapshot['name'],
         surname = snapshot['surname'],
         role = snapshot['role'];

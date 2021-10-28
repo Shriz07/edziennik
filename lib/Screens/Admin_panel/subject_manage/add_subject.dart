@@ -1,4 +1,4 @@
-import 'package:edziennik/Screens/Admin_panel/subjects_manage.dart';
+import 'package:edziennik/Screens/Admin_panel/subject_manage/subjects_manage.dart';
 import 'package:edziennik/Utils/firestoreDB.dart';
 import 'package:edziennik/custom_widgets/panel_widgets.dart';
 import 'package:edziennik/custom_widgets/popup_dialog.dart';
@@ -29,7 +29,7 @@ class _AddSubjectState extends State<AddSubject> {
 
   Future<List> getTeachers() async {
     if (!loaded) {
-      teachers = await _db.getUsersWithRole('teacher');
+      teachers = await _db.getUsersWithRole('nauczyciel');
       _nameTextController.text = widget.subject.name;
       teacherDropdownValue = widget.subject.name != '' ? widget.subject.leadingTeacher.surname : '';
     }

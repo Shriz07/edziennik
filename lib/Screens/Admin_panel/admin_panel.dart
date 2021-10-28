@@ -1,6 +1,6 @@
-import 'package:edziennik/Screens/Admin_panel/class_manage.dart';
-import 'package:edziennik/Screens/Admin_panel/subjects_manage.dart';
-import 'package:edziennik/Screens/Admin_panel/users_manage.dart';
+import 'package:edziennik/Screens/Admin_panel/class_manage/class_manage.dart';
+import 'package:edziennik/Screens/Admin_panel/subject_manage/subjects_manage.dart';
+import 'package:edziennik/Screens/Admin_panel/user_manage/users_manage.dart';
 import 'package:edziennik/custom_widgets/panel_widgets.dart';
 import 'package:edziennik/style/MyColors.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +27,7 @@ class AdminPanel extends StatelessWidget {
               children: <Widget>[
                 SizedBox(height: 50.0),
                 panelTitle('Panel administratora'),
-                SizedBox(height: 70.0),
+                SizedBox(height: 50.0),
                 panelOption('Użytkownicy', () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) => UsersManage()));
                 }),

@@ -81,9 +81,9 @@ class FireAuth {
     final User? user = auth.currentUser;
 
     FirebaseFirestore.instance.collection('users').doc(user!.uid).get().then((value) => {
-          if (value.get('role') == 'admin')
+          if (value.get('role') == 'administrator')
             {Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => AdminHome()))}
-          else if (value.get('role') == 'teacher')
+          else if (value.get('role') == 'nauczyciel')
             {Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => TeacherHome()))}
           else if (value.get('role') == 'student')
             {Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => StudentHome()))}
