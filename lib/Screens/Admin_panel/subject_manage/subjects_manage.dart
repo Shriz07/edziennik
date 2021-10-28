@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:edziennik/Screens/Admin_panel/subject_manage/add_subject.dart';
 import 'package:edziennik/Utils/firestoreDB.dart';
 import 'package:edziennik/custom_widgets/panel_widgets.dart';
@@ -28,6 +30,15 @@ class _SubjectsManageState extends State<SubjectsManage> {
     }
     loaded = true;
     return subjects;
+  }
+
+  FutureOr onGoBack(dynamic value) {
+    setState(() {});
+  }
+
+  void navigateToAnotherScreen(screen) {
+    Route route = MaterialPageRoute(builder: (context) => screen);
+    Navigator.push(context, route).then(onGoBack);
   }
 
   @override
@@ -92,7 +103,7 @@ class _SubjectsManageState extends State<SubjectsManage> {
 
   VoidCallback addSubjectIconClick() {
     return () {
-      Navigator.of(context).push(MaterialPageRoute(builder: (context) => new AddSubject(subject: new Subject(subjectID: '', name: '', leadingTeacherID: ''))));
+      navigateToAnotherScreen(Subject(subjectID: '', name: '', leadingTeacherID: ''));
     };
   }
 
@@ -100,7 +111,7 @@ class _SubjectsManageState extends State<SubjectsManage> {
     return () {
       if (_selectedSubject != -1) {
         Subject subject = subjects.elementAt(_selectedSubject);
-        Navigator.of(context).push(MaterialPageRoute(builder: (context) => new AddSubject(subject: subject)));
+        navigateToAnotherScreen(AddSubject(subject: subject));
       }
     };
   }

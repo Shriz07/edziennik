@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:edziennik/Utils/firestoreDB.dart';
 import 'package:edziennik/custom_widgets/panel_widgets.dart';
 import 'package:edziennik/models/class.dart';
@@ -25,6 +27,15 @@ class _ClassManageState extends State<ClassManage> {
     }
     loaded = true;
     return classes;
+  }
+
+  FutureOr onGoBack(dynamic value) {
+    setState(() {});
+  }
+
+  void navigateToAnotherScreen(screen) {
+    Route route = MaterialPageRoute(builder: (context) => screen);
+    Navigator.push(context, route).then(onGoBack);
   }
 
   @override

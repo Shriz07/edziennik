@@ -100,8 +100,7 @@ class _AddSubjectState extends State<AddSubject> {
                     subject.name = _nameTextController.text;
                     subject.leadingTeacherID = teacher.userID;
                     await _db.addSubject(subject);
-                    showDialog(context: context, builder: (context) => PopupDialog(title: 'Informacja', message: 'Przedmiot został poprawnie dodany.', close: 'Zamknij'));
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SubjectsManage()));
+                    Navigator.pop(context);
                   }
                 },
                 icon: Icon(Icons.save, size: 35, color: MyColors.dodgerBlue)),

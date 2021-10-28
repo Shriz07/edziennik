@@ -34,8 +34,6 @@ class _EditUserState extends State<EditUser> {
 
   @override
   Widget build(BuildContext context) {
-    _nameTextController.text = widget.user.name;
-    _surnameTextController.text = widget.user.surname;
     return MaterialApp(
       title: 'User edit',
       theme: ThemeData(
@@ -149,7 +147,8 @@ class _EditUserState extends State<EditUser> {
                     user.surname = _surnameTextController.text;
                     user.role = _roleDropdownValue;
                     await _db.updateUser(user);
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UsersManage()));
+                    Navigator.pop(context);
+                    //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UsersManage()));
                   }
                 },
                 icon: Icon(Icons.save, size: 35, color: MyColors.dodgerBlue)),

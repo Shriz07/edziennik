@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:edziennik/Screens/Admin_panel/user_manage/add_user.dart';
 import 'package:edziennik/Screens/Admin_panel/user_manage/edit_user.dart';
 import 'package:edziennik/Utils/firestoreDB.dart';
@@ -61,6 +63,15 @@ class _UsersManageState extends State<UsersManage> {
     }
   }
 
+  FutureOr onGoBack(dynamic value) {
+    setState(() {});
+  }
+
+  void navigateToAnotherScreen(screen) {
+    Route route = MaterialPageRoute(builder: (context) => screen);
+    Navigator.push(context, route).then(onGoBack);
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -115,7 +126,7 @@ class _UsersManageState extends State<UsersManage> {
           children: <Widget>[
             IconButton(
                 onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => new AddUser()));
+                  navigateToAnotherScreen(AddUser());
                 },
                 icon: Icon(Icons.person_add_alt_1, size: 30, color: MyColors.dodgerBlue)),
             IconButton(
@@ -123,7 +134,7 @@ class _UsersManageState extends State<UsersManage> {
                   if (_selectedItem == -1) {
                     showDialog(context: context, builder: (context) => PopupDialog(title: 'Informacja', message: 'Najpierw wybierz użytkownika', close: 'Zamknij'));
                   } else {
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => new EditUser(user: currentList[_selectedItem])));
+                    navigateToAnotherScreen(EditUser(user: currentList[_selectedItem]));
                   }
                 },
                 icon: Icon(Icons.edit, size: 30, color: MyColors.dodgerBlue)),
