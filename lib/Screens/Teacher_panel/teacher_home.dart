@@ -3,6 +3,7 @@ import 'package:edziennik/Screens/Profile/profile.dart';
 import 'package:edziennik/style/MyColors.dart';
 import 'package:fancy_bottom_navigation/fancy_bottom_navigation.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'teacher_panel.dart';
 
@@ -28,7 +29,7 @@ class _MyStatefulWidgetState extends State<TeacherHome> {
   static final List<Widget> _widgetOptions = <Widget>[
     TeacherPanel(),
     Calendar(),
-    Profile(),
+    Profile(uid: FirebaseAuth.instance.currentUser!.uid),
   ];
 
   void _onItemTapped(int index) {

@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:edziennik/Screens/Calendar/calendar.dart';
 import 'package:edziennik/Screens/Profile/profile.dart';
 import 'package:edziennik/style/MyColors.dart';
@@ -28,7 +29,7 @@ class _MyStatefulWidgetState extends State<AdminHome> {
   static final List<Widget> _widgetOptions = <Widget>[
     AdminPanel(),
     Calendar(),
-    Profile(),
+    Profile(uid: FirebaseAuth.instance.currentUser!.uid),
   ];
 
   void _onItemTapped(int index) {
