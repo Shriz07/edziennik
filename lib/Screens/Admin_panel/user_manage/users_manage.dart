@@ -200,6 +200,7 @@ class _UsersManageState extends State<UsersManage> {
             return InkWell(
               child: Center(
                 child: Container(
+                  height: 25.0,
                   color: _selectedItem == index ? Colors.blue.withOpacity(0.5) : Colors.transparent,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,

@@ -172,6 +172,7 @@ class _SubjectsManageState extends State<SubjectsManage> {
             return InkWell(
               child: Center(
                 child: Container(
+                  height: 25.0,
                   color: _selectedSubject == index ? Colors.blue.withOpacity(0.5) : Colors.transparent,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
