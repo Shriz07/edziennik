@@ -148,11 +148,11 @@ class _EditClassState extends State<EditClass> {
           ),
           Column(
             children: <Widget>[
-              Icon(Icons.person_add, size: 35.0),
+              Icon(Icons.person_add, size: 35.0, color: MyColors.dodgerBlue),
               SizedBox(height: 25),
-              Icon(Icons.edit, size: 30.0),
+              Icon(Icons.edit, size: 30.0, color: MyColors.dodgerBlue),
               SizedBox(height: 25),
-              Icon(Icons.delete, size: 35.0),
+              Icon(Icons.delete, size: 35.0, color: MyColors.dodgerBlue),
             ],
           )
         ],
