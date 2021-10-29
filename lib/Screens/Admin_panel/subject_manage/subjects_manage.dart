@@ -103,7 +103,7 @@ class _SubjectsManageState extends State<SubjectsManage> {
 
   VoidCallback addSubjectIconClick() {
     return () {
-      navigateToAnotherScreen(Subject(subjectID: '', name: '', leadingTeacherID: ''));
+      navigateToAnotherScreen(AddSubject(subject: Subject(subjectID: '', name: '', leadingTeacherID: '')));
     };
   }
 

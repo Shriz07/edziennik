@@ -251,8 +251,9 @@ class _UsersManageState extends State<UsersManage> {
     return Padding(
       padding: const EdgeInsets.all(15.0),
       child: Container(
-        alignment: AlignmentDirectional.center,
+        alignment: AlignmentDirectional.centerStart,
         width: double.infinity,
+        height: 60,
         decoration: BoxDecoration(
           color: MyColors.dodgerBlue,
           borderRadius: BorderRadius.circular(10),
@@ -265,27 +266,31 @@ class _UsersManageState extends State<UsersManage> {
             ),
           ],
         ),
-        child: DropdownButton<String>(
-          value: dropdownValue,
-          style: TextStyle(color: Colors.white, fontSize: 20.0),
-          icon: Icon(
-            Icons.arrow_drop_down,
-            color: Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.only(left: 15.0, right: 15.0),
+          child: DropdownButtonFormField<String>(
+            isExpanded: true,
+            value: dropdownValue,
+            style: TextStyle(color: Colors.white, fontSize: 20.0),
+            dropdownColor: MyColors.dodgerBlue,
+            icon: Icon(
+              Icons.arrow_drop_down,
+              color: Colors.white,
+            ),
+            iconSize: 42,
+            elevation: 16,
+            onChanged: (String? newValue) {
+              setState(() {
+                dropdownValue = newValue!;
+              });
+            },
+            items: <String>['Wszyscy', 'Administratorzy', 'Nauczyciele', 'Uczniowie'].map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
           ),
-          iconSize: 42,
-          elevation: 16,
-          underline: SizedBox(),
-          onChanged: (String? newValue) {
-            setState(() {
-              dropdownValue = newValue!;
-            });
-          },
-          items: <String>['Wszyscy', 'Administratorzy', 'Nauczyciele', 'Uczniowie'].map<DropdownMenuItem<String>>((String value) {
-            return DropdownMenuItem<String>(
-              value: value,
-              child: Text(value),
-            );
-          }).toList(),
         ),
       ),
     );
