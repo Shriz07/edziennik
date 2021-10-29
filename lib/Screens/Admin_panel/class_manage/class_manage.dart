@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:edziennik/Screens/Admin_panel/class_manage/edit_class.dart';
 import 'package:edziennik/Utils/firestoreDB.dart';
 import 'package:edziennik/custom_widgets/panel_widgets.dart';
 import 'package:edziennik/models/class.dart';
@@ -16,6 +17,7 @@ class _ClassManageState extends State<ClassManage> {
   final FirestoreDB _db = FirestoreDB();
   bool loaded = false;
   late List<Class> classes;
+  int _selectedClass = -1;
 
   Future<List> getClasses() async {
     if (!loaded) {
@@ -91,12 +93,14 @@ class _ClassManageState extends State<ClassManage> {
           children: <Widget>[
             IconButton(
                 onPressed: () {
-                  print('Icon 1 pressed');
+                  navigateToAnotherScreen(EditClass(currentClass: Class(classID: '', name: '', supervisingTeacherID: '')));
                 },
                 icon: Icon(Icons.add_box, size: 30, color: MyColors.dodgerBlue)),
             IconButton(
                 onPressed: () {
-                  print('Icon 2 pressed');
+                  if (_selectedClass != -1) {
+                    navigateToAnotherScreen(EditClass(currentClass: classes[_selectedClass]));
+                  }
                 },
                 icon: Icon(Icons.edit, size: 30, color: MyColors.dodgerBlue)),
             IconButton(
@@ -150,21 +154,28 @@ class _ClassManageState extends State<ClassManage> {
         child: ListView.builder(
           itemCount: classes.length,
           itemBuilder: (context, index) {
-            return Padding(
-              padding: const EdgeInsets.all(5.0),
-              child: InkWell(
-                child: Center(
-                  child: Container(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        classInfoField(classes[index].name, true),
-                        classInfoField(classes[index].supervisingTeacher.name + ' ' + classes[index].supervisingTeacher.surname, true),
-                      ],
-                    ),
+            return InkWell(
+              child: Center(
+                child: Container(
+                  height: 25.0,
+                  color: _selectedClass == index ? Colors.blue.withOpacity(0.5) : Colors.transparent,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      classInfoField(classes[index].name, true),
+                      classInfoField(classes[index].supervisingTeacher.name + ' ' + classes[index].supervisingTeacher.surname, true),
+                    ],
                   ),
                 ),
               ),
+              onLongPress: () => {
+                if (_selectedClass != index)
+                  {
+                    setState(() {
+                      _selectedClass = index;
+                    })
+                  }
+              },
             );
           },
         ),
