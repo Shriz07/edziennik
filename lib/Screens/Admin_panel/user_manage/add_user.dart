@@ -95,9 +95,16 @@ class _AddUserState extends State<AddUser> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            IconButton(onPressed: () {}, icon: Icon(Icons.person_add_alt_1, size: 30, color: MyColors.dodgerBlue)),
-            IconButton(onPressed: () {}, icon: Icon(Icons.edit, size: 30, color: MyColors.dodgerBlue)),
-            IconButton(onPressed: () {}, icon: Icon(Icons.delete, size: 30, color: MyColors.dodgerBlue)),
+            IconButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                icon: Icon(Icons.save, size: 35, color: MyColors.dodgerBlue)),
+            IconButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                icon: Icon(Icons.close_rounded, size: 30, color: MyColors.dodgerBlue)),
           ],
         ),
       ),
