@@ -1,6 +1,8 @@
 import 'package:edziennik/style/MyColors.dart';
 import 'package:flutter/material.dart';
 
+import 'pages/multi_example.dart';
+
 class Calendar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -14,11 +16,23 @@ class Calendar extends StatelessWidget {
             style: TextStyle(color: Colors.black),
           ),
         ),
-        body: const Center(
-          child: Text(
-            'Calendar',
-          ),
-        ),
+        body: StartPage(),
+      ),
+    );
+  }
+}
+
+class StartPage extends StatefulWidget {
+  @override
+  _StartPageState createState() => _StartPageState();
+}
+
+class _StartPageState extends State<StartPage> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Builder(builder: (BuildContext context) => TableMultiExample()),
       ),
     );
   }
