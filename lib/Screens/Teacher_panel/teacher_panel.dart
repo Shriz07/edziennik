@@ -1,4 +1,5 @@
 import 'package:edziennik/custom_widgets/panel_widgets.dart';
+import 'package:edziennik/Screens/Teacher_panel/class_manage/my_classes.dart';
 import 'package:edziennik/style/MyColors.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -27,8 +28,8 @@ class TeacherPanel extends StatelessWidget {
               panelTitle('Nauczyciel [ID]'),
               SizedBox(height: 30.0),
               panelOption('Moje klasy', () {
-                // Navigator.push(context,
-                //     MaterialPageRoute(builder: (context) => MyClasses()));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => MyClasses()));
               }),
               panelOption('Uwagi', () {
                 // Navigator.push(context,
