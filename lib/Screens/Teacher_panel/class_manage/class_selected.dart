@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:edziennik/Screens/Teacher_panel/class_manage/class_presence.dart';
 import 'package:edziennik/Utils/firestoreDB.dart';
 import 'package:edziennik/custom_widgets/panel_widgets.dart';
 import 'package:edziennik/models/class.dart';
@@ -84,7 +85,9 @@ class _ClassSelectedState extends State<ClassSelected> {
         width: double.infinity,
         child: Column(
           children: <Widget>[
-            teacherOption("Sprawdź obecność", null),
+            teacherOption("Sprawdź obecność", () {
+              navigateToAnotherScreen(ClassPresence());
+            }),
             teacherOption("Dodaj wydarzenie", null),
             SizedBox(height: 30.0),
             formFieldTitle('Uczniowie: '),
@@ -172,5 +175,14 @@ class _ClassSelectedState extends State<ClassSelected> {
             ),
           )),
     );
+  }
+
+  FutureOr onGoBack(dynamic value) {
+    setState(() {});
+  }
+
+  void navigateToAnotherScreen(screen) {
+    Route route = MaterialPageRoute(builder: (context) => screen);
+    Navigator.push(context, route).then(onGoBack);
   }
 }
