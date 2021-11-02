@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:edziennik/Screens/Teacher_panel/class_manage/class_selected.dart';
 import 'package:edziennik/Utils/firestoreDB.dart';
 import 'package:edziennik/custom_widgets/panel_widgets.dart';
 import 'package:edziennik/models/class.dart';
@@ -42,7 +43,7 @@ class _MyClassesState extends State<MyClasses> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Users manage',
+      title: 'Selecting class',
       theme: ThemeData(
         textTheme: GoogleFonts.rubikTextTheme(
           Theme.of(context).textTheme,
@@ -51,8 +52,8 @@ class _MyClassesState extends State<MyClasses> {
       home: Scaffold(
         appBar: AppBar(
           backgroundColor: MyColors.greenAccent,
-          title: const Text('Zarządzanie klasami',
-              style: TextStyle(color: Colors.black)),
+          title:
+              const Text('Wybór klasy', style: TextStyle(color: Colors.black)),
         ),
         body: FutureBuilder<List>(
           future: getClasses(),
@@ -108,7 +109,9 @@ class _MyClassesState extends State<MyClasses> {
         ),
         onTap: () {
           print("wybrana klasa");
-          // navigateToAnotherScreen(null);
+          if (_selectedClass != -1) {
+            navigateToAnotherScreen(ClassSelected());
+          }
         },
       ),
     );
