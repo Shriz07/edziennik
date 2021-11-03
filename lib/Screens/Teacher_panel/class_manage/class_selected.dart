@@ -19,12 +19,7 @@ class _ClassSelectedState extends State<ClassSelected> {
   bool loaded = false;
   List<User> teachers = [];
   int _selectedStudent = -1;
-  List<String> students = [
-    'Emilia Kamińska',
-    'Michał Kowalski',
-    'Bartosz Górski',
-    'Monika Kołodziej'
-  ];
+  List<String> students = ['Emilia Kamińska', 'Michał Kowalski', 'Bartosz Górski', 'Monika Kołodziej'];
 
   final _nameTextController = TextEditingController();
   final _focusName = FocusNode();
@@ -45,8 +40,7 @@ class _ClassSelectedState extends State<ClassSelected> {
         child: Scaffold(
           appBar: AppBar(
             backgroundColor: MyColors.greenAccent,
-            title:
-                const Text('EDziennik', style: TextStyle(color: Colors.black)),
+            title: const Text('EDziennik', style: TextStyle(color: Colors.black)),
           ),
           body: FutureBuilder<List>(
             future: getClassStudents(), //getTeachers(),
@@ -81,7 +75,6 @@ class _ClassSelectedState extends State<ClassSelected> {
     return Padding(
       padding: const EdgeInsets.only(left: 15.0, right: 15.0),
       child: Container(
-        height: 400,
         width: double.infinity,
         child: Column(
           children: <Widget>[
@@ -124,9 +117,7 @@ class _ClassSelectedState extends State<ClassSelected> {
                         child: Center(
                           child: Container(
                             height: 25.0,
-                            color: _selectedStudent == index
-                                ? Colors.blue.withOpacity(0.5)
-                                : Colors.transparent,
+                            color: _selectedStudent == index ? Colors.blue.withOpacity(0.5) : Colors.transparent,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: <Widget>[
