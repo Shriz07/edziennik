@@ -85,19 +85,11 @@ class _ClassSelectedState extends State<ClassSelected> {
             }, context),
             teacherOption("Dodaj wydarzenie", null, context),
             SizedBox(height: 30.0),
-            formFieldTitle('Uczniowie: '),
+            formFieldTitle('Uczniowie: ', context),
             studentsInClassSelection(),
           ],
         ),
       ),
-    );
-  }
-
-  Widget formFieldTitle(title) {
-    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
-    return Text(
-      title,
-      style: TextStyle(fontSize: 3 * unitHeightValue, fontWeight: FontWeight.bold),
     );
   }
 
@@ -123,7 +115,7 @@ class _ClassSelectedState extends State<ClassSelected> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: <Widget>[
-                                studentName(students[index]),
+                                singleTableCell(students[index], true, context),
                               ],
                             ),
                           ),
@@ -150,24 +142,6 @@ class _ClassSelectedState extends State<ClassSelected> {
           )
         ],
       ),
-    );
-  }
-
-  Widget studentName(info) {
-    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
-    return Expanded(
-      child: Container(
-          child: Center(
-            child: Text(
-              info,
-              style: TextStyle(fontSize: 3 * unitHeightValue, fontWeight: FontWeight.bold),
-            ),
-          ),
-          decoration: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(color: Colors.grey),
-            ),
-          )),
     );
   }
 

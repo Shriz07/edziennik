@@ -56,12 +56,12 @@ class _ClassPresenceState extends State<ClassPresence> {
                         panelTitle('Klasa [NAZWA]', context),
                         teacherOption("Obecności", null, context),
                         SizedBox(height: 15.0),
-                        formFieldTitle('Data: '),
+                        formFieldTitle('Data: ', context),
                         dateField(),
                         SizedBox(height: 15.0),
                         studentsListContainer(),
                         SizedBox(height: 15.0),
-                        bottomOptionsMenu(),
+                        bottomOptionsMenu(context, listOfBottomIconsWithActions()),
                       ],
                     ),
                   ),
@@ -78,15 +78,6 @@ class _ClassPresenceState extends State<ClassPresence> {
 
   Future<List> getClassStudents() async {
     return students;
-  }
-
-  Widget formFieldTitle(title) {
-    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
-    return Text(
-      title,
-      textAlign: TextAlign.left,
-      style: TextStyle(fontSize: 3 * unitHeightValue, fontWeight: FontWeight.bold),
-    );
   }
 
   Widget dateField() {
@@ -156,32 +147,19 @@ class _ClassPresenceState extends State<ClassPresence> {
     );
   }
 
-  Widget bottomOptionsMenu() {
+  List<Widget> listOfBottomIconsWithActions() {
     double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
-    return Padding(
-      padding: const EdgeInsets.all(15.0),
-      child: Container(
-        height: MediaQuery.of(context).size.height * 1 / 14,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: Colors.black, width: 2.0),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            IconButton(
-                onPressed: () async {
-                  Navigator.pop(context);
-                },
-                icon: Icon(Icons.save, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
-            IconButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                icon: Icon(Icons.close_rounded, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
-          ],
-        ),
-      ),
-    );
+    return <Widget>[
+      IconButton(
+          onPressed: () async {
+            Navigator.pop(context);
+          },
+          icon: Icon(Icons.save, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
+      IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(Icons.close_rounded, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
+    ];
   }
 }

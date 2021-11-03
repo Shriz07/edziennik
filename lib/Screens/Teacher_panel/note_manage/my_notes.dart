@@ -88,11 +88,11 @@ class _MyNotesState extends State<MyNotes> {
           child: Column(
             children: <Widget>[
               SizedBox(height: 15),
-              formFieldTitle('Przedmiot:'),
+              formFieldTitle('Przedmiot:', context),
               customDropdownSubjects(),
-              formFieldTitle('Klasa:'),
+              formFieldTitle('Klasa:', context),
               customDropdownClasses(),
-              formFieldTitle('Uwagi: '),
+              formFieldTitle('Uwagi: ', context),
               myNotesList(),
             ],
           ),
@@ -169,43 +169,6 @@ class _MyNotesState extends State<MyNotes> {
               bottom: BorderSide(color: Colors.grey),
             ),
           )),
-    );
-  }
-
-  Widget formFieldTitle(title) {
-    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
-    return Text(
-      title,
-      style: TextStyle(fontSize: 3 * unitHeightValue, fontWeight: FontWeight.bold),
-    );
-  }
-
-  Widget customFormField(controller, hintText, fnode) {
-    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
-    return Padding(
-      padding: const EdgeInsets.all(15.0),
-      child: TextFormField(
-        controller: controller,
-        focusNode: fnode,
-        style: TextStyle(fontSize: 3 * unitHeightValue),
-        decoration: InputDecoration(
-          hintText: hintText,
-          border: const OutlineInputBorder(
-            borderRadius: const BorderRadius.all(
-              Radius.circular(15.0),
-            ),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(15.0),
-            borderSide: BorderSide(color: Colors.black, width: 2.0),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(15.0),
-            borderSide: BorderSide(color: MyColors.carrotOrange, width: 2.0),
-          ),
-          hintStyle: TextStyle(fontSize: 3 * unitHeightValue),
-        ),
-      ),
     );
   }
 

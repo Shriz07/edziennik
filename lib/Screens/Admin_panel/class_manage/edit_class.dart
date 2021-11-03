@@ -67,7 +67,7 @@ class _EditClassState extends State<EditClass> {
                         SizedBox(height: 25.0),
                         panelTitle('Edytowanie klasy', context),
                         classEditContainer(),
-                        bottomOptionsMenu(),
+                        bottomOptionsMenu(context, listOfBottomIconsWithActions()),
                       ],
                     ),
                   ),
@@ -97,11 +97,11 @@ class _EditClassState extends State<EditClass> {
           child: Column(
             children: <Widget>[
               SizedBox(height: 15),
-              formFieldTitle('Nazwa klasy:'),
-              customFormField(_nameTextController, 'Nazwa klasy', _focusName),
-              formFieldTitle('Nauczyciel prowadzący:'),
+              formFieldTitle('Nazwa klasy:', context),
+              customFormField(_nameTextController, 'Nazwa klasy', _focusName, context),
+              formFieldTitle('Nauczyciel prowadzący:', context),
               customDropdownTeacher(),
-              formFieldTitle('Uczniowie: '),
+              formFieldTitle('Uczniowie: ', context),
               studentsInClassSelection(),
             ],
           ),
@@ -133,7 +133,7 @@ class _EditClassState extends State<EditClass> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: <Widget>[
-                                studentName(students[index]),
+                                singleTableCell(students[index], true, context),
                               ],
                             ),
                           ),
@@ -159,60 +159,6 @@ class _EditClassState extends State<EditClass> {
             ],
           )
         ],
-      ),
-    );
-  }
-
-  Widget studentName(info) {
-    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
-    return Expanded(
-      child: Container(
-          child: Center(
-            child: Text(
-              info,
-              style: TextStyle(fontSize: 3 * unitHeightValue, fontWeight: FontWeight.bold),
-            ),
-          ),
-          decoration: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(color: Colors.grey),
-            ),
-          )),
-    );
-  }
-
-  Widget formFieldTitle(title) {
-    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
-    return Text(
-      title,
-      style: TextStyle(fontSize: 3 * unitHeightValue, fontWeight: FontWeight.bold),
-    );
-  }
-
-  Widget customFormField(controller, hintText, fnode) {
-    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
-    return Padding(
-      padding: const EdgeInsets.all(15.0),
-      child: TextFormField(
-        controller: controller,
-        focusNode: fnode,
-        style: TextStyle(fontSize: 3 * unitHeightValue),
-        decoration: InputDecoration(
-            hintText: hintText,
-            border: const OutlineInputBorder(
-              borderRadius: const BorderRadius.all(
-                Radius.circular(15.0),
-              ),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(15.0),
-              borderSide: BorderSide(color: Colors.black, width: 2.0),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(15.0),
-              borderSide: BorderSide(color: MyColors.carrotOrange, width: 2.0),
-            ),
-            hintStyle: TextStyle(fontSize: 3 * unitHeightValue)),
       ),
     );
   }
@@ -252,32 +198,19 @@ class _EditClassState extends State<EditClass> {
     );
   }
 
-  Widget bottomOptionsMenu() {
+  List<Widget> listOfBottomIconsWithActions() {
     double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
-    return Padding(
-      padding: const EdgeInsets.all(15.0),
-      child: Container(
-        height: 70,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: Colors.black, width: 2.0),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            IconButton(
-                onPressed: () async {
-                  Navigator.pop(context);
-                },
-                icon: Icon(Icons.save, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
-            IconButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                icon: Icon(Icons.close_rounded, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
-          ],
-        ),
-      ),
-    );
+    return <Widget>[
+      IconButton(
+          onPressed: () async {
+            Navigator.pop(context);
+          },
+          icon: Icon(Icons.save, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
+      IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(Icons.close_rounded, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
+    ];
   }
 }

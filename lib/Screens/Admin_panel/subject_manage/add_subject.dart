@@ -68,7 +68,7 @@ class _AddSubjectState extends State<AddSubject> {
                         SizedBox(height: 25.0),
                         panelTitle('Dodawanie przedmiotu', context),
                         userAddContainer(),
-                        bottomOptionsMenu(widget.subject),
+                        bottomOptionsMenu(context, listOfBottomIconsWithActions(widget.subject)),
                       ],
                     ),
                   ),
@@ -83,39 +83,26 @@ class _AddSubjectState extends State<AddSubject> {
     );
   }
 
-  Widget bottomOptionsMenu(Subject subject) {
+  List<Widget> listOfBottomIconsWithActions(Subject subject) {
     double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
-    return Padding(
-      padding: const EdgeInsets.all(15.0),
-      child: Container(
-        height: MediaQuery.of(context).size.height * 1 / 14,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: Colors.black, width: 2.0),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            IconButton(
-                onPressed: () async {
-                  if (teacherDropdownValue != '' && _nameTextController.text != '') {
-                    User teacher = teachers.firstWhere((element) => element.surname == teacherDropdownValue);
-                    subject.name = _nameTextController.text;
-                    subject.leadingTeacherID = teacher.userID;
-                    await _db.addSubject(subject);
-                    Navigator.pop(context);
-                  }
-                },
-                icon: Icon(Icons.save, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
-            IconButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                icon: Icon(Icons.close_rounded, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
-          ],
-        ),
-      ),
-    );
+    return <Widget>[
+      IconButton(
+          onPressed: () async {
+            if (teacherDropdownValue != '' && _nameTextController.text != '') {
+              User teacher = teachers.firstWhere((element) => element.surname == teacherDropdownValue);
+              subject.name = _nameTextController.text;
+              subject.leadingTeacherID = teacher.userID;
+              await _db.addSubject(subject);
+              Navigator.pop(context);
+            }
+          },
+          icon: Icon(Icons.save, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
+      IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(Icons.close_rounded, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
+    ];
   }
 
   Widget userAddContainer() {
@@ -132,49 +119,12 @@ class _AddSubjectState extends State<AddSubject> {
           child: Column(
             children: <Widget>[
               SizedBox(height: 15),
-              formFieldTitle('Nazwa:'),
-              customFormField(_nameTextController, 'Nazwa przedmiotu', _focusName),
-              formFieldTitle('Nauczyciel prowadzący:'),
+              formFieldTitle('Nazwa:', context),
+              customFormField(_nameTextController, 'Nazwa przedmiotu', _focusName, context),
+              formFieldTitle('Nauczyciel prowadzący:', context),
               customDropdownTeacher(),
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget formFieldTitle(title) {
-    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
-    return Text(
-      title,
-      style: TextStyle(fontSize: 3 * unitHeightValue, fontWeight: FontWeight.bold),
-    );
-  }
-
-  Widget customFormField(controller, hintText, fnode) {
-    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
-    return Padding(
-      padding: const EdgeInsets.all(15.0),
-      child: TextFormField(
-        controller: controller,
-        focusNode: fnode,
-        style: TextStyle(fontSize: 3 * unitHeightValue),
-        decoration: InputDecoration(
-          hintText: hintText,
-          border: const OutlineInputBorder(
-            borderRadius: const BorderRadius.all(
-              Radius.circular(15.0),
-            ),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(15.0),
-            borderSide: BorderSide(color: Colors.black, width: 2.0),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(15.0),
-            borderSide: BorderSide(color: MyColors.carrotOrange, width: 2.0),
-          ),
-          hintStyle: TextStyle(fontSize: 3 * unitHeightValue),
         ),
       ),
     );

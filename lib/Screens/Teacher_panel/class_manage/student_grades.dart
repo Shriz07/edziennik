@@ -94,11 +94,11 @@ class _StudentGradesState extends State<StudentGrades> {
           child: Column(
             children: <Widget>[
               SizedBox(height: 15),
-              formFieldTitle('Przedmiot:'),
+              formFieldTitle('Przedmiot:', context),
               customDropdownSubjects(),
-              formFieldTitle('Uczeń:'),
+              formFieldTitle('Uczeń:', context),
               customDropdownStudents(),
-              formFieldTitle('Oceny: '),
+              formFieldTitle('Oceny: ', context),
               studentGradesList(),
             ],
           ),
@@ -130,7 +130,7 @@ class _StudentGradesState extends State<StudentGrades> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: <Widget>[
-                                gradeName(grades[index]),
+                                singleTableCell(grades[index], true, context),
                               ],
                             ),
                           ),
@@ -156,56 +156,6 @@ class _StudentGradesState extends State<StudentGrades> {
             ],
           )
         ],
-      ),
-    );
-  }
-
-  Widget gradeName(info) {
-    return Expanded(
-      child: Container(
-          child: Center(
-            child: Text(
-              info,
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-          ),
-          decoration: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(color: Colors.grey),
-            ),
-          )),
-    );
-  }
-
-  Widget formFieldTitle(title) {
-    return Text(
-      title,
-      style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold),
-    );
-  }
-
-  Widget customFormField(controller, hintText, fnode) {
-    return Padding(
-      padding: const EdgeInsets.all(15.0),
-      child: TextFormField(
-        controller: controller,
-        focusNode: fnode,
-        decoration: InputDecoration(
-          hintText: hintText,
-          border: const OutlineInputBorder(
-            borderRadius: const BorderRadius.all(
-              Radius.circular(15.0),
-            ),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(15.0),
-            borderSide: BorderSide(color: Colors.black, width: 2.0),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(15.0),
-            borderSide: BorderSide(color: MyColors.carrotOrange, width: 2.0),
-          ),
-        ),
       ),
     );
   }

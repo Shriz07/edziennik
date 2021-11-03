@@ -67,7 +67,7 @@ class _AddUserState extends State<AddUser> {
                         SizedBox(height: 25.0),
                         panelTitle('Dodawanie użytkownika', context),
                         userAddContainer(),
-                        bottomOptionsMenu(),
+                        bottomOptionsMenu(context, listOfBottomIconsWithActions()),
                       ],
                     ),
                   ),
@@ -82,33 +82,20 @@ class _AddUserState extends State<AddUser> {
     );
   }
 
-  Widget bottomOptionsMenu() {
+  List<Widget> listOfBottomIconsWithActions() {
     double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
-    return Padding(
-      padding: const EdgeInsets.all(15.0),
-      child: Container(
-        height: MediaQuery.of(context).size.height * 1 / 15,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: Colors.black, width: 2.0),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            IconButton(
-                onPressed: () async {
-                  Navigator.pop(context);
-                },
-                icon: Icon(Icons.save, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
-            IconButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                icon: Icon(Icons.close_rounded, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
-          ],
-        ),
-      ),
-    );
+    return <Widget>[
+      IconButton(
+          onPressed: () async {
+            Navigator.pop(context);
+          },
+          icon: Icon(Icons.save, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
+      IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(Icons.close_rounded, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
+    ];
   }
 
   Widget userAddContainer() {
@@ -125,53 +112,16 @@ class _AddUserState extends State<AddUser> {
           child: Column(
             children: <Widget>[
               SizedBox(height: 15),
-              formFieldTitle('Typ użytkownika:'),
+              formFieldTitle('Typ użytkownika:', context),
               customDropdownRole(),
-              formFieldTitle('Imię:'),
-              customFormField(null, 'Imię', _focusName),
-              formFieldTitle('Nazwisko:'),
-              customFormField(null, 'Nazwisko', _focusSurname),
-              if (roleDropdownValue == 'Uczeń') formFieldTitle('Klasa'),
+              formFieldTitle('Imię:', context),
+              customFormField(null, 'Imię', _focusName, context),
+              formFieldTitle('Nazwisko:', context),
+              customFormField(null, 'Nazwisko', _focusSurname, context),
+              if (roleDropdownValue == 'Uczeń') formFieldTitle('Klasa', context),
               if (roleDropdownValue == 'Uczeń' && classNames.length > 0) customDropdownClass(),
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget formFieldTitle(title) {
-    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
-    return Text(
-      title,
-      style: TextStyle(fontSize: 3 * unitHeightValue, fontWeight: FontWeight.bold),
-    );
-  }
-
-  Widget customFormField(controller, hintText, fnode) {
-    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
-    return Padding(
-      padding: const EdgeInsets.all(15.0),
-      child: TextFormField(
-        controller: controller,
-        focusNode: fnode,
-        style: TextStyle(fontSize: 3 * unitHeightValue),
-        decoration: InputDecoration(
-          hintText: hintText,
-          border: const OutlineInputBorder(
-            borderRadius: const BorderRadius.all(
-              Radius.circular(15.0),
-            ),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(15.0),
-            borderSide: BorderSide(color: Colors.black, width: 2.0),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(15.0),
-            borderSide: BorderSide(color: MyColors.carrotOrange, width: 2.0),
-          ),
-          hintStyle: TextStyle(fontSize: 3 * unitHeightValue),
         ),
       ),
     );

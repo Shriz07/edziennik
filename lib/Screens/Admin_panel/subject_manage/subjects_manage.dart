@@ -69,7 +69,7 @@ class _SubjectsManageState extends State<SubjectsManage> {
                     panelTitle('Przedmioty', context),
                     classesListHeader(),
                     classesListContainer(),
-                    bottomOptionsMenu(),
+                    bottomOptionsMenu(context, listOfBottomIconsWithActions()),
                   ],
                 ),
               );
@@ -82,26 +82,13 @@ class _SubjectsManageState extends State<SubjectsManage> {
     );
   }
 
-  Widget bottomOptionsMenu() {
+  List<Widget> listOfBottomIconsWithActions() {
     double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
-    return Padding(
-      padding: const EdgeInsets.all(15.0),
-      child: Container(
-        height: MediaQuery.of(context).size.height * 1 / 14,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: Colors.black, width: 2.0),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            IconButton(onPressed: addSubjectIconClick(), icon: Icon(Icons.add_box, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
-            IconButton(onPressed: editSubjectIconClick(), icon: Icon(Icons.edit, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
-            IconButton(onPressed: deleteSubjectIconClick(), icon: Icon(Icons.delete, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
-          ],
-        ),
-      ),
-    );
+    return <Widget>[
+      IconButton(onPressed: addSubjectIconClick(), icon: Icon(Icons.add_box, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
+      IconButton(onPressed: editSubjectIconClick(), icon: Icon(Icons.edit, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
+      IconButton(onPressed: deleteSubjectIconClick(), icon: Icon(Icons.delete, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
+    ];
   }
 
   VoidCallback addSubjectIconClick() {
@@ -148,8 +135,8 @@ class _SubjectsManageState extends State<SubjectsManage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  classInfoField('Nazwa', false),
-                  classInfoField('Nauczyciel', false),
+                  singleTableCell('Nazwa', false, context),
+                  singleTableCell('Nauczyciel', false, context),
                 ],
               ),
             ),
@@ -180,8 +167,8 @@ class _SubjectsManageState extends State<SubjectsManage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
-                      classInfoField(subjects[index].name, true),
-                      classInfoField(subjects[index].leadingTeacher.name + ' ' + subjects[index].leadingTeacher.surname, true),
+                      singleTableCell(subjects[index].name, true, context),
+                      singleTableCell(subjects[index].leadingTeacher.name + ' ' + subjects[index].leadingTeacher.surname, true, context),
                     ],
                   ),
                 ),
@@ -197,27 +184,6 @@ class _SubjectsManageState extends State<SubjectsManage> {
             );
           },
         ),
-      ),
-    );
-  }
-
-  Widget classInfoField(info, bottomBorder) {
-    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
-    return Expanded(
-      child: Container(
-        child: Center(
-          child: Text(
-            info,
-            style: TextStyle(fontSize: 3 * unitHeightValue, fontWeight: FontWeight.bold),
-          ),
-        ),
-        decoration: bottomBorder == true
-            ? BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(color: Colors.grey),
-                ),
-              )
-            : null,
       ),
     );
   }

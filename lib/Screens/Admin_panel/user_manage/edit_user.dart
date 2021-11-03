@@ -60,7 +60,7 @@ class _EditUserState extends State<EditUser> {
                   SizedBox(height: 25.0),
                   panelTitle('Edytowanie użytkownika', context),
                   userEditContainer(),
-                  bottomOptionsMenu(widget.user),
+                  bottomOptionsMenu(context, listOfBottomIconsWithActions(widget.user)),
                 ],
               ),
             ),
@@ -84,11 +84,11 @@ class _EditUserState extends State<EditUser> {
           child: Column(
             children: <Widget>[
               SizedBox(height: 15),
-              formFieldTitle('Imię:'),
-              customFormField(_nameTextController, 'Imię', _focusName),
-              formFieldTitle('Nazwisko:'),
-              customFormField(_surnameTextController, 'Imię', _focusSurname),
-              formFieldTitle('Rola:'),
+              formFieldTitle('Imię:', context),
+              customFormField(_nameTextController, 'Imię', _focusName, context),
+              formFieldTitle('Nazwisko:', context),
+              customFormField(_surnameTextController, 'Imię', _focusSurname, context),
+              formFieldTitle('Rola:', context),
               customDropdownRole(),
             ],
           ),
@@ -97,76 +97,26 @@ class _EditUserState extends State<EditUser> {
     );
   }
 
-  Widget formFieldTitle(title) {
+  List<Widget> listOfBottomIconsWithActions(User user) {
     double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
-    return Text(
-      title,
-      style: TextStyle(fontSize: 3 * unitHeightValue, fontWeight: FontWeight.bold),
-    );
-  }
-
-  Widget customFormField(controller, hintText, fnode) {
-    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
-    return Padding(
-      padding: const EdgeInsets.all(15.0),
-      child: TextFormField(
-        controller: controller,
-        focusNode: fnode,
-        style: TextStyle(fontSize: 3 * unitHeightValue),
-        decoration: InputDecoration(
-          hintText: hintText,
-          hintStyle: TextStyle(fontSize: 3 * unitHeightValue),
-          border: const OutlineInputBorder(
-            borderRadius: const BorderRadius.all(
-              Radius.circular(15.0),
-            ),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(15.0),
-            borderSide: BorderSide(color: Colors.black, width: 2.0),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(15.0),
-            borderSide: BorderSide(color: MyColors.carrotOrange, width: 2.0),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget bottomOptionsMenu(User user) {
-    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
-    return Padding(
-      padding: const EdgeInsets.all(15.0),
-      child: Container(
-        height: MediaQuery.of(context).size.height * 1 / 15,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: Colors.black, width: 2.0),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            IconButton(
-                onPressed: () async {
-                  if (_nameTextController.text != '' && _surnameTextController.text != '' && _roleDropdownValue != '') {
-                    user.name = _nameTextController.text;
-                    user.surname = _surnameTextController.text;
-                    user.role = _roleDropdownValue;
-                    await _db.updateUser(user);
-                    Navigator.pop(context);
-                  }
-                },
-                icon: Icon(Icons.save, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
-            IconButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                icon: Icon(Icons.close_rounded, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
-          ],
-        ),
-      ),
-    );
+    return <Widget>[
+      IconButton(
+          onPressed: () async {
+            if (_nameTextController.text != '' && _surnameTextController.text != '' && _roleDropdownValue != '') {
+              user.name = _nameTextController.text;
+              user.surname = _surnameTextController.text;
+              user.role = _roleDropdownValue;
+              await _db.updateUser(user);
+              Navigator.pop(context);
+            }
+          },
+          icon: Icon(Icons.save, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
+      IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(Icons.close_rounded, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
+    ];
   }
 
   Widget customDropdownRole() {

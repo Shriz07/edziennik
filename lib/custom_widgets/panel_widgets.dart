@@ -95,3 +95,79 @@ Widget teacherOption(text, action, context) {
     ),
   );
 }
+
+Widget formFieldTitle(title, context) {
+  double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
+  return Text(
+    title,
+    textAlign: TextAlign.left,
+    style: TextStyle(fontSize: 2.5 * unitHeightValue, fontWeight: FontWeight.bold),
+  );
+}
+
+Widget singleTableCell(info, bottomBorder, context) {
+  double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
+  return Expanded(
+    child: Container(
+      child: Center(
+        child: Text(
+          info,
+          style: TextStyle(fontSize: 2.5 * unitHeightValue, fontWeight: FontWeight.bold),
+        ),
+      ),
+      decoration: bottomBorder == true
+          ? BoxDecoration(
+              border: Border(
+                bottom: BorderSide(color: Colors.grey),
+              ),
+            )
+          : null,
+    ),
+  );
+}
+
+Widget customFormField(controller, hintText, fnode, context) {
+  double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
+  return Padding(
+    padding: const EdgeInsets.all(15.0),
+    child: TextFormField(
+      controller: controller,
+      focusNode: fnode,
+      style: TextStyle(fontSize: 3 * unitHeightValue),
+      decoration: InputDecoration(
+          hintText: hintText,
+          border: const OutlineInputBorder(
+            borderRadius: const BorderRadius.all(
+              Radius.circular(15.0),
+            ),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(15.0),
+            borderSide: BorderSide(color: Colors.black, width: 2.0),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(15.0),
+            borderSide: BorderSide(color: MyColors.carrotOrange, width: 2.0),
+          ),
+          hintStyle: TextStyle(fontSize: 3 * unitHeightValue)),
+    ),
+  );
+}
+
+Widget bottomOptionsMenu(context, listOfIconsWithActions) {
+  double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
+  return Padding(
+    padding: const EdgeInsets.all(15.0),
+    child: Container(
+      height: MediaQuery.of(context).size.height * 1 / 15,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: Colors.black, width: 2.0),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: listOfIconsWithActions,
+      ),
+    ),
+  );
+}

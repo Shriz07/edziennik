@@ -101,7 +101,7 @@ class _UsersManageState extends State<UsersManage> {
                     customDropdownButton(),
                     usersListHeaders(),
                     usersListContainer(),
-                    bottomOptionsMenu(),
+                    bottomOptionsMenu(context, listOfBottomIconsWithActions()),
                   ],
                 ),
               );
@@ -114,49 +114,36 @@ class _UsersManageState extends State<UsersManage> {
     );
   }
 
-  Widget bottomOptionsMenu() {
+  List<Widget> listOfBottomIconsWithActions() {
     double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
-    return Padding(
-      padding: const EdgeInsets.all(15.0),
-      child: Container(
-        height: 4 * MediaQuery.of(context).size.height * 1 / 40,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: Colors.black, width: 2.0),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            IconButton(
-                onPressed: () {
-                  navigateToAnotherScreen(AddUser());
-                },
-                icon: Icon(Icons.person_add_alt_1, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
-            IconButton(
-                onPressed: () {
-                  if (_selectedItem == -1) {
-                    showDialog(context: context, builder: (context) => PopupDialog(title: 'Informacja', message: 'Najpierw wybierz użytkownika', close: 'Zamknij'));
-                  } else {
-                    navigateToAnotherScreen(EditUser(user: currentList[_selectedItem]));
-                  }
-                },
-                icon: Icon(Icons.edit, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
-            IconButton(
-                onPressed: () {
-                  if (_selectedItem == -1) {
-                    showDialog(context: context, builder: (context) => PopupDialog(title: 'Informacja', message: 'Najpierw wybierz użytkownika', close: 'Zamknij'));
-                  } else {
-                    _db.deleteUser(currentList[_selectedItem]);
-                    setState(() {
-                      loaded = false;
-                    });
-                  }
-                },
-                icon: Icon(Icons.delete, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
-          ],
-        ),
-      ),
-    );
+    return <Widget>[
+      IconButton(
+          onPressed: () {
+            navigateToAnotherScreen(AddUser());
+          },
+          icon: Icon(Icons.person_add_alt_1, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
+      IconButton(
+          onPressed: () {
+            if (_selectedItem == -1) {
+              showDialog(context: context, builder: (context) => PopupDialog(title: 'Informacja', message: 'Najpierw wybierz użytkownika', close: 'Zamknij'));
+            } else {
+              navigateToAnotherScreen(EditUser(user: currentList[_selectedItem]));
+            }
+          },
+          icon: Icon(Icons.edit, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
+      IconButton(
+          onPressed: () {
+            if (_selectedItem == -1) {
+              showDialog(context: context, builder: (context) => PopupDialog(title: 'Informacja', message: 'Najpierw wybierz użytkownika', close: 'Zamknij'));
+            } else {
+              _db.deleteUser(currentList[_selectedItem]);
+              setState(() {
+                loaded = false;
+              });
+            }
+          },
+          icon: Icon(Icons.delete, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
+    ];
   }
 
   Widget usersListHeaders() {
@@ -175,9 +162,9 @@ class _UsersManageState extends State<UsersManage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  userInfoField('Imie', false),
-                  userInfoField('Nazwisko', false),
-                  userInfoField('Rola', false),
+                  singleTableCell('Imie', false, context),
+                  singleTableCell('Nazwisko', false, context),
+                  singleTableCell('Rola', false, context),
                 ],
               ),
             ),
@@ -207,9 +194,9 @@ class _UsersManageState extends State<UsersManage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
-                      userInfoField(currentList[index].name, true),
-                      userInfoField(currentList[index].surname, true),
-                      userInfoField(currentList[index].role, true),
+                      singleTableCell(currentList[index].name, true, context),
+                      singleTableCell(currentList[index].surname, true, context),
+                      singleTableCell(currentList[index].role, true, context),
                     ],
                   ),
                 ),
@@ -229,27 +216,6 @@ class _UsersManageState extends State<UsersManage> {
     );
   }
 
-  Widget userInfoField(info, bottomBorder) {
-    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
-    return Expanded(
-      child: Container(
-        child: Center(
-          child: Text(
-            info,
-            style: TextStyle(fontSize: 2.5 * unitHeightValue, fontWeight: FontWeight.bold),
-          ),
-        ),
-        decoration: bottomBorder == true
-            ? BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(color: Colors.grey),
-                ),
-              )
-            : null,
-      ),
-    );
-  }
-
   Widget customDropdownButton() {
     double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return Padding(
@@ -257,7 +223,6 @@ class _UsersManageState extends State<UsersManage> {
       child: Container(
         alignment: AlignmentDirectional.centerStart,
         width: double.infinity,
-        height: MediaQuery.of(context).size.height * 1 / 13,
         decoration: BoxDecoration(
           color: MyColors.dodgerBlue,
           borderRadius: BorderRadius.circular(10),

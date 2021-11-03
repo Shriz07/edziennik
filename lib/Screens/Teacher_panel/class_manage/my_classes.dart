@@ -140,7 +140,7 @@ class _MyClassesState extends State<MyClasses> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
-                      classInfoField(classes[index].name, true),
+                      singleTableCell(classes[index].name, true, context),
                       // classInfoField(
                       //     classes[index].supervisingTeacher.name +
                       //         ' ' +
@@ -161,27 +161,6 @@ class _MyClassesState extends State<MyClasses> {
             );
           },
         ),
-      ),
-    );
-  }
-
-  Widget classInfoField(info, bottomBorder) {
-    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
-    return Expanded(
-      child: Container(
-        child: Center(
-          child: Text(
-            info,
-            style: TextStyle(fontSize: 3 * unitHeightValue, fontWeight: FontWeight.bold),
-          ),
-        ),
-        decoration: bottomBorder == true
-            ? BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(color: Colors.grey),
-                ),
-              )
-            : null,
       ),
     );
   }

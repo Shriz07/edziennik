@@ -68,7 +68,7 @@ class _ClassManageState extends State<ClassManage> {
                     panelTitle('Klasy', context),
                     classesListHeader(),
                     classesListContainer(),
-                    bottomOptionsMenu(),
+                    bottomOptionsMenu(context, listOfBottomIconsWithActions()),
                   ],
                 ),
               );
@@ -81,40 +81,27 @@ class _ClassManageState extends State<ClassManage> {
     );
   }
 
-  Widget bottomOptionsMenu() {
+  List<Widget> listOfBottomIconsWithActions() {
     double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
-    return Padding(
-      padding: const EdgeInsets.all(15.0),
-      child: Container(
-        height: MediaQuery.of(context).size.height * 1 / 15,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: Colors.black, width: 2.0),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            IconButton(
-                onPressed: () {
-                  navigateToAnotherScreen(EditClass(currentClass: Class(classID: '', name: '', supervisingTeacherID: '')));
-                },
-                icon: Icon(Icons.add_box, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
-            IconButton(
-                onPressed: () {
-                  if (_selectedClass != -1) {
-                    navigateToAnotherScreen(EditClass(currentClass: classes[_selectedClass]));
-                  }
-                },
-                icon: Icon(Icons.edit, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
-            IconButton(
-                onPressed: () {
-                  print('Icon 3 pressed');
-                },
-                icon: Icon(Icons.delete, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
-          ],
-        ),
-      ),
-    );
+    return <Widget>[
+      IconButton(
+          onPressed: () {
+            navigateToAnotherScreen(EditClass(currentClass: Class(classID: '', name: '', supervisingTeacherID: '')));
+          },
+          icon: Icon(Icons.add_box, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
+      IconButton(
+          onPressed: () {
+            if (_selectedClass != -1) {
+              navigateToAnotherScreen(EditClass(currentClass: classes[_selectedClass]));
+            }
+          },
+          icon: Icon(Icons.edit, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
+      IconButton(
+          onPressed: () {
+            print('Icon 3 pressed');
+          },
+          icon: Icon(Icons.delete, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
+    ];
   }
 
   Widget classesListHeader() {
@@ -134,8 +121,8 @@ class _ClassManageState extends State<ClassManage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  classInfoField('Nazwa', false),
-                  classInfoField('Wychowawca', false),
+                  singleTableCell('Nazwa', false, context),
+                  singleTableCell('Wychowawca', false, context),
                 ],
               ),
             ),
@@ -165,8 +152,8 @@ class _ClassManageState extends State<ClassManage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
-                      classInfoField(classes[index].name, true),
-                      classInfoField(classes[index].supervisingTeacher.name + ' ' + classes[index].supervisingTeacher.surname, true),
+                      singleTableCell(classes[index].name, true, context),
+                      singleTableCell(classes[index].supervisingTeacher.name + ' ' + classes[index].supervisingTeacher.surname, true, context),
                     ],
                   ),
                 ),
@@ -182,27 +169,6 @@ class _ClassManageState extends State<ClassManage> {
             );
           },
         ),
-      ),
-    );
-  }
-
-  Widget classInfoField(info, bottomBorder) {
-    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
-    return Expanded(
-      child: Container(
-        child: Center(
-          child: Text(
-            info,
-            style: TextStyle(fontSize: 3 * unitHeightValue, fontWeight: FontWeight.bold),
-          ),
-        ),
-        decoration: bottomBorder == true
-            ? BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(color: Colors.grey),
-                ),
-              )
-            : null,
       ),
     );
   }
