@@ -1,17 +1,17 @@
 import 'package:edziennik/style/MyColors.dart';
 import 'package:flutter/material.dart';
 
-Widget panelTitle(title) {
+Widget panelTitle(title, context) {
+  double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
   return Padding(
-    padding: const EdgeInsets.all(15.0),
+    padding: const EdgeInsets.only(left: 30.0, right: 30.0, top: 15.0, bottom: 15.0),
     child: Container(
       width: double.infinity,
-      height: 60,
+      height: 4 * MediaQuery.of(context).size.height * 1 / 40,
       child: Center(
           child: Text(
         title,
-        style: TextStyle(
-            fontSize: 23.0, fontWeight: FontWeight.bold, color: Colors.black),
+        style: TextStyle(fontSize: 3.0 * unitHeightValue, fontWeight: FontWeight.bold, color: Colors.black),
       )),
       decoration: BoxDecoration(
         color: MyColors.greenAccent,
@@ -29,18 +29,20 @@ Widget panelTitle(title) {
   );
 }
 
-Widget panelOption(text, action) {
+Widget panelOption(text, action, context) {
+  double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
   return Padding(
     padding: const EdgeInsets.only(left: 70.0, right: 70.0, top: 30.0),
     child: InkWell(
       child: Container(
         width: double.infinity,
+        height: 4 * MediaQuery.of(context).size.height * 1 / 40,
         child: Center(
             child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Text(
             text,
-            style: TextStyle(fontSize: 20.0, color: Colors.white),
+            style: TextStyle(fontSize: 3.0 * unitHeightValue, color: Colors.white),
           ),
         )),
         decoration: BoxDecoration(
@@ -61,18 +63,19 @@ Widget panelOption(text, action) {
   );
 }
 
-Widget teacherOption(text, action) {
+Widget teacherOption(text, action, context) {
+  double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
   return Padding(
-    padding: const EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0),
+    padding: const EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0, bottom: 15.0),
     child: InkWell(
       child: Container(
-        width: double.infinity,
+        width: MediaQuery.of(context).size.width * 3 / 4,
         child: Center(
             child: Padding(
           padding: const EdgeInsets.all(15.0),
           child: Text(
             text,
-            style: TextStyle(fontSize: 20.0, color: Colors.white),
+            style: TextStyle(fontSize: 3 * unitHeightValue, color: Colors.white),
           ),
         )),
         decoration: BoxDecoration(

@@ -39,6 +39,7 @@ class _AddSubjectState extends State<AddSubject> {
 
   @override
   Widget build(BuildContext context) {
+    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return MaterialApp(
       title: 'Subject add',
       theme: ThemeData(
@@ -52,8 +53,9 @@ class _AddSubjectState extends State<AddSubject> {
         },
         child: Scaffold(
           appBar: AppBar(
+            toolbarHeight: 3 * MediaQuery.of(context).size.height * 1 / 40,
             backgroundColor: MyColors.greenAccent,
-            title: const Text('EDziennik', style: TextStyle(color: Colors.black)),
+            title: Text('EDziennik', style: TextStyle(color: Colors.black, fontSize: 3 * unitHeightValue)),
           ),
           body: FutureBuilder<List>(
             future: getTeachers(),
@@ -64,7 +66,7 @@ class _AddSubjectState extends State<AddSubject> {
                     child: Column(
                       children: <Widget>[
                         SizedBox(height: 25.0),
-                        panelTitle('Dodawanie przedmiotu'),
+                        panelTitle('Dodawanie przedmiotu', context),
                         userAddContainer(),
                         bottomOptionsMenu(widget.subject),
                       ],
@@ -82,10 +84,11 @@ class _AddSubjectState extends State<AddSubject> {
   }
 
   Widget bottomOptionsMenu(Subject subject) {
+    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return Padding(
       padding: const EdgeInsets.all(15.0),
       child: Container(
-        height: 70,
+        height: MediaQuery.of(context).size.height * 1 / 14,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           border: Border.all(color: Colors.black, width: 2.0),
@@ -103,12 +106,12 @@ class _AddSubjectState extends State<AddSubject> {
                     Navigator.pop(context);
                   }
                 },
-                icon: Icon(Icons.save, size: 35, color: MyColors.dodgerBlue)),
+                icon: Icon(Icons.save, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
             IconButton(
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                icon: Icon(Icons.close_rounded, size: 35, color: MyColors.dodgerBlue)),
+                icon: Icon(Icons.close_rounded, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
           ],
         ),
       ),
@@ -119,7 +122,7 @@ class _AddSubjectState extends State<AddSubject> {
     return Padding(
       padding: const EdgeInsets.all(15.0),
       child: Container(
-        height: 400,
+        height: MediaQuery.of(context).size.height * 1 / 1.8,
         width: double.infinity,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
@@ -141,18 +144,21 @@ class _AddSubjectState extends State<AddSubject> {
   }
 
   Widget formFieldTitle(title) {
+    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return Text(
       title,
-      style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold),
+      style: TextStyle(fontSize: 3 * unitHeightValue, fontWeight: FontWeight.bold),
     );
   }
 
   Widget customFormField(controller, hintText, fnode) {
+    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return Padding(
       padding: const EdgeInsets.all(15.0),
       child: TextFormField(
         controller: controller,
         focusNode: fnode,
+        style: TextStyle(fontSize: 3 * unitHeightValue),
         decoration: InputDecoration(
           hintText: hintText,
           border: const OutlineInputBorder(
@@ -168,18 +174,19 @@ class _AddSubjectState extends State<AddSubject> {
             borderRadius: BorderRadius.circular(15.0),
             borderSide: BorderSide(color: MyColors.carrotOrange, width: 2.0),
           ),
+          hintStyle: TextStyle(fontSize: 3 * unitHeightValue),
         ),
       ),
     );
   }
 
   Widget customDropdownTeacher() {
+    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return Padding(
       padding: const EdgeInsets.all(15.0),
       child: Container(
         alignment: AlignmentDirectional.centerStart,
         width: double.infinity,
-        height: 60,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           border: Border.all(color: Colors.black, width: 2.0),
@@ -199,7 +206,7 @@ class _AddSubjectState extends State<AddSubject> {
             items: teachers.map((user) => user.surname).toList().map<DropdownMenuItem<String>>((String selectedTeacher) {
               return DropdownMenuItem<String>(
                 value: selectedTeacher,
-                child: Text(selectedTeacher),
+                child: Text(selectedTeacher, style: TextStyle(fontSize: 3 * unitHeightValue)),
               );
             }).toList(),
           ),

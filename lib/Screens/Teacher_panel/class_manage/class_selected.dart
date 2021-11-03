@@ -26,6 +26,7 @@ class _ClassSelectedState extends State<ClassSelected> {
 
   @override
   Widget build(BuildContext context) {
+    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return MaterialApp(
       title: 'Class window',
       theme: ThemeData(
@@ -39,8 +40,9 @@ class _ClassSelectedState extends State<ClassSelected> {
         },
         child: Scaffold(
           appBar: AppBar(
+            toolbarHeight: 3 * MediaQuery.of(context).size.height * 1 / 40,
             backgroundColor: MyColors.greenAccent,
-            title: const Text('EDziennik', style: TextStyle(color: Colors.black)),
+            title: Text('EDziennik', style: TextStyle(color: Colors.black, fontSize: 3 * unitHeightValue)),
           ),
           body: FutureBuilder<List>(
             future: getClassStudents(), //getTeachers(),
@@ -51,7 +53,7 @@ class _ClassSelectedState extends State<ClassSelected> {
                     child: Column(
                       children: <Widget>[
                         SizedBox(height: 15.0),
-                        panelTitle('Klasa [NAZWA]'),
+                        panelTitle('Klasa [NAZWA]', context),
                         classManagementContainer(),
                       ],
                     ),
@@ -80,8 +82,8 @@ class _ClassSelectedState extends State<ClassSelected> {
           children: <Widget>[
             teacherOption("Sprawdź obecność", () {
               navigateToAnotherScreen(ClassPresence());
-            }),
-            teacherOption("Dodaj wydarzenie", null),
+            }, context),
+            teacherOption("Dodaj wydarzenie", null, context),
             SizedBox(height: 30.0),
             formFieldTitle('Uczniowie: '),
             studentsInClassSelection(),
@@ -92,9 +94,10 @@ class _ClassSelectedState extends State<ClassSelected> {
   }
 
   Widget formFieldTitle(title) {
+    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return Text(
       title,
-      style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold),
+      style: TextStyle(fontSize: 3 * unitHeightValue, fontWeight: FontWeight.bold),
     );
   }
 
@@ -105,7 +108,7 @@ class _ClassSelectedState extends State<ClassSelected> {
         children: <Widget>[
           Flexible(
             child: Container(
-                height: 250,
+                height: MediaQuery.of(context).size.height * 1 / 3,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(color: Colors.black, width: 2.0),
@@ -116,7 +119,6 @@ class _ClassSelectedState extends State<ClassSelected> {
                       return InkWell(
                         child: Center(
                           child: Container(
-                            height: 25.0,
                             color: _selectedStudent == index ? Colors.blue.withOpacity(0.5) : Colors.transparent,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -152,12 +154,13 @@ class _ClassSelectedState extends State<ClassSelected> {
   }
 
   Widget studentName(info) {
+    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return Expanded(
       child: Container(
           child: Center(
             child: Text(
               info,
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 3 * unitHeightValue, fontWeight: FontWeight.bold),
             ),
           ),
           decoration: BoxDecoration(

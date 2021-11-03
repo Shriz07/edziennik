@@ -24,12 +24,7 @@ class _StudentGradesState extends State<StudentGrades> {
     'Kartkówka matematyka - 3',
     'Dyktando Polski - 5',
   ];
-  List<String> students = [
-    'Emilia Kamińska',
-    'Michał Kowalski',
-    'Bartosz Górski',
-    'Monika Kołodziej'
-  ];
+  List<String> students = ['Emilia Kamińska', 'Michał Kowalski', 'Bartosz Górski', 'Monika Kołodziej'];
 
   int _selectedGrade = -1;
 
@@ -42,6 +37,7 @@ class _StudentGradesState extends State<StudentGrades> {
 
   @override
   Widget build(BuildContext context) {
+    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return MaterialApp(
       title: 'Student grades window',
       theme: ThemeData(
@@ -55,9 +51,9 @@ class _StudentGradesState extends State<StudentGrades> {
         },
         child: Scaffold(
           appBar: AppBar(
+            toolbarHeight: 3 * MediaQuery.of(context).size.height * 1 / 40,
             backgroundColor: MyColors.greenAccent,
-            title:
-                const Text('EDziennik', style: TextStyle(color: Colors.black)),
+            title: Text('EDziennik', style: TextStyle(color: Colors.black, fontSize: 3 * unitHeightValue)),
           ),
           body: FutureBuilder<List>(
             future: getSubjects(),
@@ -68,7 +64,7 @@ class _StudentGradesState extends State<StudentGrades> {
                     child: Column(
                       children: <Widget>[
                         SizedBox(height: 25.0),
-                        panelTitle('Lista ocen'),
+                        panelTitle('Lista ocen', context),
                         studentGradesContainer(),
                       ],
                     ),
@@ -130,9 +126,7 @@ class _StudentGradesState extends State<StudentGrades> {
                         child: Center(
                           child: Container(
                             height: 25.0,
-                            color: _selectedGrade == index
-                                ? Colors.blue.withOpacity(0.5)
-                                : Colors.transparent,
+                            color: _selectedGrade == index ? Colors.blue.withOpacity(0.5) : Colors.transparent,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: <Widget>[
@@ -239,8 +233,7 @@ class _StudentGradesState extends State<StudentGrades> {
                 subjectDropdownValue = newSelectedSubject!;
               });
             },
-            items: subjects
-                .map<DropdownMenuItem<String>>((String selectedSubject) {
+            items: subjects.map<DropdownMenuItem<String>>((String selectedSubject) {
               return DropdownMenuItem<String>(
                 value: selectedSubject,
                 child: Text(selectedSubject),
@@ -275,8 +268,7 @@ class _StudentGradesState extends State<StudentGrades> {
                 studentDropdownValue = newSelectedStudent!;
               });
             },
-            items: students
-                .map<DropdownMenuItem<String>>((String selectedStudent) {
+            items: students.map<DropdownMenuItem<String>>((String selectedStudent) {
               return DropdownMenuItem<String>(
                 value: selectedStudent,
                 child: Text(selectedStudent),

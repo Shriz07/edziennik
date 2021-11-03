@@ -43,6 +43,7 @@ class _SubjectsManageState extends State<SubjectsManage> {
 
   @override
   Widget build(BuildContext context) {
+    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return MaterialApp(
       title: 'Subjects manage',
       theme: ThemeData(
@@ -52,8 +53,9 @@ class _SubjectsManageState extends State<SubjectsManage> {
       ),
       home: Scaffold(
         appBar: AppBar(
+          toolbarHeight: 3 * MediaQuery.of(context).size.height * 1 / 40,
           backgroundColor: MyColors.greenAccent,
-          title: const Text('Zarządzanie przedmiotami', style: TextStyle(color: Colors.black)),
+          title: Text('Zarządzanie przedmiotami', style: TextStyle(color: Colors.black, fontSize: 3 * unitHeightValue)),
         ),
         body: FutureBuilder<List>(
           future: getSubjects(),
@@ -64,7 +66,7 @@ class _SubjectsManageState extends State<SubjectsManage> {
                 child: Column(
                   children: <Widget>[
                     SizedBox(height: 25.0),
-                    panelTitle('Przedmioty'),
+                    panelTitle('Przedmioty', context),
                     classesListHeader(),
                     classesListContainer(),
                     bottomOptionsMenu(),
@@ -81,10 +83,11 @@ class _SubjectsManageState extends State<SubjectsManage> {
   }
 
   Widget bottomOptionsMenu() {
+    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return Padding(
       padding: const EdgeInsets.all(15.0),
       child: Container(
-        height: 70,
+        height: MediaQuery.of(context).size.height * 1 / 14,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           border: Border.all(color: Colors.black, width: 2.0),
@@ -92,9 +95,9 @@ class _SubjectsManageState extends State<SubjectsManage> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            IconButton(onPressed: addSubjectIconClick(), icon: Icon(Icons.add_box, size: 30, color: MyColors.dodgerBlue)),
-            IconButton(onPressed: editSubjectIconClick(), icon: Icon(Icons.edit, size: 30, color: MyColors.dodgerBlue)),
-            IconButton(onPressed: deleteSubjectIconClick(), icon: Icon(Icons.delete, size: 30, color: MyColors.dodgerBlue)),
+            IconButton(onPressed: addSubjectIconClick(), icon: Icon(Icons.add_box, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
+            IconButton(onPressed: editSubjectIconClick(), icon: Icon(Icons.edit, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
+            IconButton(onPressed: deleteSubjectIconClick(), icon: Icon(Icons.delete, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
           ],
         ),
       ),
@@ -157,10 +160,11 @@ class _SubjectsManageState extends State<SubjectsManage> {
   }
 
   Widget classesListContainer() {
+    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return Padding(
       padding: const EdgeInsets.all(15.0),
       child: Container(
-        height: 300,
+        height: MediaQuery.of(context).size.height * 1 / 2,
         width: double.infinity,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
@@ -172,7 +176,6 @@ class _SubjectsManageState extends State<SubjectsManage> {
             return InkWell(
               child: Center(
                 child: Container(
-                  height: 25.0,
                   color: _selectedSubject == index ? Colors.blue.withOpacity(0.5) : Colors.transparent,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -199,12 +202,13 @@ class _SubjectsManageState extends State<SubjectsManage> {
   }
 
   Widget classInfoField(info, bottomBorder) {
+    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return Expanded(
       child: Container(
         child: Center(
           child: Text(
             info,
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 3 * unitHeightValue, fontWeight: FontWeight.bold),
           ),
         ),
         decoration: bottomBorder == true

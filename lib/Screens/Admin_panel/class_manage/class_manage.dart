@@ -42,6 +42,7 @@ class _ClassManageState extends State<ClassManage> {
 
   @override
   Widget build(BuildContext context) {
+    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return MaterialApp(
       title: 'Users manage',
       theme: ThemeData(
@@ -51,8 +52,9 @@ class _ClassManageState extends State<ClassManage> {
       ),
       home: Scaffold(
         appBar: AppBar(
+          toolbarHeight: 3 * MediaQuery.of(context).size.height * 1 / 40,
           backgroundColor: MyColors.greenAccent,
-          title: const Text('Zarządzanie klasami', style: TextStyle(color: Colors.black)),
+          title: Text('Zarządzanie klasami', style: TextStyle(color: Colors.black, fontSize: 3 * unitHeightValue)),
         ),
         body: FutureBuilder<List>(
           future: getClasses(),
@@ -63,7 +65,7 @@ class _ClassManageState extends State<ClassManage> {
                 child: Column(
                   children: <Widget>[
                     SizedBox(height: 25.0),
-                    panelTitle('Klasy'),
+                    panelTitle('Klasy', context),
                     classesListHeader(),
                     classesListContainer(),
                     bottomOptionsMenu(),
@@ -80,10 +82,11 @@ class _ClassManageState extends State<ClassManage> {
   }
 
   Widget bottomOptionsMenu() {
+    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return Padding(
       padding: const EdgeInsets.all(15.0),
       child: Container(
-        height: 70,
+        height: MediaQuery.of(context).size.height * 1 / 15,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           border: Border.all(color: Colors.black, width: 2.0),
@@ -95,19 +98,19 @@ class _ClassManageState extends State<ClassManage> {
                 onPressed: () {
                   navigateToAnotherScreen(EditClass(currentClass: Class(classID: '', name: '', supervisingTeacherID: '')));
                 },
-                icon: Icon(Icons.add_box, size: 30, color: MyColors.dodgerBlue)),
+                icon: Icon(Icons.add_box, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
             IconButton(
                 onPressed: () {
                   if (_selectedClass != -1) {
                     navigateToAnotherScreen(EditClass(currentClass: classes[_selectedClass]));
                   }
                 },
-                icon: Icon(Icons.edit, size: 30, color: MyColors.dodgerBlue)),
+                icon: Icon(Icons.edit, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
             IconButton(
                 onPressed: () {
                   print('Icon 3 pressed');
                 },
-                icon: Icon(Icons.delete, size: 30, color: MyColors.dodgerBlue)),
+                icon: Icon(Icons.delete, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
           ],
         ),
       ),
@@ -115,6 +118,7 @@ class _ClassManageState extends State<ClassManage> {
   }
 
   Widget classesListHeader() {
+    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return Padding(
       padding: const EdgeInsets.only(left: 15.0, right: 15.0),
       child: Container(
@@ -145,7 +149,7 @@ class _ClassManageState extends State<ClassManage> {
     return Padding(
       padding: const EdgeInsets.all(15.0),
       child: Container(
-        height: 300,
+        height: MediaQuery.of(context).size.height * 1 / 2,
         width: double.infinity,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
@@ -157,7 +161,6 @@ class _ClassManageState extends State<ClassManage> {
             return InkWell(
               child: Center(
                 child: Container(
-                  height: 25.0,
                   color: _selectedClass == index ? Colors.blue.withOpacity(0.5) : Colors.transparent,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -184,12 +187,13 @@ class _ClassManageState extends State<ClassManage> {
   }
 
   Widget classInfoField(info, bottomBorder) {
+    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return Expanded(
       child: Container(
         child: Center(
           child: Text(
             info,
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 3 * unitHeightValue, fontWeight: FontWeight.bold),
           ),
         ),
         decoration: bottomBorder == true

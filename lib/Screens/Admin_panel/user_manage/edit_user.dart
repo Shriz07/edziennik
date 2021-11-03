@@ -34,6 +34,7 @@ class _EditUserState extends State<EditUser> {
 
   @override
   Widget build(BuildContext context) {
+    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return MaterialApp(
       title: 'User edit',
       theme: ThemeData(
@@ -48,15 +49,16 @@ class _EditUserState extends State<EditUser> {
         },
         child: Scaffold(
           appBar: AppBar(
+            toolbarHeight: 3 * MediaQuery.of(context).size.height * 1 / 40,
             backgroundColor: MyColors.greenAccent,
-            title: const Text('EDziennik', style: TextStyle(color: Colors.black)),
+            title: Text('Edziennik', style: TextStyle(color: Colors.black, fontSize: 3 * unitHeightValue)),
           ),
           body: SafeArea(
             child: SingleChildScrollView(
               child: Column(
                 children: <Widget>[
                   SizedBox(height: 25.0),
-                  panelTitle('Edytowanie użytkownika'),
+                  panelTitle('Edytowanie użytkownika', context),
                   userEditContainer(),
                   bottomOptionsMenu(widget.user),
                 ],
@@ -72,7 +74,7 @@ class _EditUserState extends State<EditUser> {
     return Padding(
       padding: const EdgeInsets.all(15.0),
       child: Container(
-        height: 400,
+        height: MediaQuery.of(context).size.height * 1 / 2,
         width: double.infinity,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
@@ -96,20 +98,24 @@ class _EditUserState extends State<EditUser> {
   }
 
   Widget formFieldTitle(title) {
+    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return Text(
       title,
-      style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold),
+      style: TextStyle(fontSize: 3 * unitHeightValue, fontWeight: FontWeight.bold),
     );
   }
 
   Widget customFormField(controller, hintText, fnode) {
+    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return Padding(
       padding: const EdgeInsets.all(15.0),
       child: TextFormField(
         controller: controller,
         focusNode: fnode,
+        style: TextStyle(fontSize: 3 * unitHeightValue),
         decoration: InputDecoration(
           hintText: hintText,
+          hintStyle: TextStyle(fontSize: 3 * unitHeightValue),
           border: const OutlineInputBorder(
             borderRadius: const BorderRadius.all(
               Radius.circular(15.0),
@@ -129,10 +135,11 @@ class _EditUserState extends State<EditUser> {
   }
 
   Widget bottomOptionsMenu(User user) {
+    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return Padding(
       padding: const EdgeInsets.all(15.0),
       child: Container(
-        height: 70,
+        height: MediaQuery.of(context).size.height * 1 / 15,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           border: Border.all(color: Colors.black, width: 2.0),
@@ -148,15 +155,14 @@ class _EditUserState extends State<EditUser> {
                     user.role = _roleDropdownValue;
                     await _db.updateUser(user);
                     Navigator.pop(context);
-                    //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UsersManage()));
                   }
                 },
-                icon: Icon(Icons.save, size: 35, color: MyColors.dodgerBlue)),
+                icon: Icon(Icons.save, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
             IconButton(
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                icon: Icon(Icons.close_rounded, size: 35, color: MyColors.dodgerBlue)),
+                icon: Icon(Icons.close_rounded, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
           ],
         ),
       ),
@@ -164,12 +170,13 @@ class _EditUserState extends State<EditUser> {
   }
 
   Widget customDropdownRole() {
+    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return Padding(
       padding: const EdgeInsets.all(15.0),
       child: Container(
         alignment: AlignmentDirectional.centerStart,
         width: double.infinity,
-        height: 60,
+        height: MediaQuery.of(context).size.height * 1 / 15,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           border: Border.all(color: Colors.black, width: 2.0),
@@ -189,7 +196,7 @@ class _EditUserState extends State<EditUser> {
             items: <String>['uczeń', 'nauczyciel', 'administrator'].map<DropdownMenuItem<String>>((String selectedRole) {
               return DropdownMenuItem<String>(
                 value: selectedRole,
-                child: Text(selectedRole),
+                child: Text(selectedRole, style: TextStyle(fontSize: 3 * unitHeightValue)),
               );
             }).toList(),
           ),
