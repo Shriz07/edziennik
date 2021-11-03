@@ -10,7 +10,8 @@ Widget panelTitle(title) {
       child: Center(
           child: Text(
         title,
-        style: TextStyle(fontSize: 23.0, fontWeight: FontWeight.bold, color: Colors.black),
+        style: TextStyle(
+            fontSize: 23.0, fontWeight: FontWeight.bold, color: Colors.black),
       )),
       decoration: BoxDecoration(
         color: MyColors.greenAccent,
@@ -37,6 +38,38 @@ Widget panelOption(text, action) {
         child: Center(
             child: Padding(
           padding: const EdgeInsets.all(20.0),
+          child: Text(
+            text,
+            style: TextStyle(fontSize: 20.0, color: Colors.white),
+          ),
+        )),
+        decoration: BoxDecoration(
+          color: MyColors.dodgerBlue,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 5,
+              blurRadius: 7,
+              offset: Offset(0, 3),
+            ),
+          ],
+        ),
+      ),
+      onTap: action,
+    ),
+  );
+}
+
+Widget teacherOption(text, action) {
+  return Padding(
+    padding: const EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0),
+    child: InkWell(
+      child: Container(
+        width: double.infinity,
+        child: Center(
+            child: Padding(
+          padding: const EdgeInsets.all(15.0),
           child: Text(
             text,
             style: TextStyle(fontSize: 20.0, color: Colors.white),
