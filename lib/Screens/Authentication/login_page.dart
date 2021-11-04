@@ -163,13 +163,12 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget myFormField(TextEditingController controller, String hintText, Icon prefixIcon, FocusNode fnode, FormFieldValidator<String> validator, bool obscureText) {
-    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return TextFormField(
       controller: controller,
       focusNode: fnode,
       validator: validator,
       obscureText: obscureText,
-      style: TextStyle(fontSize: 3.0 * unitHeightValue),
+      style: TextStyle(fontSize: 20),
       decoration: InputDecoration(
         fillColor: MyColors.greenAccent,
         hintText: hintText,
@@ -184,26 +183,27 @@ class _LoginPageState extends State<LoginPage> {
           borderRadius: BorderRadius.circular(15.0),
           borderSide: BorderSide(color: MyColors.carrotOrange, width: 2),
         ),
-        hintStyle: TextStyle(fontSize: 3.0 * unitHeightValue),
+        hintStyle: TextStyle(fontSize: 20),
         errorStyle: TextStyle(fontSize: 15.0),
       ),
     );
   }
 
   Widget applyButton(VoidCallback? onPress, String text) {
-    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return MaterialButton(
       onPressed: onPress,
-      height: 5 * MediaQuery.of(context).size.height * 1 / 40,
       minWidth: double.infinity,
       color: MyColors.dodgerBlue,
       textColor: Colors.white,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15.0),
       ),
-      child: Text(
-        text,
-        style: TextStyle(fontSize: 3 * unitHeightValue, fontWeight: FontWeight.bold),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Text(
+          text,
+          style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+        ),
       ),
     );
   }
