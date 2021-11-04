@@ -133,7 +133,7 @@ Widget customFormField(controller, hintText, fnode, context) {
     child: TextFormField(
       controller: controller,
       focusNode: fnode,
-      style: TextStyle(fontSize: 3 * unitHeightValue),
+      style: TextStyle(fontSize: 2.5 * unitHeightValue),
       decoration: InputDecoration(
           hintText: hintText,
           border: const OutlineInputBorder(
@@ -149,7 +149,7 @@ Widget customFormField(controller, hintText, fnode, context) {
             borderRadius: BorderRadius.circular(15.0),
             borderSide: BorderSide(color: MyColors.carrotOrange, width: 2.0),
           ),
-          hintStyle: TextStyle(fontSize: 3 * unitHeightValue)),
+          hintStyle: TextStyle(fontSize: 2.5 * unitHeightValue)),
     ),
   );
 }

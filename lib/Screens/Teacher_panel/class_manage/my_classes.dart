@@ -93,7 +93,7 @@ class _MyClassesState extends State<MyClasses> {
             padding: const EdgeInsets.all(20.0),
             child: Text(
               "Wybierz",
-              style: TextStyle(fontSize: 4 * unitHeightValue, color: Colors.white),
+              style: TextStyle(fontSize: 3 * unitHeightValue, color: Colors.white),
             ),
           )),
           decoration: BoxDecoration(

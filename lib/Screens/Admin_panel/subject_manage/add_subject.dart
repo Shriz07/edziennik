@@ -156,7 +156,7 @@ class _AddSubjectState extends State<AddSubject> {
             items: teachers.map((user) => user.surname).toList().map<DropdownMenuItem<String>>((String selectedTeacher) {
               return DropdownMenuItem<String>(
                 value: selectedTeacher,
-                child: Text(selectedTeacher, style: TextStyle(fontSize: 3 * unitHeightValue)),
+                child: Text(selectedTeacher, style: TextStyle(fontSize: 2.5 * unitHeightValue)),
               );
             }).toList(),
           ),

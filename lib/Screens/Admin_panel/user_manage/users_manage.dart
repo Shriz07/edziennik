@@ -256,7 +256,7 @@ class _UsersManageState extends State<UsersManage> {
             items: <String>['Wszyscy', 'Administratorzy', 'Nauczyciele', 'Uczniowie'].map<DropdownMenuItem<String>>((String value) {
               return DropdownMenuItem<String>(
                 value: value,
-                child: Text(value, style: TextStyle(fontSize: 3 * unitHeightValue)),
+                child: Text(value, style: TextStyle(fontSize: 2.5 * unitHeightValue)),
               );
             }).toList(),
           ),

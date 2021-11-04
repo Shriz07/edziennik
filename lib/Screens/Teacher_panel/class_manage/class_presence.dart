@@ -83,14 +83,22 @@ class _ClassPresenceState extends State<ClassPresence> {
   Widget dateField() {
     double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return Padding(
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.only(left: 15, right: 15, top: 10),
       child: Container(
         child: DateTimeFormField(
+          dateTextStyle: TextStyle(fontSize: 2.5 * unitHeightValue),
           decoration: InputDecoration(
-            hintStyle: TextStyle(color: Colors.black45, fontSize: 3 * unitHeightValue),
-            labelStyle: TextStyle(color: Colors.black45, fontSize: 3 * unitHeightValue),
+            hintStyle: TextStyle(fontSize: 2.5 * unitHeightValue),
+            labelStyle: TextStyle(fontSize: 2.5 * unitHeightValue),
             errorStyle: TextStyle(color: Colors.redAccent),
-            border: OutlineInputBorder(),
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.black, width: 2.0),
+            ),
+            border: const OutlineInputBorder(
+              borderRadius: const BorderRadius.all(
+                Radius.circular(15.0),
+              ),
+            ),
             suffixIcon: Icon(Icons.event_note),
             labelText: 'Wybierz date',
           ),
@@ -126,7 +134,7 @@ class _ClassPresenceState extends State<ClassPresence> {
                   child: Column(
                     children: <Widget>[
                       new CheckboxListTile(
-                        title: Text(students[index], style: TextStyle(fontSize: 3 * unitHeightValue)),
+                        title: Text(students[index], style: TextStyle(fontSize: 2.5 * unitHeightValue)),
                         activeColor: Colors.green,
                         checkColor: Colors.white,
                         value: _isSelected,

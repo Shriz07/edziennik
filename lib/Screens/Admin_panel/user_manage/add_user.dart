@@ -1,7 +1,6 @@
 import 'package:edziennik/Utils/firestoreDB.dart';
 import 'package:edziennik/custom_widgets/panel_widgets.dart';
 import 'package:edziennik/models/class.dart';
-import 'package:edziennik/models/user.dart';
 import 'package:edziennik/style/MyColors.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -134,7 +133,6 @@ class _AddUserState extends State<AddUser> {
       child: Container(
         alignment: AlignmentDirectional.centerStart,
         width: double.infinity,
-        height: 60,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           border: Border.all(color: Colors.black, width: 2.0),
@@ -154,7 +152,7 @@ class _AddUserState extends State<AddUser> {
             items: classNames.map<DropdownMenuItem<String>>((String selectedClass) {
               return DropdownMenuItem<String>(
                 value: selectedClass,
-                child: Text(selectedClass, style: TextStyle(fontSize: 3 * unitHeightValue)),
+                child: Text(selectedClass, style: TextStyle(fontSize: 2.5 * unitHeightValue)),
               );
             }).toList(),
           ),
@@ -170,7 +168,6 @@ class _AddUserState extends State<AddUser> {
       child: Container(
         alignment: AlignmentDirectional.centerStart,
         width: double.infinity,
-        height: MediaQuery.of(context).size.height * 1 / 15,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           border: Border.all(color: Colors.black, width: 2.0),
@@ -190,7 +187,7 @@ class _AddUserState extends State<AddUser> {
             items: <String>['Uczeń', 'Nauczyciel', 'Administrator'].map<DropdownMenuItem<String>>((String selectedRole) {
               return DropdownMenuItem<String>(
                 value: selectedRole,
-                child: Text(selectedRole, style: TextStyle(fontSize: 3 * unitHeightValue)),
+                child: Text(selectedRole, style: TextStyle(fontSize: 2.5 * unitHeightValue)),
               );
             }).toList(),
           ),

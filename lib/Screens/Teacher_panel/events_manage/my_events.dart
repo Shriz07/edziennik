@@ -181,7 +181,7 @@ class _MyEventsState extends State<MyEvents> {
             items: subjects.map<DropdownMenuItem<String>>((String selectedSubject) {
               return DropdownMenuItem<String>(
                 value: selectedSubject,
-                child: Text(selectedSubject, style: TextStyle(fontSize: 3 * unitHeightValue)),
+                child: Text(selectedSubject, style: TextStyle(fontSize: 2.5 * unitHeightValue)),
               );
             }).toList(),
           ),
@@ -216,7 +216,7 @@ class _MyEventsState extends State<MyEvents> {
             items: classes.map<DropdownMenuItem<String>>((String selectedClass) {
               return DropdownMenuItem<String>(
                 value: selectedClass,
-                child: Text(selectedClass, style: TextStyle(fontSize: 3 * unitHeightValue)),
+                child: Text(selectedClass, style: TextStyle(fontSize: 2.5 * unitHeightValue)),
               );
             }).toList(),
           ),

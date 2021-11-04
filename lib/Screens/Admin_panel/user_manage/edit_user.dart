@@ -126,7 +126,6 @@ class _EditUserState extends State<EditUser> {
       child: Container(
         alignment: AlignmentDirectional.centerStart,
         width: double.infinity,
-        height: MediaQuery.of(context).size.height * 1 / 15,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           border: Border.all(color: Colors.black, width: 2.0),
@@ -146,7 +145,7 @@ class _EditUserState extends State<EditUser> {
             items: <String>['uczeń', 'nauczyciel', 'administrator'].map<DropdownMenuItem<String>>((String selectedRole) {
               return DropdownMenuItem<String>(
                 value: selectedRole,
-                child: Text(selectedRole, style: TextStyle(fontSize: 3 * unitHeightValue)),
+                child: Text(selectedRole, style: TextStyle(fontSize: 2.5 * unitHeightValue)),
               );
             }).toList(),
           ),
