@@ -16,24 +16,40 @@ class EditClass extends StatefulWidget {
 }
 
 class _EditClassState extends State<EditClass> {
-  String teacherDropdownValue = '';
+  final _formkey = GlobalKey<FormState>();
+  String _teacherDropdownValue = '';
   final FirestoreDB _db = FirestoreDB();
   bool loaded = false;
-  List<User> teachers = [];
+  List<User> _teachers = [];
   int _selectedStudent = -1;
-  List<String> students = ['Emilia Kamińska', 'Michał Kowalski', 'Bartosz Górski', 'Monika Kołodziej'];
+  List<User> _students = [];
 
   final _nameTextController = TextEditingController();
+  final _surnameTextController = TextEditingController();
   final _focusName = FocusNode();
+  final _focusSurname = FocusNode();
 
-  Future<List> getTeachers() async {
+  Future<List> getStudentsInClass() async {
+    List<String> userIDsInClass = await _db.getUsersIDsInClass(widget.currentClass.classID);
+    for (var id in userIDsInClass) {
+      print(id);
+      User user = await _db.getUserWithID(id);
+      _students.add(user);
+    }
+    return _students;
+  }
+
+  Future<List> getTeachersAndStudents() async {
     if (!loaded) {
-      teachers = await _db.getUsersWithRole('nauczyciel');
+      _teachers.clear();
+      _students.clear();
+      _teachers = await _db.getUsersWithRole('nauczyciel');
       _nameTextController.text = widget.currentClass.name;
-      teacherDropdownValue = widget.currentClass.name != '' ? widget.currentClass.supervisingTeacher.surname : '';
+      _teacherDropdownValue = widget.currentClass.name != '' ? widget.currentClass.supervisingTeacher.surname : '';
+      await getStudentsInClass();
     }
     loaded = true;
-    return teachers;
+    return _teachers;
   }
 
   @override
@@ -57,7 +73,7 @@ class _EditClassState extends State<EditClass> {
             title: Text('Edziennik', style: TextStyle(color: Colors.black, fontSize: 3 * unitHeightValue)),
           ),
           body: FutureBuilder<List>(
-            future: getTeachers(),
+            future: getTeachersAndStudents(),
             builder: (context, AsyncSnapshot<List> snapshot) {
               if (snapshot.hasData) {
                 return SafeArea(
@@ -124,7 +140,7 @@ class _EditClassState extends State<EditClass> {
                   border: Border.all(color: Colors.black, width: 2.0),
                 ),
                 child: ListView.builder(
-                    itemCount: students.length,
+                    itemCount: _students.length,
                     itemBuilder: (context, index) {
                       return InkWell(
                         child: Center(
@@ -133,7 +149,7 @@ class _EditClassState extends State<EditClass> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: <Widget>[
-                                singleTableCell(students[index], true, context),
+                                singleTableCell(_students[index].name + ' ' + _students[index].surname, true, context),
                               ],
                             ),
                           ),
@@ -151,15 +167,94 @@ class _EditClassState extends State<EditClass> {
           ),
           Column(
             children: <Widget>[
-              Icon(Icons.person_add, size: 4 * unitHeightValue, color: MyColors.dodgerBlue),
+              IconButton(onPressed: addUserToClass(), icon: Icon(Icons.person_add, size: 35.0, color: MyColors.dodgerBlue)),
               SizedBox(height: 25),
-              Icon(Icons.edit, size: 4 * unitHeightValue, color: MyColors.dodgerBlue),
-              SizedBox(height: 25),
-              Icon(Icons.delete, size: 4 * unitHeightValue, color: MyColors.dodgerBlue),
+              IconButton(onPressed: deleteUserFromClass(), icon: Icon(Icons.delete, size: 35.0, color: MyColors.dodgerBlue))
             ],
           )
         ],
       ),
+    );
+  }
+
+  VoidCallback addUserToClass() {
+    return () {
+      showFindUserDialog();
+      /*setState(() {
+          loaded = false;
+        });*/
+    };
+  }
+
+  VoidCallback deleteUserFromClass() {
+    return () {
+      if (_selectedStudent == -1) {
+        print('Nie wybrano studenta');
+      } else {
+        _db.deleteUserFromClass(widget.currentClass.classID, _students[_selectedStudent].userID);
+        setState(() {
+          loaded = false;
+        });
+      }
+    };
+  }
+
+  void showFindUserDialog() async {
+    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          child: Container(
+            child: SafeArea(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Form(
+                    key: _formkey,
+                    child: Column(
+                      children: <Widget>[
+                        Text(
+                          'Znajdź ucznia',
+                          style: TextStyle(fontSize: 3.0 * unitHeightValue),
+                        ),
+                        SizedBox(height: 25),
+                        customFormField(_surnameTextController, 'Nazwisko ucznia', _focusSurname, context),
+                        SizedBox(height: 5),
+                        MaterialButton(
+                          color: MyColors.frenchLime,
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                          child: Text(
+                            'Szukaj',
+                            style: TextStyle(fontSize: 3.0 * unitHeightValue),
+                          ),
+                        ),
+                        SizedBox(height: 25),
+                        MaterialButton(
+                          color: MyColors.dodgerBlue,
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                          child: Text(
+                            'Anuluj',
+                            style: TextStyle(fontSize: 3.0 * unitHeightValue, color: Colors.white),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -177,16 +272,16 @@ class _EditClassState extends State<EditClass> {
         child: Padding(
           padding: const EdgeInsets.only(left: 8.0),
           child: DropdownButtonFormField<String>(
-            value: teacherDropdownValue == '' ? null : teacherDropdownValue,
+            value: _teacherDropdownValue == '' ? null : _teacherDropdownValue,
             icon: Icon(Icons.arrow_drop_down),
             iconSize: 42,
             elevation: 16,
             onChanged: (String? newSelectedTeacher) {
               setState(() {
-                teacherDropdownValue = newSelectedTeacher!;
+                _teacherDropdownValue = newSelectedTeacher!;
               });
             },
-            items: teachers.map((user) => user.surname).toList().map<DropdownMenuItem<String>>((String selectedTeacher) {
+            items: _teachers.map((user) => user.surname).toList().map<DropdownMenuItem<String>>((String selectedTeacher) {
               return DropdownMenuItem<String>(
                 value: selectedTeacher,
                 child: Text(selectedTeacher, style: TextStyle(fontSize: 2.5 * unitHeightValue)),
