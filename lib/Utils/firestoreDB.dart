@@ -73,6 +73,37 @@ class FirestoreDB extends ChangeNotifier {
     }
   }
 
+  Future getUsersIDsInClass(classID) async {
+    try {
+      List<String> listOfIDs = [];
+      await _classCollectionReference.doc(classID).collection('students').get().then((docs) => {
+            for (var doc in docs.docs) {listOfIDs.add(doc.id)}
+          });
+      return listOfIDs;
+    } catch (e) {
+      print(e.toString());
+      return e.toString();
+    }
+  }
+
+  Future deleteUserFromClass(classID, userID) async {
+    try {
+      await _classCollectionReference.doc(classID).collection('students').doc(userID).delete();
+    } catch (e) {
+      print(e.toString());
+      return e.toString();
+    }
+  }
+
+  Future addUserToClass(classID, userID) async {
+    try {
+      await _classCollectionReference.doc(classID).collection('students').doc(userID).set({});
+    } catch (e) {
+      print(e.toString());
+      return e.toString();
+    }
+  }
+
   Future getSubjects() async {
     try {
       List<Subject> subjects = [];
