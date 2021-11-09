@@ -26,6 +26,7 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
+    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return MaterialApp(
       title: 'Profile page',
       theme: ThemeData(
@@ -35,11 +36,9 @@ class _ProfileState extends State<Profile> {
       ),
       home: Scaffold(
         appBar: AppBar(
+          toolbarHeight: 3 * MediaQuery.of(context).size.height * 1 / 40,
           backgroundColor: MyColors.greenAccent,
-          title: const Text(
-            'Profil użytkownika',
-            style: TextStyle(color: Colors.black),
-          ),
+          title: Text('Profil użytkownika', style: TextStyle(color: Colors.black, fontSize: 3 * unitHeightValue)),
         ),
         body: FutureBuilder<User>(
           future: getUser(),
@@ -62,21 +61,23 @@ class _ProfileState extends State<Profile> {
   }
 
   Widget logoutButton() {
+    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return MaterialButton(
       color: MyColors.dodgerBlue,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
       textColor: Colors.white,
-      height: 50,
-      minWidth: 200,
       onPressed: () async {
         await FB.FirebaseAuth.instance.signOut();
         Navigator.of(context, rootNavigator: true).pushReplacement(
           MaterialPageRoute(builder: (context) => new LoginPage()),
         );
       },
-      child: Text(
-        'Wyloguj',
-        style: TextStyle(fontSize: 20),
+      child: Padding(
+        padding: const EdgeInsets.all(15.0),
+        child: Text(
+          'Wyloguj',
+          style: TextStyle(fontSize: 3 * unitHeightValue),
+        ),
       ),
     );
   }
@@ -112,10 +113,10 @@ class _ProfileState extends State<Profile> {
   }
 
   Widget userInfoField(text) {
+    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return Padding(
       padding: const EdgeInsets.only(top: 8.0, bottom: 8.0, left: 15.0, right: 15.0),
       child: Container(
-        height: 30.0,
         width: double.infinity,
         decoration: BoxDecoration(
           color: MyColors.greenAccent,
@@ -130,9 +131,12 @@ class _ProfileState extends State<Profile> {
           ],
         ),
         child: Center(
-          child: Text(
-            text,
-            style: TextStyle(fontSize: 20.0),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              text,
+              style: TextStyle(fontSize: 2.5 * unitHeightValue),
+            ),
           ),
         ),
       ),

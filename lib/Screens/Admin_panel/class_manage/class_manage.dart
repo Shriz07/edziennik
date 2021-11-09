@@ -42,6 +42,7 @@ class _ClassManageState extends State<ClassManage> {
 
   @override
   Widget build(BuildContext context) {
+    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return MaterialApp(
       title: 'Users manage',
       theme: ThemeData(
@@ -51,8 +52,9 @@ class _ClassManageState extends State<ClassManage> {
       ),
       home: Scaffold(
         appBar: AppBar(
+          toolbarHeight: 3 * MediaQuery.of(context).size.height * 1 / 40,
           backgroundColor: MyColors.greenAccent,
-          title: const Text('Zarządzanie klasami', style: TextStyle(color: Colors.black)),
+          title: Text('Zarządzanie klasami', style: TextStyle(color: Colors.black, fontSize: 3 * unitHeightValue)),
         ),
         body: FutureBuilder<List>(
           future: getClasses(),
@@ -63,10 +65,10 @@ class _ClassManageState extends State<ClassManage> {
                 child: Column(
                   children: <Widget>[
                     SizedBox(height: 25.0),
-                    panelTitle('Klasy'),
+                    panelTitle('Klasy', context),
                     classesListHeader(),
                     classesListContainer(),
-                    bottomOptionsMenu(),
+                    bottomOptionsMenu(context, listOfBottomIconsWithActions()),
                   ],
                 ),
               );
@@ -79,42 +81,31 @@ class _ClassManageState extends State<ClassManage> {
     );
   }
 
-  Widget bottomOptionsMenu() {
-    return Padding(
-      padding: const EdgeInsets.all(15.0),
-      child: Container(
-        height: 70,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: Colors.black, width: 2.0),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            IconButton(
-                onPressed: () {
-                  navigateToAnotherScreen(EditClass(currentClass: Class(classID: '', name: '', supervisingTeacherID: '')));
-                },
-                icon: Icon(Icons.add_box, size: 30, color: MyColors.dodgerBlue)),
-            IconButton(
-                onPressed: () {
-                  if (_selectedClass != -1) {
-                    navigateToAnotherScreen(EditClass(currentClass: classes[_selectedClass]));
-                  }
-                },
-                icon: Icon(Icons.edit, size: 30, color: MyColors.dodgerBlue)),
-            IconButton(
-                onPressed: () {
-                  print('Icon 3 pressed');
-                },
-                icon: Icon(Icons.delete, size: 30, color: MyColors.dodgerBlue)),
-          ],
-        ),
-      ),
-    );
+  List<Widget> listOfBottomIconsWithActions() {
+    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
+    return <Widget>[
+      IconButton(
+          onPressed: () {
+            navigateToAnotherScreen(EditClass(currentClass: Class(classID: '', name: '', supervisingTeacherID: '')));
+          },
+          icon: Icon(Icons.add_box, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
+      IconButton(
+          onPressed: () {
+            if (_selectedClass != -1) {
+              navigateToAnotherScreen(EditClass(currentClass: classes[_selectedClass]));
+            }
+          },
+          icon: Icon(Icons.edit, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
+      IconButton(
+          onPressed: () {
+            print('Icon 3 pressed');
+          },
+          icon: Icon(Icons.delete, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
+    ];
   }
 
   Widget classesListHeader() {
+    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return Padding(
       padding: const EdgeInsets.only(left: 15.0, right: 15.0),
       child: Container(
@@ -130,8 +121,8 @@ class _ClassManageState extends State<ClassManage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  classInfoField('Nazwa', false),
-                  classInfoField('Wychowawca', false),
+                  singleTableCell('Nazwa', false, context),
+                  singleTableCell('Wychowawca', false, context),
                 ],
               ),
             ),
@@ -145,7 +136,7 @@ class _ClassManageState extends State<ClassManage> {
     return Padding(
       padding: const EdgeInsets.all(15.0),
       child: Container(
-        height: 300,
+        height: MediaQuery.of(context).size.height * 1 / 2,
         width: double.infinity,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
@@ -157,13 +148,12 @@ class _ClassManageState extends State<ClassManage> {
             return InkWell(
               child: Center(
                 child: Container(
-                  height: 25.0,
                   color: _selectedClass == index ? Colors.blue.withOpacity(0.5) : Colors.transparent,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
-                      classInfoField(classes[index].name, true),
-                      classInfoField(classes[index].supervisingTeacher.name + ' ' + classes[index].supervisingTeacher.surname, true),
+                      singleTableCell(classes[index].name, true, context),
+                      singleTableCell(classes[index].supervisingTeacher.name + ' ' + classes[index].supervisingTeacher.surname, true, context),
                     ],
                   ),
                 ),
@@ -179,26 +169,6 @@ class _ClassManageState extends State<ClassManage> {
             );
           },
         ),
-      ),
-    );
-  }
-
-  Widget classInfoField(info, bottomBorder) {
-    return Expanded(
-      child: Container(
-        child: Center(
-          child: Text(
-            info,
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          ),
-        ),
-        decoration: bottomBorder == true
-            ? BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(color: Colors.grey),
-                ),
-              )
-            : null,
       ),
     );
   }

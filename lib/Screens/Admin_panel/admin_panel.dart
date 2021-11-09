@@ -9,6 +9,7 @@ import 'package:google_fonts/google_fonts.dart';
 class AdminPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return MaterialApp(
       title: 'Admin panel',
       theme: ThemeData(
@@ -18,25 +19,26 @@ class AdminPanel extends StatelessWidget {
       ),
       home: Scaffold(
           appBar: AppBar(
+            toolbarHeight: 3 * MediaQuery.of(context).size.height * 1 / 40,
             backgroundColor: MyColors.greenAccent,
-            title: const Text('EDziennik', style: TextStyle(color: Colors.black)),
+            title: Text('EDziennik', style: TextStyle(color: Colors.black, fontSize: 3 * unitHeightValue)),
           ),
           body: Container(
             alignment: AlignmentDirectional.center,
             child: Column(
               children: <Widget>[
                 SizedBox(height: 50.0),
-                panelTitle('Panel administratora'),
-                SizedBox(height: 50.0),
+                panelTitle('Panel administratora', context),
+                SizedBox(height: 25.0),
                 panelOption('Użytkownicy', () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) => UsersManage()));
-                }),
+                }, context),
                 panelOption('Klasy', () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) => ClassManage()));
-                }),
+                }, context),
                 panelOption('Przedmioty', () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) => SubjectsManage()));
-                }),
+                }, context),
               ],
             ),
           )),

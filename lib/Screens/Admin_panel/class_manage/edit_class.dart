@@ -38,6 +38,7 @@ class _EditClassState extends State<EditClass> {
 
   @override
   Widget build(BuildContext context) {
+    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return MaterialApp(
       title: 'Class edit',
       theme: ThemeData(
@@ -51,8 +52,9 @@ class _EditClassState extends State<EditClass> {
         },
         child: Scaffold(
           appBar: AppBar(
+            toolbarHeight: 3 * MediaQuery.of(context).size.height * 1 / 40,
             backgroundColor: MyColors.greenAccent,
-            title: const Text('EDziennik', style: TextStyle(color: Colors.black)),
+            title: Text('Edziennik', style: TextStyle(color: Colors.black, fontSize: 3 * unitHeightValue)),
           ),
           body: FutureBuilder<List>(
             future: getTeachers(),
@@ -63,9 +65,9 @@ class _EditClassState extends State<EditClass> {
                     child: Column(
                       children: <Widget>[
                         SizedBox(height: 25.0),
-                        panelTitle('Edytowanie klasy'),
+                        panelTitle('Edytowanie klasy', context),
                         classEditContainer(),
-                        bottomOptionsMenu(),
+                        bottomOptionsMenu(context, listOfBottomIconsWithActions()),
                       ],
                     ),
                   ),
@@ -81,10 +83,11 @@ class _EditClassState extends State<EditClass> {
   }
 
   Widget classEditContainer() {
+    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return Padding(
       padding: const EdgeInsets.all(15.0),
       child: Container(
-        height: 400,
+        height: MediaQuery.of(context).size.height * 1 / 1.9,
         width: double.infinity,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
@@ -94,11 +97,11 @@ class _EditClassState extends State<EditClass> {
           child: Column(
             children: <Widget>[
               SizedBox(height: 15),
-              formFieldTitle('Nazwa klasy:'),
-              customFormField(_nameTextController, 'Nazwa klasy', _focusName),
-              formFieldTitle('Nauczyciel prowadzący:'),
+              formFieldTitle('Nazwa klasy:', context),
+              customFormField(_nameTextController, 'Nazwa klasy', _focusName, context),
+              formFieldTitle('Nauczyciel prowadzący:', context),
               customDropdownTeacher(),
-              formFieldTitle('Uczniowie: '),
+              formFieldTitle('Uczniowie: ', context),
               studentsInClassSelection(),
             ],
           ),
@@ -108,6 +111,7 @@ class _EditClassState extends State<EditClass> {
   }
 
   Widget studentsInClassSelection() {
+    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return Padding(
       padding: const EdgeInsets.all(15.0),
       child: Row(
@@ -125,12 +129,11 @@ class _EditClassState extends State<EditClass> {
                       return InkWell(
                         child: Center(
                           child: Container(
-                            height: 25.0,
                             color: _selectedStudent == index ? Colors.blue.withOpacity(0.5) : Colors.transparent,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: <Widget>[
-                                studentName(students[index]),
+                                singleTableCell(students[index], true, context),
                               ],
                             ),
                           ),
@@ -148,11 +151,11 @@ class _EditClassState extends State<EditClass> {
           ),
           Column(
             children: <Widget>[
-              Icon(Icons.person_add, size: 35.0, color: MyColors.dodgerBlue),
+              Icon(Icons.person_add, size: 4 * unitHeightValue, color: MyColors.dodgerBlue),
               SizedBox(height: 25),
-              Icon(Icons.edit, size: 30.0, color: MyColors.dodgerBlue),
+              Icon(Icons.edit, size: 4 * unitHeightValue, color: MyColors.dodgerBlue),
               SizedBox(height: 25),
-              Icon(Icons.delete, size: 35.0, color: MyColors.dodgerBlue),
+              Icon(Icons.delete, size: 4 * unitHeightValue, color: MyColors.dodgerBlue),
             ],
           )
         ],
@@ -160,63 +163,13 @@ class _EditClassState extends State<EditClass> {
     );
   }
 
-  Widget studentName(info) {
-    return Expanded(
-      child: Container(
-          child: Center(
-            child: Text(
-              info,
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-          ),
-          decoration: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(color: Colors.grey),
-            ),
-          )),
-    );
-  }
-
-  Widget formFieldTitle(title) {
-    return Text(
-      title,
-      style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold),
-    );
-  }
-
-  Widget customFormField(controller, hintText, fnode) {
-    return Padding(
-      padding: const EdgeInsets.all(15.0),
-      child: TextFormField(
-        controller: controller,
-        focusNode: fnode,
-        decoration: InputDecoration(
-          hintText: hintText,
-          border: const OutlineInputBorder(
-            borderRadius: const BorderRadius.all(
-              Radius.circular(15.0),
-            ),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(15.0),
-            borderSide: BorderSide(color: Colors.black, width: 2.0),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(15.0),
-            borderSide: BorderSide(color: MyColors.carrotOrange, width: 2.0),
-          ),
-        ),
-      ),
-    );
-  }
-
   Widget customDropdownTeacher() {
+    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return Padding(
       padding: const EdgeInsets.all(15.0),
       child: Container(
         alignment: AlignmentDirectional.centerStart,
         width: double.infinity,
-        height: 60,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           border: Border.all(color: Colors.black, width: 2.0),
@@ -236,7 +189,7 @@ class _EditClassState extends State<EditClass> {
             items: teachers.map((user) => user.surname).toList().map<DropdownMenuItem<String>>((String selectedTeacher) {
               return DropdownMenuItem<String>(
                 value: selectedTeacher,
-                child: Text(selectedTeacher),
+                child: Text(selectedTeacher, style: TextStyle(fontSize: 2.5 * unitHeightValue)),
               );
             }).toList(),
           ),
@@ -245,31 +198,19 @@ class _EditClassState extends State<EditClass> {
     );
   }
 
-  Widget bottomOptionsMenu() {
-    return Padding(
-      padding: const EdgeInsets.all(15.0),
-      child: Container(
-        height: 70,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: Colors.black, width: 2.0),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            IconButton(
-                onPressed: () async {
-                  Navigator.pop(context);
-                },
-                icon: Icon(Icons.save, size: 35, color: MyColors.dodgerBlue)),
-            IconButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                icon: Icon(Icons.close_rounded, size: 35, color: MyColors.dodgerBlue)),
-          ],
-        ),
-      ),
-    );
+  List<Widget> listOfBottomIconsWithActions() {
+    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
+    return <Widget>[
+      IconButton(
+          onPressed: () async {
+            Navigator.pop(context);
+          },
+          icon: Icon(Icons.save, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
+      IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(Icons.close_rounded, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
+    ];
   }
 }
