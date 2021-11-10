@@ -29,6 +29,12 @@ class _EditClassState extends State<EditClass> {
   final _focusName = FocusNode();
   final _focusSurname = FocusNode();
 
+  void onGoBack() {
+    setState(() {
+      loaded = false;
+    });
+  }
+
   Future<List> getStudentsInClass() async {
     List<String> userIDsInClass = await _db.getUsersIDsInClass(widget.currentClass.classID);
     for (var id in userIDsInClass) {
@@ -180,9 +186,6 @@ class _EditClassState extends State<EditClass> {
   VoidCallback addUserToClass() {
     return () {
       showFindUserDialog();
-      /*setState(() {
-          loaded = false;
-        });*/
     };
   }
 
@@ -201,57 +204,116 @@ class _EditClassState extends State<EditClass> {
 
   void showFindUserDialog() async {
     double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
+    bool showUsers = false;
+    int _findingSelection = -1;
+    List<User> _users = [];
     await showDialog(
       context: context,
       barrierDismissible: false,
       builder: (context) {
         return Dialog(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-          child: Container(
-            child: SafeArea(
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: Form(
-                    key: _formkey,
-                    child: Column(
-                      children: <Widget>[
-                        Text(
-                          'Znajdź ucznia',
-                          style: TextStyle(fontSize: 3.0 * unitHeightValue),
+          child: StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return Container(
+                child: SafeArea(
+                  child: SingleChildScrollView(
+                    child: Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Form(
+                        key: _formkey,
+                        child: Column(
+                          children: <Widget>[
+                            Text(
+                              'Znajdź ucznia',
+                              style: TextStyle(fontSize: 3.0 * unitHeightValue),
+                            ),
+                            SizedBox(height: 25),
+                            customFormField(_surnameTextController, 'Nazwisko ucznia', _focusSurname, context, (val) => val!.isNotEmpty ? null : 'Wprowadź nazwisko'),
+                            SizedBox(height: 5),
+                            MaterialButton(
+                              color: MyColors.greenAccent,
+                              onPressed: () async {
+                                _focusSurname.unfocus();
+                                if (_formkey.currentState!.validate()) {
+                                  _users = await _db.getUsersWithSurnameAndRole(_surnameTextController.text, 'uczeń');
+                                  for (var user in _users) {
+                                    print(user.userID);
+                                  }
+                                  setState(() {
+                                    showUsers = true;
+                                  });
+                                }
+                              },
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                              child: Text(
+                                'Szukaj',
+                                style: TextStyle(fontSize: 3.0 * unitHeightValue),
+                              ),
+                            ),
+                            if (showUsers == true)
+                              Container(
+                                child: SingleChildScrollView(
+                                  child: ConstrainedBox(
+                                    constraints: BoxConstraints(maxHeight: 100),
+                                    child: ListView.builder(
+                                      itemCount: _users.length,
+                                      itemBuilder: (context, findingIndex) {
+                                        return ListTile(
+                                          title: Center(child: Text(_users[findingIndex].name + ' ' + _users[findingIndex].surname)),
+                                          tileColor: _findingSelection == findingIndex ? Colors.blue : null,
+                                          onTap: () {
+                                            setState(() {
+                                              _findingSelection = findingIndex;
+                                            });
+                                          },
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            if (_findingSelection != -1)
+                              Padding(
+                                padding: const EdgeInsets.only(top: 25.0),
+                                child: MaterialButton(
+                                  color: MyColors.greenAccent,
+                                  onPressed: () async {
+                                    await _db.addUserToClass(widget.currentClass.classID, _users[_findingSelection].userID);
+                                    _users.clear();
+                                    showUsers = false;
+                                    onGoBack();
+                                    Navigator.pop(context);
+                                  },
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                  child: Text(
+                                    'Dodaj ucznia',
+                                    style: TextStyle(fontSize: 3.0 * unitHeightValue),
+                                  ),
+                                ),
+                              ),
+                            SizedBox(height: 15),
+                            MaterialButton(
+                              color: MyColors.dodgerBlue,
+                              onPressed: () {
+                                _users.clear();
+                                showUsers = false;
+                                Navigator.pop(context);
+                              },
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                              child: Text(
+                                'Anuluj',
+                                style: TextStyle(fontSize: 3.0 * unitHeightValue, color: Colors.white),
+                              ),
+                            ),
+                          ],
                         ),
-                        SizedBox(height: 25),
-                        customFormField(_surnameTextController, 'Nazwisko ucznia', _focusSurname, context),
-                        SizedBox(height: 5),
-                        MaterialButton(
-                          color: MyColors.frenchLime,
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                          child: Text(
-                            'Szukaj',
-                            style: TextStyle(fontSize: 3.0 * unitHeightValue),
-                          ),
-                        ),
-                        SizedBox(height: 25),
-                        MaterialButton(
-                          color: MyColors.dodgerBlue,
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                          child: Text(
-                            'Anuluj',
-                            style: TextStyle(fontSize: 3.0 * unitHeightValue, color: Colors.white),
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ),
+              );
+            },
           ),
         );
       },
