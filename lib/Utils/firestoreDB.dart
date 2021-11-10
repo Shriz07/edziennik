@@ -12,12 +12,14 @@ class FirestoreDB extends ChangeNotifier {
   Future getUsers() async {
     try {
       List<User> users = [];
-      await _userCollectionReference.get().then((docs) => {
-            for (var doc in docs.docs)
-              {
-                users.add(new User(userID: doc.get('uid'), name: doc.get('name'), surname: doc.get('surname'), role: doc.get('role'))),
-              }
-          });
+      await _userCollectionReference.get().then(
+            (docs) => {
+              for (var doc in docs.docs)
+                {
+                  users.add(new User(userID: doc.get('uid'), name: doc.get('name'), surname: doc.get('surname'), role: doc.get('role'))),
+                }
+            },
+          );
       return users;
     } catch (e) {
       print(e.toString());
@@ -28,15 +30,17 @@ class FirestoreDB extends ChangeNotifier {
   Future getUsersWithRole(role) async {
     try {
       List<User> users = [];
-      await _userCollectionReference.get().then((docs) => {
-            for (var doc in docs.docs)
-              {
-                if (doc.get('role') == role)
-                  {
-                    users.add(new User(userID: doc.id, name: doc.get('name'), surname: doc.get('surname'), role: doc.get('role'))),
-                  }
-              }
-          });
+      await _userCollectionReference.get().then(
+            (docs) => {
+              for (var doc in docs.docs)
+                {
+                  if (doc.get('role') == role)
+                    {
+                      users.add(new User(userID: doc.id, name: doc.get('name'), surname: doc.get('surname'), role: doc.get('role'))),
+                    }
+                }
+            },
+          );
       return users;
     } catch (e) {
       print(e.toString());
@@ -47,9 +51,11 @@ class FirestoreDB extends ChangeNotifier {
   Future getUserWithID(uid) async {
     try {
       late User user;
-      await _userCollectionReference.doc(uid).get().then((snapshot) => {
-            user = new User(userID: snapshot['uid'], name: snapshot['name'], surname: snapshot['surname'], role: snapshot['role']),
-          });
+      await _userCollectionReference.doc(uid).get().then(
+            (snapshot) => {
+              user = new User(userID: snapshot['uid'], name: snapshot['name'], surname: snapshot['surname'], role: snapshot['role']),
+            },
+          );
       return user;
     } catch (e) {
       print(e.toString());
@@ -60,12 +66,14 @@ class FirestoreDB extends ChangeNotifier {
   Future getClasses() async {
     try {
       List<Class> classes = [];
-      await _classCollectionReference.get().then((docs) => {
-            for (var doc in docs.docs)
-              {
-                classes.add(new Class(classID: doc.id, name: doc.get('name'), supervisingTeacherID: doc.get('supervisingTeacherID'))),
-              }
-          });
+      await _classCollectionReference.get().then(
+            (docs) => {
+              for (var doc in docs.docs)
+                {
+                  classes.add(new Class(classID: doc.id, name: doc.get('name'), supervisingTeacherID: doc.get('supervisingTeacherID'))),
+                }
+            },
+          );
       return classes;
     } catch (e) {
       print(e.toString());
@@ -76,10 +84,31 @@ class FirestoreDB extends ChangeNotifier {
   Future getUsersIDsInClass(classID) async {
     try {
       List<String> listOfIDs = [];
-      await _classCollectionReference.doc(classID).collection('students').get().then((docs) => {
-            for (var doc in docs.docs) {listOfIDs.add(doc.id)}
-          });
+      await _classCollectionReference.doc(classID).collection('students').get().then(
+            (docs) => {
+              for (var doc in docs.docs) {listOfIDs.add(doc.id)}
+            },
+          );
       return listOfIDs;
+    } catch (e) {
+      print(e.toString());
+      return e.toString();
+    }
+  }
+
+  Future getUsersWithSurnameAndRole(surname, role) async {
+    try {
+      List<User> users = [];
+      await _userCollectionReference.get().then(
+            (docs) => {
+              for (var doc in docs.docs)
+                {
+                  if (doc.get('role') == role && doc.get('surname') == surname)
+                    {users.add(new User(userID: doc.get('uid'), name: doc.get('name'), surname: doc.get('surname'), role: doc.get('role')))}
+                }
+            },
+          );
+      return users;
     } catch (e) {
       print(e.toString());
       return e.toString();
