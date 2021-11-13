@@ -125,7 +125,8 @@ class _UsersManageState extends State<UsersManage> {
       IconButton(
           onPressed: () {
             if (_selectedItem == -1) {
-              showDialog(context: context, builder: (context) => PopupDialog(title: 'Informacja', message: 'Najpierw wybierz użytkownika', close: 'Zamknij'));
+              showDialog(
+                  context: context, builder: (context) => PopupDialog(title: 'Informacja', message: 'Najpierw wybierz użytkownika, którego chcesz edytować.', close: 'Zamknij'));
             } else {
               navigateToAnotherScreen(EditUser(user: currentList[_selectedItem]));
             }
@@ -134,7 +135,9 @@ class _UsersManageState extends State<UsersManage> {
       IconButton(
           onPressed: () {
             if (_selectedItem == -1) {
-              showDialog(context: context, builder: (context) => PopupDialog(title: 'Informacja', message: 'Najpierw wybierz użytkownika', close: 'Zamknij'));
+              showDialog(
+                  context: context,
+                  builder: (context) => PopupDialog(title: 'Informacja', message: 'Najpierw wybierz użytkownika z listy, którego chcesz usunąć.', close: 'Zamknij'));
             } else {
               _db.deleteUser(currentList[_selectedItem]);
               setState(() {
