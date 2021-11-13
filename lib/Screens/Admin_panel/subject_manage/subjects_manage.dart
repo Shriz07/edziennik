@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:edziennik/Screens/Admin_panel/subject_manage/add_subject.dart';
 import 'package:edziennik/Utils/firestoreDB.dart';
 import 'package:edziennik/custom_widgets/panel_widgets.dart';
+import 'package:edziennik/custom_widgets/popup_dialog.dart';
+import 'package:edziennik/custom_widgets/yes_no_alert.dart';
 import 'package:edziennik/models/subject.dart';
 import 'package:edziennik/style/MyColors.dart';
 import 'package:flutter/material.dart';
@@ -33,7 +35,9 @@ class _SubjectsManageState extends State<SubjectsManage> {
   }
 
   FutureOr onGoBack(dynamic value) {
-    setState(() {});
+    setState(() {
+      loaded = false;
+    });
   }
 
   void navigateToAnotherScreen(screen) {
@@ -102,6 +106,9 @@ class _SubjectsManageState extends State<SubjectsManage> {
       if (_selectedSubject != -1) {
         Subject subject = subjects.elementAt(_selectedSubject);
         navigateToAnotherScreen(AddSubject(subject: subject));
+      } else {
+        showDialog(
+            context: context, builder: (context) => PopupDialog(title: 'Informacja', message: 'Najpierw wybierz przedmiot z listy, który chcesz edytować.', close: 'Zamknij'));
       }
     };
   }
@@ -110,11 +117,27 @@ class _SubjectsManageState extends State<SubjectsManage> {
     return () {
       if (_selectedSubject != -1) {
         Subject subject = subjects.elementAt(_selectedSubject);
-        _db.deleteSubject(subject);
-        setState(() {
-          loaded = false;
-          _selectedSubject = -1;
-        });
+        showDialog(
+          context: context,
+          builder: (context) => YesNoAlert(
+            message: 'Czy napewno chcesz usunąć przedmiot ' + subject.name + ', prowadzony przez ' + subject.leadingTeacher.name + ' ' + subject.leadingTeacher.surname + '?',
+            yesAction: () {
+              _db.deleteSubject(subject);
+              subjects.remove(subject);
+              setState(
+                () {
+                  _selectedSubject = -1;
+                },
+              );
+              Navigator.of(context).pop();
+            },
+            noAction: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        );
+      } else {
+        showDialog(context: context, builder: (context) => PopupDialog(title: 'Informacja', message: 'Najpierw wybierz przedmiot z listy, który chcesz usunąć.', close: 'Zamknij'));
       }
     };
   }
