@@ -36,11 +36,13 @@ class _EditClassState extends State<EditClass> {
   }
 
   Future<List> getStudentsInClass() async {
-    List<String> userIDsInClass = await _db.getUsersIDsInClass(widget.currentClass.classID);
-    for (var id in userIDsInClass) {
-      print(id);
-      User user = await _db.getUserWithID(id);
-      _students.add(user);
+    if (widget.currentClass.classID != '') {
+      List<String> userIDsInClass = await _db.getUsersIDsInClass(widget.currentClass.classID);
+      for (var id in userIDsInClass) {
+        print(id);
+        User user = await _db.getUserWithID(id);
+        _students.add(user);
+      }
     }
     return _students;
   }
@@ -360,6 +362,10 @@ class _EditClassState extends State<EditClass> {
     return <Widget>[
       IconButton(
           onPressed: () async {
+            widget.currentClass.name = _nameTextController.text;
+            User teacher = _teachers.firstWhere((element) => element.surname == _teacherDropdownValue);
+            widget.currentClass.supervisingTeacherID = teacher.userID;
+            _db.addClass(widget.currentClass);
             Navigator.pop(context);
           },
           icon: Icon(Icons.save, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
