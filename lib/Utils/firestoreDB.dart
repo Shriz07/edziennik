@@ -81,6 +81,15 @@ class FirestoreDB extends ChangeNotifier {
     }
   }
 
+  Future deleteClassWithID(classID) async {
+    try {
+      await _classCollectionReference.doc(classID).delete();
+    } catch (e) {
+      print(e.toString());
+      return e.toString();
+    }
+  }
+
   Future getUsersIDsInClass(classID) async {
     try {
       List<String> listOfIDs = [];
@@ -127,6 +136,19 @@ class FirestoreDB extends ChangeNotifier {
   Future addUserToClass(classID, userID) async {
     try {
       await _classCollectionReference.doc(classID).collection('students').doc(userID).set({});
+    } catch (e) {
+      print(e.toString());
+      return e.toString();
+    }
+  }
+
+  Future addClass(Class cl) async {
+    try {
+      if (cl.classID != '') {
+        await _classCollectionReference.doc(cl.classID).set(cl.toMap());
+      } else {
+        await _classCollectionReference.add(cl.toMap());
+      }
     } catch (e) {
       print(e.toString());
       return e.toString();
