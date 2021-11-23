@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:edziennik/Screens/Teacher_panel/class_manage/add_degree.dart';
 import 'package:edziennik/Screens/Teacher_panel/class_manage/class_presence.dart';
 import 'package:edziennik/Screens/Teacher_panel/events_manage/add_event.dart';
 import 'package:edziennik/Utils/firestoreDB.dart';

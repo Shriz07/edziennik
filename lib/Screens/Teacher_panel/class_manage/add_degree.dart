@@ -8,15 +8,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class AddEvent extends StatefulWidget {
+class AddDegree extends StatefulWidget {
   @override
-  _AddEventState createState() => _AddEventState();
+  _AddDegreeState createState() => _AddDegreeState();
 }
 
-class _AddEventState extends State<AddEvent> {
-  String classDropdownValue = '';
+class _AddDegreeState extends State<AddDegree> {
+  String studentDropdownValue = '';
   String subjectDropdownValue = '';
-  String eventTypeDropdownValue = '';
+  String degreeDropdownValue = '';
 
   final FirestoreDB _db = FirestoreDB();
   final User? user = FirebaseAuth.instance.currentUser;
@@ -24,9 +24,14 @@ class _AddEventState extends State<AddEvent> {
   bool loaded = false;
   List<String> subjects = ['matematyka', 'angielski', 'polski'];
   List<String> classes = ['2A', '3D', '6C'];
-  List<String> eventTypes = ['Sprawdzian', 'Kartkowka', 'Test'];
-  List<String> events = ['Sprawdzian 2A', 'Kartkowka 3D', 'Wycieczka 6C'];
+  List<String> degrees = ['1', '2', '3', '4', '5'];
   int _selectedEvent = -1;
+  List<String> students = [
+    'Emilia Kamińska',
+    'Michał Kowalski',
+    'Bartosz Górski',
+    'Monika Kołodziej',
+  ];
 
   final _nameTextController = TextEditingController();
   final _focusName = FocusNode();
@@ -66,8 +71,8 @@ class _AddEventState extends State<AddEvent> {
                     child: Column(
                       children: <Widget>[
                         SizedBox(height: 1.0),
-                        panelTitle('Nowe wydarzenie', context),
-                        addEventContainer(),
+                        panelTitle('Dodaj/edytuj ocene', context),
+                        addDegreeContainer(),
                         bottomOptionsMenu(
                             context, listOfBottomIconsWithActions())
                       ],
@@ -84,7 +89,7 @@ class _AddEventState extends State<AddEvent> {
     );
   }
 
-  Widget addEventContainer() {
+  Widget addDegreeContainer() {
     return Padding(
       padding: const EdgeInsets.all(15.0),
       child: Container(
@@ -98,77 +103,19 @@ class _AddEventState extends State<AddEvent> {
           child: Column(
             children: <Widget>[
               SizedBox(height: 1),
+              formFieldTitle('Uczeń: ', context),
+              customDropdownStudents(),
               formFieldTitle('Przedmiot:', context),
               customDropdownSubjects(),
-              formFieldTitle('Klasa:', context),
-              customDropdownClasses(),
-              formFieldTitle('Typ wydarzenia: ', context),
-              customDropdownEventTypes(),
+              formFieldTitle('Ocena:', context),
+              customDropdownDegrees(),
               formFieldTitle('Data:', context),
               dateField(),
-              formFieldTitle('Opis wydarzenia:', context),
+              formFieldTitle('Komentarz do oceny:', context),
               customTextField(),
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget myEventsList() {
-    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
-    return Padding(
-      padding: const EdgeInsets.all(15.0),
-      child: Row(
-        children: <Widget>[
-          Flexible(
-            child: Container(
-                height: 250,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: Colors.black, width: 2.0),
-                ),
-                child: ListView.builder(
-                    itemCount: events.length,
-                    itemBuilder: (context, index) {
-                      return InkWell(
-                        child: Center(
-                          child: Container(
-                            color: _selectedEvent == index
-                                ? Colors.blue.withOpacity(0.5)
-                                : Colors.transparent,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: <Widget>[
-                                singleTableCell(events[index], true, context),
-                              ],
-                            ),
-                          ),
-                        ),
-                        // onLongPress: () => {
-                        //   if (_selectedEvent != index)
-                        //     {
-                        //       setState(() {
-                        //         _selectedEvent = index;
-                        //       })
-                        //     }
-                        // },
-                      );
-                    })),
-          ),
-          Column(
-            children: <Widget>[
-              Icon(Icons.person_add,
-                  size: 4 * unitHeightValue, color: MyColors.dodgerBlue),
-              SizedBox(height: 25),
-              Icon(Icons.edit,
-                  size: 4 * unitHeightValue, color: MyColors.dodgerBlue),
-              SizedBox(height: 25),
-              Icon(Icons.delete,
-                  size: 4 * unitHeightValue, color: MyColors.dodgerBlue),
-            ],
-          )
-        ],
       ),
     );
   }
@@ -210,7 +157,7 @@ class _AddEventState extends State<AddEvent> {
     );
   }
 
-  Widget customDropdownClasses() {
+  Widget customDropdownDegrees() {
     double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return Padding(
       padding: const EdgeInsets.all(15.0),
@@ -224,20 +171,20 @@ class _AddEventState extends State<AddEvent> {
         child: Padding(
           padding: const EdgeInsets.only(left: 8.0),
           child: DropdownButtonFormField<String>(
-            value: classDropdownValue == '' ? null : classDropdownValue,
+            value: degreeDropdownValue == '' ? null : degreeDropdownValue,
             icon: Icon(Icons.arrow_drop_down),
             iconSize: 28,
             elevation: 16,
             onChanged: (String? newSelectedClass) {
               setState(() {
-                classDropdownValue = newSelectedClass!;
+                degreeDropdownValue = newSelectedClass!;
               });
             },
             items:
-                classes.map<DropdownMenuItem<String>>((String selectedClass) {
+                degrees.map<DropdownMenuItem<String>>((String selectedDegree) {
               return DropdownMenuItem<String>(
-                value: selectedClass,
-                child: Text(selectedClass,
+                value: selectedDegree,
+                child: Text(selectedDegree,
                     style: TextStyle(fontSize: 2.5 * unitHeightValue)),
               );
             }).toList(),
@@ -247,7 +194,7 @@ class _AddEventState extends State<AddEvent> {
     );
   }
 
-  Widget customDropdownEventTypes() {
+  Widget customDropdownStudents() {
     double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return Padding(
       padding: const EdgeInsets.all(15.0),
@@ -261,20 +208,20 @@ class _AddEventState extends State<AddEvent> {
         child: Padding(
           padding: const EdgeInsets.only(left: 8.0),
           child: DropdownButtonFormField<String>(
-            value: eventTypeDropdownValue == '' ? null : eventTypeDropdownValue,
+            value: studentDropdownValue == '' ? null : studentDropdownValue,
             icon: Icon(Icons.arrow_drop_down),
             iconSize: 28,
             elevation: 16,
             onChanged: (String? newSelectedEventType) {
               setState(() {
-                eventTypeDropdownValue = newSelectedEventType!;
+                studentDropdownValue = newSelectedEventType!;
               });
             },
-            items: eventTypes
-                .map<DropdownMenuItem<String>>((String selectedEventType) {
+            items: students
+                .map<DropdownMenuItem<String>>((String selectedStudent) {
               return DropdownMenuItem<String>(
-                value: selectedEventType,
-                child: Text(selectedEventType,
+                value: selectedStudent,
+                child: Text(selectedStudent,
                     style: TextStyle(fontSize: 2.5 * unitHeightValue)),
               );
             }).toList(),
