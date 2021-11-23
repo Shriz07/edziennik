@@ -9,6 +9,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ClassSelected extends StatefulWidget {
+  Class currentClass;
+  ClassSelected({Key? key, required this.currentClass}) : super(key: key);
+
   @override
   _ClassSelectedState createState() => _ClassSelectedState();
 }
@@ -19,7 +22,7 @@ class _ClassSelectedState extends State<ClassSelected> {
   bool loaded = false;
   List<User> teachers = [];
   int _selectedStudent = -1;
-  List<String> students = ['Emilia Kamińska', 'Michał Kowalski', 'Bartosz Górski', 'Monika Kołodziej'];
+  late List<User> students;
 
   final _nameTextController = TextEditingController();
   final _focusName = FocusNode();
@@ -42,7 +45,9 @@ class _ClassSelectedState extends State<ClassSelected> {
           appBar: AppBar(
             toolbarHeight: 3 * MediaQuery.of(context).size.height * 1 / 40,
             backgroundColor: MyColors.greenAccent,
-            title: Text('EDziennik', style: TextStyle(color: Colors.black, fontSize: 3 * unitHeightValue)),
+            title: Text('EDziennik',
+                style: TextStyle(
+                    color: Colors.black, fontSize: 3 * unitHeightValue)),
           ),
           body: FutureBuilder<List>(
             future: getClassStudents(), //getTeachers(),
@@ -53,7 +58,8 @@ class _ClassSelectedState extends State<ClassSelected> {
                     child: Column(
                       children: <Widget>[
                         SizedBox(height: 15.0),
-                        panelTitle('Klasa [NAZWA]', context),
+                        panelTitle(
+                            'Klasa ' + widget.currentClass.name, context),
                         classManagementContainer(),
                       ],
                     ),
@@ -70,6 +76,11 @@ class _ClassSelectedState extends State<ClassSelected> {
   }
 
   Future<List> getClassStudents() async {
+    if (!loaded) {
+      print("class id:" + widget.currentClass.classID);
+      students = await _db.getClassStudents(widget.currentClass.classID);
+    }
+    loaded = true;
     return students;
   }
 
@@ -81,7 +92,8 @@ class _ClassSelectedState extends State<ClassSelected> {
         child: Column(
           children: <Widget>[
             teacherOption("Sprawdź obecność", () {
-              navigateToAnotherScreen(ClassPresence());
+              navigateToAnotherScreen(
+                  ClassPresence(currentClass: widget.currentClass));
             }, context),
             teacherOption("Dodaj wydarzenie", null, context),
             SizedBox(height: 30.0),
@@ -111,11 +123,18 @@ class _ClassSelectedState extends State<ClassSelected> {
                       return InkWell(
                         child: Center(
                           child: Container(
-                            color: _selectedStudent == index ? Colors.blue.withOpacity(0.5) : Colors.transparent,
+                            color: _selectedStudent == index
+                                ? Colors.blue.withOpacity(0.5)
+                                : Colors.transparent,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: <Widget>[
-                                singleTableCell(students[index], true, context),
+                                singleTableCell(
+                                    students[index].name +
+                                        " " +
+                                        students[index].surname,
+                                    true,
+                                    context),
                               ],
                             ),
                           ),

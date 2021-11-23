@@ -9,6 +9,9 @@ import 'package:date_field/date_field.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ClassPresence extends StatefulWidget {
+  Class currentClass;
+  ClassPresence({Key? key, required this.currentClass}) : super(key: key);
+
   @override
   _ClassPresenceState createState() => _ClassPresenceState();
 }
@@ -20,9 +23,23 @@ class _ClassPresenceState extends State<ClassPresence> {
   bool loaded = false;
   List<User> teachers = [];
   int _selectedStudent = -1;
-  List<String> students = ['Emilia Kamińska', 'Michał Kowalski', 'Bartosz Górski', 'Monika Kołodziej'];
+  late List<User> students;
+
+  Map<String, bool> values = {};
 
   bool _isSelected = false;
+
+  Future<List> getClassStudents() async {
+    if (!loaded) {
+      print("class id:" + widget.currentClass.classID);
+      students = await _db.getClassStudents(widget.currentClass.classID);
+      for (var student in students) {
+        values[student.userID] = false;
+      }
+    }
+    loaded = true;
+    return students;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +59,9 @@ class _ClassPresenceState extends State<ClassPresence> {
           appBar: AppBar(
             toolbarHeight: 3 * MediaQuery.of(context).size.height * 1 / 40,
             backgroundColor: MyColors.greenAccent,
-            title: Text('EDziennik', style: TextStyle(color: Colors.black, fontSize: 3 * unitHeightValue)),
+            title: Text('EDziennik',
+                style: TextStyle(
+                    color: Colors.black, fontSize: 3 * unitHeightValue)),
           ),
           body: FutureBuilder<List>(
             future: getClassStudents(), //getTeachers(),
@@ -61,7 +80,8 @@ class _ClassPresenceState extends State<ClassPresence> {
                         SizedBox(height: 15.0),
                         studentsListContainer(),
                         SizedBox(height: 15.0),
-                        bottomOptionsMenu(context, listOfBottomIconsWithActions()),
+                        bottomOptionsMenu(
+                            context, listOfBottomIconsWithActions()),
                       ],
                     ),
                   ),
@@ -74,10 +94,6 @@ class _ClassPresenceState extends State<ClassPresence> {
         ),
       ),
     );
-  }
-
-  Future<List> getClassStudents() async {
-    return students;
   }
 
   Widget dateField() {
@@ -104,7 +120,8 @@ class _ClassPresenceState extends State<ClassPresence> {
           ),
           mode: DateTimeFieldPickerMode.date,
           autovalidateMode: AutovalidateMode.always,
-          validator: (e) => (e?.day ?? 0) == 1 ? 'Please not the first day' : null,
+          validator: (e) =>
+              (e?.day ?? 0) == 1 ? 'Please not the first day' : null,
           onDateSelected: (DateTime value) {
             print(value);
           },
@@ -124,33 +141,61 @@ class _ClassPresenceState extends State<ClassPresence> {
           borderRadius: BorderRadius.circular(10),
           border: Border.all(color: Colors.black, width: 2.0),
         ),
-        child: ListView.builder(
-          itemCount: students.length,
-          itemBuilder: (context, index) {
-            return Card(
-              child: Center(
-                child: Container(
-                  padding: EdgeInsets.all(10.0),
-                  child: Column(
-                    children: <Widget>[
-                      new CheckboxListTile(
-                        title: Text(students[index], style: TextStyle(fontSize: 2.5 * unitHeightValue)),
-                        activeColor: Colors.green,
-                        checkColor: Colors.white,
-                        value: _isSelected,
-                        onChanged: (value) {
-                          setState(() {
-                            _isSelected = value!;
-                          });
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          },
-        ),
+        child: new ListView(
+            children: values.keys.map((String key) {
+          return new CheckboxListTile(
+              title: Text(
+                  students.firstWhere((element) => element.userID == key).name +
+                      " " +
+                      students
+                          .firstWhere((element) => element.userID == key)
+                          .surname),
+              value: values[key],
+              onChanged: (bool? value) {
+                setState(() {
+                  values[key] = value!;
+                });
+              });
+        }).toList()),
+
+        // child: ListView.builder(
+        //   itemCount: students.length,
+        //   itemBuilder: (context, index) {
+        //     return Card(
+        //       child: Center(
+        //         child: Container(
+        //           padding: EdgeInsets.all(10.0),
+        //           child: Column(
+        //             children: values.keys.map((String key) => {
+        //               return new CheckboxListTile(value: values[key], onChanged: (bool value){
+        //                 setState(() {
+        //                   values[key] = value
+        //                 });
+        //               })
+        //             }),
+        //             // children: <Widget>[
+        //             //   new CheckboxListTile(
+        //             //     title: Text(
+        //             //         students[index].name +
+        //             //             " " +
+        //             //             students[index].surname,
+        //             //         style: TextStyle(fontSize: 2.5 * unitHeightValue)),
+        //             //     activeColor: Colors.green,
+        //             //     checkColor: Colors.white,
+        //             //     value: _isSelected,
+        //             //     onChanged: (value) {
+        //             //       setState(() {
+        //             //         _isSelected = value!;
+        //             //       });
+        //             //     },
+        //             //   ),
+        //             // ],
+        //           ),
+        //         ),
+        //       ),
+        //     );
+        //   },
+        // ),
       ),
     );
   }
@@ -162,12 +207,14 @@ class _ClassPresenceState extends State<ClassPresence> {
           onPressed: () async {
             Navigator.pop(context);
           },
-          icon: Icon(Icons.save, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
+          icon: Icon(Icons.save,
+              size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
       IconButton(
           onPressed: () {
             Navigator.pop(context);
           },
-          icon: Icon(Icons.close_rounded, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
+          icon: Icon(Icons.close_rounded,
+              size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
     ];
   }
 }

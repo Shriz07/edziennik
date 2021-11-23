@@ -1,3 +1,4 @@
+import 'package:edziennik/Screens/Teacher_panel/class_manage/my_subjects.dart';
 import 'package:edziennik/custom_widgets/panel_widgets.dart';
 import 'package:edziennik/Screens/Teacher_panel/class_manage/my_classes.dart';
 import 'package:edziennik/Screens/Teacher_panel/events_manage/my_events.dart';
@@ -21,7 +22,9 @@ class TeacherPanel extends StatelessWidget {
         appBar: AppBar(
           toolbarHeight: 3 * MediaQuery.of(context).size.height * 1 / 40,
           backgroundColor: MyColors.greenAccent,
-          title: Text('EDziennik Nauczyciel', style: TextStyle(color: Colors.black, fontSize: 3 * unitHeightValue)),
+          title: Text('EDziennik Nauczyciel',
+              style: TextStyle(
+                  color: Colors.black, fontSize: 3 * unitHeightValue)),
         ),
         body: Container(
           alignment: AlignmentDirectional.center,
@@ -30,14 +33,17 @@ class TeacherPanel extends StatelessWidget {
               SizedBox(height: 20.0),
               panelTitle('Nauczyciel [ID]', context),
               SizedBox(height: 30.0),
-              panelOption('Moje klasy', () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => MyClasses()));
+              panelOption('Moje przedmioty', () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => MySubjects()));
               }, context),
               panelOption('Uwagi', () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => MyNotes()));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => MyNotes()));
               }, context),
               panelOption('Wydarzenia', () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => MyEvents()));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => MyEvents()));
               }, context),
             ],
           ),

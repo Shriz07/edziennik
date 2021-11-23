@@ -9,27 +9,26 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class MyClasses extends StatefulWidget {
-  Subject currentSubject;
-  MyClasses({Key? key, required this.currentSubject}) : super(key: key);
+import 'my_classes.dart';
 
+class MySubjects extends StatefulWidget {
   @override
-  _MyClassesState createState() => _MyClassesState();
+  _MySubjectsState createState() => _MySubjectsState();
 }
 
-class _MyClassesState extends State<MyClasses> {
+class _MySubjectsState extends State<MySubjects> {
   final User? user = FirebaseAuth.instance.currentUser;
   final FirestoreDB _db = FirestoreDB();
   bool loaded = false;
-  late List<Class> classes;
-  int _selectedClass = -1;
+  late List<Subject> subjects;
+  int _selectedSubject = -1;
 
-  Future<List> getClasses() async {
+  Future<List> getSubjects() async {
     if (!loaded) {
-      classes = await _db.getTeachersClasses(user!.uid);
+      subjects = await _db.getTeachersSubjects(user!.uid);
     }
     loaded = true;
-    return classes;
+    return subjects;
   }
 
   FutureOr onGoBack(dynamic value) {
@@ -55,12 +54,12 @@ class _MyClassesState extends State<MyClasses> {
         appBar: AppBar(
           toolbarHeight: 3 * MediaQuery.of(context).size.height * 1 / 40,
           backgroundColor: MyColors.greenAccent,
-          title: Text('Wybór klasy',
+          title: Text('Wybór przedmiotu',
               style: TextStyle(
                   color: Colors.black, fontSize: 3 * unitHeightValue)),
         ),
         body: FutureBuilder<List>(
-          future: getClasses(),
+          future: getSubjects(),
           builder: (context, AsyncSnapshot<List> snapshot) {
             if (snapshot.hasData) {
               return Container(
@@ -68,9 +67,9 @@ class _MyClassesState extends State<MyClasses> {
                 child: Column(
                   children: <Widget>[
                     SizedBox(height: 25.0),
-                    panelTitle('Moje klasy', context),
-                    // classesListHeader(),
-                    classesListContainer(),
+                    panelTitle('Moje przedmioty', context),
+                    // subjectsListHeader(),
+                    subjectsListContainer(),
                     bottomApproveBtn(),
                   ],
                 ),
@@ -114,18 +113,17 @@ class _MyClassesState extends State<MyClasses> {
           ),
         ),
         onTap: () {
-          print("wybrana klasa");
-          if (_selectedClass != -1) {
-            print(classes[_selectedClass].name);
+          if (_selectedSubject != -1) {
+            print(subjects[_selectedSubject].name);
             navigateToAnotherScreen(
-                ClassSelected(currentClass: classes[_selectedClass]));
+                MyClasses(currentSubject: subjects[_selectedSubject]));
           }
         },
       ),
     );
   }
 
-  Widget classesListContainer() {
+  Widget subjectsListContainer() {
     double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return Padding(
       padding: const EdgeInsets.all(15.0),
@@ -137,32 +135,32 @@ class _MyClassesState extends State<MyClasses> {
           border: Border.all(color: Colors.black, width: 2.0),
         ),
         child: ListView.builder(
-          itemCount: classes.length,
+          itemCount: subjects.length,
           itemBuilder: (context, index) {
             return InkWell(
               child: Center(
                 child: Container(
-                  color: _selectedClass == index
+                  color: _selectedSubject == index
                       ? Colors.blue.withOpacity(0.5)
                       : Colors.transparent,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
-                      singleTableCell(classes[index].name, true, context),
+                      singleTableCell(subjects[index].name, true, context),
                       // classInfoField(
-                      //     classes[index].supervisingTeacher.name +
+                      //     subjects[index].supervisingTeacher.name +
                       //         ' ' +
-                      //         classes[index].supervisingTeacher.surname,
+                      //         subjects[index].supervisingTeacher.surname,
                       //     true),
                     ],
                   ),
                 ),
               ),
               onLongPress: () => {
-                if (_selectedClass != index)
+                if (_selectedSubject != index)
                   {
                     setState(() {
-                      _selectedClass = index;
+                      _selectedSubject = index;
                     })
                   }
               },
