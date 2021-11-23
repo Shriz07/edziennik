@@ -42,6 +42,7 @@ class _MyClassesState extends State<MyClasses> {
 
   @override
   Widget build(BuildContext context) {
+    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return MaterialApp(
       title: 'Selecting class',
       theme: ThemeData(
@@ -51,9 +52,9 @@ class _MyClassesState extends State<MyClasses> {
       ),
       home: Scaffold(
         appBar: AppBar(
+          toolbarHeight: 3 * MediaQuery.of(context).size.height * 1 / 40,
           backgroundColor: MyColors.greenAccent,
-          title:
-              const Text('Wybór klasy', style: TextStyle(color: Colors.black)),
+          title: Text('Wybór klasy', style: TextStyle(color: Colors.black, fontSize: 3 * unitHeightValue)),
         ),
         body: FutureBuilder<List>(
           future: getClasses(),
@@ -64,7 +65,7 @@ class _MyClassesState extends State<MyClasses> {
                 child: Column(
                   children: <Widget>[
                     SizedBox(height: 25.0),
-                    panelTitle('Moje klasy'),
+                    panelTitle('Moje klasy', context),
                     // classesListHeader(),
                     classesListContainer(),
                     bottomApproveBtn(),
@@ -81,17 +82,18 @@ class _MyClassesState extends State<MyClasses> {
   }
 
   Widget bottomApproveBtn() {
+    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return Padding(
       padding: const EdgeInsets.only(left: 70.0, right: 70.0, top: 30.0),
       child: InkWell(
         child: Container(
-          width: double.infinity,
+          width: MediaQuery.of(context).size.width * 1 / 2,
           child: Center(
               child: Padding(
             padding: const EdgeInsets.all(20.0),
             child: Text(
               "Wybierz",
-              style: TextStyle(fontSize: 20.0, color: Colors.white),
+              style: TextStyle(fontSize: 3 * unitHeightValue, color: Colors.white),
             ),
           )),
           decoration: BoxDecoration(
@@ -118,10 +120,11 @@ class _MyClassesState extends State<MyClasses> {
   }
 
   Widget classesListContainer() {
+    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return Padding(
       padding: const EdgeInsets.all(15.0),
       child: Container(
-        height: 300,
+        height: MediaQuery.of(context).size.height * 1 / 2,
         width: double.infinity,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
@@ -133,14 +136,11 @@ class _MyClassesState extends State<MyClasses> {
             return InkWell(
               child: Center(
                 child: Container(
-                  height: 25.0,
-                  color: _selectedClass == index
-                      ? Colors.blue.withOpacity(0.5)
-                      : Colors.transparent,
+                  color: _selectedClass == index ? Colors.blue.withOpacity(0.5) : Colors.transparent,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
-                      classInfoField(classes[index].name, true),
+                      singleTableCell(classes[index].name, true, context),
                       // classInfoField(
                       //     classes[index].supervisingTeacher.name +
                       //         ' ' +
@@ -161,26 +161,6 @@ class _MyClassesState extends State<MyClasses> {
             );
           },
         ),
-      ),
-    );
-  }
-
-  Widget classInfoField(info, bottomBorder) {
-    return Expanded(
-      child: Container(
-        child: Center(
-          child: Text(
-            info,
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          ),
-        ),
-        decoration: bottomBorder == true
-            ? BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(color: Colors.grey),
-                ),
-              )
-            : null,
       ),
     );
   }

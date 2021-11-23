@@ -133,14 +133,14 @@ class _LoginPageState extends State<LoginPage> {
                                         }
                                       }, 'Zaloguj'),
                                       SizedBox(height: 12.0),
-                                      applyButton(() {
+                                      /*applyButton(() {
                                         Navigator.of(context).push(
                                           MaterialPageRoute(
                                             builder: (context) => RegisterPage(),
                                           ),
                                         );
                                       }, 'Stwórz konto'),
-                                      SizedBox(height: 12.0),
+                                      SizedBox(height: 12.0),*/
                                       if (_errorMessage != '') errorMessageBox(),
                                     ],
                                   )
@@ -168,6 +168,7 @@ class _LoginPageState extends State<LoginPage> {
       focusNode: fnode,
       validator: validator,
       obscureText: obscureText,
+      style: TextStyle(fontSize: 20),
       decoration: InputDecoration(
         fillColor: MyColors.greenAccent,
         hintText: hintText,
@@ -182,6 +183,7 @@ class _LoginPageState extends State<LoginPage> {
           borderRadius: BorderRadius.circular(15.0),
           borderSide: BorderSide(color: MyColors.carrotOrange, width: 2),
         ),
+        hintStyle: TextStyle(fontSize: 20),
         errorStyle: TextStyle(fontSize: 15.0),
       ),
     );
@@ -190,41 +192,49 @@ class _LoginPageState extends State<LoginPage> {
   Widget applyButton(VoidCallback? onPress, String text) {
     return MaterialButton(
       onPressed: onPress,
-      height: 50,
       minWidth: double.infinity,
       color: MyColors.dodgerBlue,
       textColor: Colors.white,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15.0),
       ),
-      child: Text(
-        text,
-        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Text(
+          text,
+          style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+        ),
       ),
     );
   }
 
   Widget errorMessageBox() {
+    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       color: MyColors.carrotOrange,
-      child: ListTile(
-        title: Text(
-          _errorMessage,
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+      height: 5 * MediaQuery.of(context).size.height * 1 / 40,
+      child: Center(
+        child: ListTile(
+          title: Text(
+            _errorMessage,
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 3 * unitHeightValue),
+          ),
+          leading: Icon(
+            Icons.error,
+            color: Colors.white,
+            size: 3 * unitHeightValue,
+          ),
+          trailing: IconButton(
+              icon: Icon(
+                Icons.close,
+                color: Colors.white,
+                size: 3 * unitHeightValue,
+              ),
+              onPressed: () => setState(() {
+                    _errorMessage = '';
+                  })),
         ),
-        leading: Icon(
-          Icons.error,
-          color: Colors.white,
-        ),
-        trailing: IconButton(
-            icon: Icon(
-              Icons.close,
-              color: Colors.white,
-            ),
-            onPressed: () => setState(() {
-                  _errorMessage = '';
-                })),
       ),
     );
   }

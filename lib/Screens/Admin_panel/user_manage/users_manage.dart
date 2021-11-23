@@ -74,6 +74,7 @@ class _UsersManageState extends State<UsersManage> {
 
   @override
   Widget build(BuildContext context) {
+    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return MaterialApp(
       title: 'Users manage',
       theme: ThemeData(
@@ -83,8 +84,9 @@ class _UsersManageState extends State<UsersManage> {
       ),
       home: Scaffold(
         appBar: AppBar(
+          toolbarHeight: 3 * MediaQuery.of(context).size.height * 1 / 40,
           backgroundColor: MyColors.greenAccent,
-          title: const Text('Zarządzanie użytkownikami', style: TextStyle(color: Colors.black)),
+          title: Text('Zarządzanie użytkownikami', style: TextStyle(color: Colors.black, fontSize: 3 * unitHeightValue)),
         ),
         body: FutureBuilder<List>(
           future: getUsers(),
@@ -94,12 +96,12 @@ class _UsersManageState extends State<UsersManage> {
                 alignment: AlignmentDirectional.center,
                 child: Column(
                   children: <Widget>[
-                    SizedBox(height: 25.0),
-                    panelTitle('Użytkownicy'),
+                    SizedBox(height: 15.0),
+                    panelTitle('Użytkownicy', context),
                     customDropdownButton(),
                     usersListHeaders(),
                     usersListContainer(),
-                    bottomOptionsMenu(),
+                    bottomOptionsMenu(context, listOfBottomIconsWithActions()),
                   ],
                 ),
               );
@@ -112,48 +114,39 @@ class _UsersManageState extends State<UsersManage> {
     );
   }
 
-  Widget bottomOptionsMenu() {
-    return Padding(
-      padding: const EdgeInsets.all(15.0),
-      child: Container(
-        height: 70,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: Colors.black, width: 2.0),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            IconButton(
-                onPressed: () {
-                  navigateToAnotherScreen(AddUser());
-                },
-                icon: Icon(Icons.person_add_alt_1, size: 30, color: MyColors.dodgerBlue)),
-            IconButton(
-                onPressed: () {
-                  if (_selectedItem == -1) {
-                    showDialog(context: context, builder: (context) => PopupDialog(title: 'Informacja', message: 'Najpierw wybierz użytkownika', close: 'Zamknij'));
-                  } else {
-                    navigateToAnotherScreen(EditUser(user: currentList[_selectedItem]));
-                  }
-                },
-                icon: Icon(Icons.edit, size: 30, color: MyColors.dodgerBlue)),
-            IconButton(
-                onPressed: () {
-                  if (_selectedItem == -1) {
-                    showDialog(context: context, builder: (context) => PopupDialog(title: 'Informacja', message: 'Najpierw wybierz użytkownika', close: 'Zamknij'));
-                  } else {
-                    _db.deleteUser(currentList[_selectedItem]);
-                    setState(() {
-                      loaded = false;
-                    });
-                  }
-                },
-                icon: Icon(Icons.delete, size: 30, color: MyColors.dodgerBlue)),
-          ],
-        ),
-      ),
-    );
+  List<Widget> listOfBottomIconsWithActions() {
+    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
+    return <Widget>[
+      IconButton(
+          onPressed: () {
+            navigateToAnotherScreen(AddUser());
+          },
+          icon: Icon(Icons.person_add_alt_1, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
+      IconButton(
+          onPressed: () {
+            if (_selectedItem == -1) {
+              showDialog(
+                  context: context, builder: (context) => PopupDialog(title: 'Informacja', message: 'Najpierw wybierz użytkownika, którego chcesz edytować.', close: 'Zamknij'));
+            } else {
+              navigateToAnotherScreen(EditUser(user: currentList[_selectedItem]));
+            }
+          },
+          icon: Icon(Icons.edit, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
+      IconButton(
+          onPressed: () {
+            if (_selectedItem == -1) {
+              showDialog(
+                  context: context,
+                  builder: (context) => PopupDialog(title: 'Informacja', message: 'Najpierw wybierz użytkownika z listy, którego chcesz usunąć.', close: 'Zamknij'));
+            } else {
+              _db.deleteUser(currentList[_selectedItem]);
+              setState(() {
+                loaded = false;
+              });
+            }
+          },
+          icon: Icon(Icons.delete, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
+    ];
   }
 
   Widget usersListHeaders() {
@@ -172,9 +165,9 @@ class _UsersManageState extends State<UsersManage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  userInfoField('Imie', false),
-                  userInfoField('Nazwisko', false),
-                  userInfoField('Rola', false),
+                  singleTableCell('Imie', false, context),
+                  singleTableCell('Nazwisko', false, context),
+                  singleTableCell('Rola', false, context),
                 ],
               ),
             ),
@@ -188,7 +181,7 @@ class _UsersManageState extends State<UsersManage> {
     return Padding(
       padding: const EdgeInsets.all(15.0),
       child: Container(
-        height: 300,
+        height: 6 * MediaQuery.of(context).size.height * 1 / 15 - 50,
         width: double.infinity,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
@@ -200,14 +193,13 @@ class _UsersManageState extends State<UsersManage> {
             return InkWell(
               child: Center(
                 child: Container(
-                  height: 25.0,
                   color: _selectedItem == index ? Colors.blue.withOpacity(0.5) : Colors.transparent,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
-                      userInfoField(currentList[index].name, true),
-                      userInfoField(currentList[index].surname, true),
-                      userInfoField(currentList[index].role, true),
+                      singleTableCell(currentList[index].name, true, context),
+                      singleTableCell(currentList[index].surname, true, context),
+                      singleTableCell(currentList[index].role, true, context),
                     ],
                   ),
                 ),
@@ -227,33 +219,13 @@ class _UsersManageState extends State<UsersManage> {
     );
   }
 
-  Widget userInfoField(info, bottomBorder) {
-    return Expanded(
-      child: Container(
-        child: Center(
-          child: Text(
-            info,
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          ),
-        ),
-        decoration: bottomBorder == true
-            ? BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(color: Colors.grey),
-                ),
-              )
-            : null,
-      ),
-    );
-  }
-
   Widget customDropdownButton() {
+    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return Padding(
       padding: const EdgeInsets.all(15.0),
       child: Container(
         alignment: AlignmentDirectional.centerStart,
         width: double.infinity,
-        height: 60,
         decoration: BoxDecoration(
           color: MyColors.dodgerBlue,
           borderRadius: BorderRadius.circular(10),
@@ -287,7 +259,7 @@ class _UsersManageState extends State<UsersManage> {
             items: <String>['Wszyscy', 'Administratorzy', 'Nauczyciele', 'Uczniowie'].map<DropdownMenuItem<String>>((String value) {
               return DropdownMenuItem<String>(
                 value: value,
-                child: Text(value),
+                child: Text(value, style: TextStyle(fontSize: 2.5 * unitHeightValue)),
               );
             }).toList(),
           ),

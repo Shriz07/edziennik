@@ -21,12 +21,7 @@ class _MyEventsState extends State<MyEvents> {
   List<String> classes = ['2A', '3D', '6C'];
   List<String> events = ['Sprawdzian 2A', 'Kartkowka 3D', 'Wycieczka 6C'];
   int _selectedEvent = -1;
-  List<String> students = [
-    'Emilia Kamińska',
-    'Michał Kowalski',
-    'Bartosz Górski',
-    'Monika Kołodziej'
-  ];
+  List<String> students = ['Emilia Kamińska', 'Michał Kowalski', 'Bartosz Górski', 'Monika Kołodziej'];
 
   final _nameTextController = TextEditingController();
   final _focusName = FocusNode();
@@ -37,6 +32,7 @@ class _MyEventsState extends State<MyEvents> {
 
   @override
   Widget build(BuildContext context) {
+    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return MaterialApp(
       title: 'My events window',
       theme: ThemeData(
@@ -50,9 +46,9 @@ class _MyEventsState extends State<MyEvents> {
         },
         child: Scaffold(
           appBar: AppBar(
+            toolbarHeight: 3 * MediaQuery.of(context).size.height * 1 / 40,
             backgroundColor: MyColors.greenAccent,
-            title:
-                const Text('EDziennik', style: TextStyle(color: Colors.black)),
+            title: Text('EDziennik', style: TextStyle(color: Colors.black, fontSize: 3 * unitHeightValue)),
           ),
           body: FutureBuilder<List>(
             future: getSubjects(),
@@ -63,7 +59,7 @@ class _MyEventsState extends State<MyEvents> {
                     child: Column(
                       children: <Widget>[
                         SizedBox(height: 25.0),
-                        panelTitle('Moje wydarzenia'),
+                        panelTitle('Moje wydarzenia', context),
                         myEventsContainer(),
                       ],
                     ),
@@ -83,7 +79,7 @@ class _MyEventsState extends State<MyEvents> {
     return Padding(
       padding: const EdgeInsets.all(15.0),
       child: Container(
-        height: 500,
+        height: MediaQuery.of(context).size.height * 1 / 1.5,
         width: double.infinity,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
@@ -93,11 +89,11 @@ class _MyEventsState extends State<MyEvents> {
           child: Column(
             children: <Widget>[
               SizedBox(height: 15),
-              formFieldTitle('Przedmiot:'),
+              formFieldTitle('Przedmiot:', context),
               customDropdownSubjects(),
-              formFieldTitle('Klasa:'),
+              formFieldTitle('Klasa:', context),
               customDropdownClasses(),
-              formFieldTitle('Wydarzenia: '),
+              formFieldTitle('Wydarzenia: ', context),
               myEventsList(),
             ],
           ),
@@ -107,6 +103,7 @@ class _MyEventsState extends State<MyEvents> {
   }
 
   Widget myEventsList() {
+    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return Padding(
       padding: const EdgeInsets.all(15.0),
       child: Row(
@@ -124,14 +121,11 @@ class _MyEventsState extends State<MyEvents> {
                       return InkWell(
                         child: Center(
                           child: Container(
-                            height: 25.0,
-                            color: _selectedEvent == index
-                                ? Colors.blue.withOpacity(0.5)
-                                : Colors.transparent,
+                            color: _selectedEvent == index ? Colors.blue.withOpacity(0.5) : Colors.transparent,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: <Widget>[
-                                eventName(events[index]),
+                                singleTableCell(events[index], true, context),
                               ],
                             ),
                           ),
@@ -149,11 +143,11 @@ class _MyEventsState extends State<MyEvents> {
           ),
           Column(
             children: <Widget>[
-              Icon(Icons.person_add, size: 35.0, color: MyColors.dodgerBlue),
+              Icon(Icons.person_add, size: 4 * unitHeightValue, color: MyColors.dodgerBlue),
               SizedBox(height: 25),
-              Icon(Icons.edit, size: 30.0, color: MyColors.dodgerBlue),
+              Icon(Icons.edit, size: 4 * unitHeightValue, color: MyColors.dodgerBlue),
               SizedBox(height: 25),
-              Icon(Icons.delete, size: 35.0, color: MyColors.dodgerBlue),
+              Icon(Icons.delete, size: 4 * unitHeightValue, color: MyColors.dodgerBlue),
             ],
           )
         ],
@@ -161,63 +155,13 @@ class _MyEventsState extends State<MyEvents> {
     );
   }
 
-  Widget eventName(info) {
-    return Expanded(
-      child: Container(
-          child: Center(
-            child: Text(
-              info,
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-          ),
-          decoration: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(color: Colors.grey),
-            ),
-          )),
-    );
-  }
-
-  Widget formFieldTitle(title) {
-    return Text(
-      title,
-      style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold),
-    );
-  }
-
-  Widget customFormField(controller, hintText, fnode) {
-    return Padding(
-      padding: const EdgeInsets.all(15.0),
-      child: TextFormField(
-        controller: controller,
-        focusNode: fnode,
-        decoration: InputDecoration(
-          hintText: hintText,
-          border: const OutlineInputBorder(
-            borderRadius: const BorderRadius.all(
-              Radius.circular(15.0),
-            ),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(15.0),
-            borderSide: BorderSide(color: Colors.black, width: 2.0),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(15.0),
-            borderSide: BorderSide(color: MyColors.carrotOrange, width: 2.0),
-          ),
-        ),
-      ),
-    );
-  }
-
   Widget customDropdownSubjects() {
+    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return Padding(
       padding: const EdgeInsets.all(15.0),
       child: Container(
         alignment: AlignmentDirectional.centerStart,
         width: double.infinity,
-        height: 60,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           border: Border.all(color: Colors.black, width: 2.0),
@@ -234,11 +178,10 @@ class _MyEventsState extends State<MyEvents> {
                 subjectDropdownValue = newSelectedSubject!;
               });
             },
-            items: subjects
-                .map<DropdownMenuItem<String>>((String selectedSubject) {
+            items: subjects.map<DropdownMenuItem<String>>((String selectedSubject) {
               return DropdownMenuItem<String>(
                 value: selectedSubject,
-                child: Text(selectedSubject),
+                child: Text(selectedSubject, style: TextStyle(fontSize: 2.5 * unitHeightValue)),
               );
             }).toList(),
           ),
@@ -248,12 +191,12 @@ class _MyEventsState extends State<MyEvents> {
   }
 
   Widget customDropdownClasses() {
+    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return Padding(
       padding: const EdgeInsets.all(15.0),
       child: Container(
         alignment: AlignmentDirectional.centerStart,
         width: double.infinity,
-        height: 60,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           border: Border.all(color: Colors.black, width: 2.0),
@@ -270,11 +213,10 @@ class _MyEventsState extends State<MyEvents> {
                 classDropdownValue = newSelectedClass!;
               });
             },
-            items:
-                classes.map<DropdownMenuItem<String>>((String selectedClass) {
+            items: classes.map<DropdownMenuItem<String>>((String selectedClass) {
               return DropdownMenuItem<String>(
                 value: selectedClass,
-                child: Text(selectedClass),
+                child: Text(selectedClass, style: TextStyle(fontSize: 2.5 * unitHeightValue)),
               );
             }).toList(),
           ),
