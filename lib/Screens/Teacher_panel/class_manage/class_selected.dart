@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'package:edziennik/Screens/Teacher_panel/class_manage/class_presence.dart';
+import 'package:edziennik/Screens/Teacher_panel/events_manage/add_event.dart';
 import 'package:edziennik/Utils/firestoreDB.dart';
 import 'package:edziennik/custom_widgets/panel_widgets.dart';
 import 'package:edziennik/models/class.dart';
+import 'package:edziennik/models/subject.dart';
 import 'package:edziennik/models/user.dart';
 import 'package:edziennik/style/MyColors.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +12,11 @@ import 'package:google_fonts/google_fonts.dart';
 
 class ClassSelected extends StatefulWidget {
   Class currentClass;
-  ClassSelected({Key? key, required this.currentClass}) : super(key: key);
+  Subject currentSubject;
+
+  ClassSelected(
+      {Key? key, required this.currentClass, required this.currentSubject})
+      : super(key: key);
 
   @override
   _ClassSelectedState createState() => _ClassSelectedState();
@@ -59,7 +65,11 @@ class _ClassSelectedState extends State<ClassSelected> {
                       children: <Widget>[
                         SizedBox(height: 15.0),
                         panelTitle(
-                            'Klasa ' + widget.currentClass.name, context),
+                            'Klasa ' +
+                                widget.currentClass.name +
+                                "\n" +
+                                widget.currentSubject.name,
+                            context),
                         classManagementContainer(),
                       ],
                     ),
@@ -95,7 +105,9 @@ class _ClassSelectedState extends State<ClassSelected> {
               navigateToAnotherScreen(
                   ClassPresence(currentClass: widget.currentClass));
             }, context),
-            teacherOption("Dodaj wydarzenie", null, context),
+            teacherOption("Dodaj wydarzenie", () {
+              navigateToAnotherScreen(AddEvent());
+            }, context),
             SizedBox(height: 30.0),
             formFieldTitle('Uczniowie: ', context),
             studentsInClassSelection(),

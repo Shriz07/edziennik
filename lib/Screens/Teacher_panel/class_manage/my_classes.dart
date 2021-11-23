@@ -23,6 +23,7 @@ class _MyClassesState extends State<MyClasses> {
   bool loaded = false;
   late List<Class> classes;
   int _selectedClass = -1;
+  late Subject currentSubject;
 
   Future<List> getClasses() async {
     if (!loaded) {
@@ -44,6 +45,11 @@ class _MyClassesState extends State<MyClasses> {
   @override
   Widget build(BuildContext context) {
     double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
+    currentSubject = new Subject(
+        leadingTeacherID: widget.currentSubject.leadingTeacherID,
+        name: widget.currentSubject.name,
+        subjectID: widget.currentSubject.subjectID);
+
     return MaterialApp(
       title: 'Selecting class',
       theme: ThemeData(
@@ -117,8 +123,10 @@ class _MyClassesState extends State<MyClasses> {
           print("wybrana klasa");
           if (_selectedClass != -1) {
             print(classes[_selectedClass].name);
-            navigateToAnotherScreen(
-                ClassSelected(currentClass: classes[_selectedClass]));
+            print("przedmiot:" + widget.currentSubject.name);
+            navigateToAnotherScreen(ClassSelected(
+                currentClass: classes[_selectedClass],
+                currentSubject: currentSubject));
           }
         },
       ),
