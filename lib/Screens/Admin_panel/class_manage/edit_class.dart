@@ -16,24 +16,48 @@ class EditClass extends StatefulWidget {
 }
 
 class _EditClassState extends State<EditClass> {
-  String teacherDropdownValue = '';
+  final _formkey = GlobalKey<FormState>();
+  String _teacherDropdownValue = '';
   final FirestoreDB _db = FirestoreDB();
   bool loaded = false;
-  List<User> teachers = [];
+  List<User> _teachers = [];
   int _selectedStudent = -1;
-  List<String> students = ['Emilia Kamińska', 'Michał Kowalski', 'Bartosz Górski', 'Monika Kołodziej'];
+  List<User> _students = [];
 
   final _nameTextController = TextEditingController();
+  final _surnameTextController = TextEditingController();
   final _focusName = FocusNode();
+  final _focusSurname = FocusNode();
 
-  Future<List> getTeachers() async {
+  void onGoBack() {
+    setState(() {
+      loaded = false;
+    });
+  }
+
+  Future<List> getStudentsInClass() async {
+    if (widget.currentClass.classID != '') {
+      List<String> userIDsInClass = await _db.getUsersIDsInClass(widget.currentClass.classID);
+      for (var id in userIDsInClass) {
+        print(id);
+        User user = await _db.getUserWithID(id);
+        _students.add(user);
+      }
+    }
+    return _students;
+  }
+
+  Future<List> getTeachersAndStudents() async {
     if (!loaded) {
-      teachers = await _db.getUsersWithRole('nauczyciel');
+      _teachers.clear();
+      _students.clear();
+      _teachers = await _db.getUsersWithRole('nauczyciel');
       _nameTextController.text = widget.currentClass.name;
-      teacherDropdownValue = widget.currentClass.name != '' ? widget.currentClass.supervisingTeacher.surname : '';
+      _teacherDropdownValue = widget.currentClass.name != '' ? widget.currentClass.supervisingTeacher.surname : '';
+      await getStudentsInClass();
     }
     loaded = true;
-    return teachers;
+    return _teachers;
   }
 
   @override
@@ -57,7 +81,7 @@ class _EditClassState extends State<EditClass> {
             title: Text('Edziennik', style: TextStyle(color: Colors.black, fontSize: 3 * unitHeightValue)),
           ),
           body: FutureBuilder<List>(
-            future: getTeachers(),
+            future: getTeachersAndStudents(),
             builder: (context, AsyncSnapshot<List> snapshot) {
               if (snapshot.hasData) {
                 return SafeArea(
@@ -101,8 +125,8 @@ class _EditClassState extends State<EditClass> {
               customFormField(_nameTextController, 'Nazwa klasy', _focusName, context),
               formFieldTitle('Nauczyciel prowadzący:', context),
               customDropdownTeacher(),
-              formFieldTitle('Uczniowie: ', context),
-              studentsInClassSelection(),
+              if (widget.currentClass.classID != '') formFieldTitle('Uczniowie: ', context),
+              if (widget.currentClass.classID != '') studentsInClassSelection(),
             ],
           ),
         ),
@@ -124,7 +148,7 @@ class _EditClassState extends State<EditClass> {
                   border: Border.all(color: Colors.black, width: 2.0),
                 ),
                 child: ListView.builder(
-                    itemCount: students.length,
+                    itemCount: _students.length,
                     itemBuilder: (context, index) {
                       return InkWell(
                         child: Center(
@@ -133,7 +157,7 @@ class _EditClassState extends State<EditClass> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: <Widget>[
-                                singleTableCell(students[index], true, context),
+                                singleTableCell(_students[index].name + ' ' + _students[index].surname, true, context),
                               ],
                             ),
                           ),
@@ -151,15 +175,150 @@ class _EditClassState extends State<EditClass> {
           ),
           Column(
             children: <Widget>[
-              Icon(Icons.person_add, size: 4 * unitHeightValue, color: MyColors.dodgerBlue),
+              IconButton(onPressed: addUserToClass(), icon: Icon(Icons.person_add, size: 35.0, color: MyColors.dodgerBlue)),
               SizedBox(height: 25),
-              Icon(Icons.edit, size: 4 * unitHeightValue, color: MyColors.dodgerBlue),
-              SizedBox(height: 25),
-              Icon(Icons.delete, size: 4 * unitHeightValue, color: MyColors.dodgerBlue),
+              IconButton(onPressed: deleteUserFromClass(), icon: Icon(Icons.delete, size: 35.0, color: MyColors.dodgerBlue))
             ],
           )
         ],
       ),
+    );
+  }
+
+  VoidCallback addUserToClass() {
+    return () {
+      showFindUserDialog();
+    };
+  }
+
+  VoidCallback deleteUserFromClass() {
+    return () {
+      if (_selectedStudent == -1) {
+        print('Nie wybrano studenta');
+      } else {
+        _db.deleteUserFromClass(widget.currentClass.classID, _students[_selectedStudent].userID);
+        setState(() {
+          loaded = false;
+        });
+      }
+    };
+  }
+
+  void showFindUserDialog() async {
+    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
+    bool showUsers = false;
+    int _findingSelection = -1;
+    List<User> _users = [];
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          child: StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return Container(
+                child: SafeArea(
+                  child: SingleChildScrollView(
+                    child: Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Form(
+                        key: _formkey,
+                        child: Column(
+                          children: <Widget>[
+                            Text(
+                              'Znajdź ucznia',
+                              style: TextStyle(fontSize: 3.0 * unitHeightValue),
+                            ),
+                            SizedBox(height: 25),
+                            customFormField(_surnameTextController, 'Nazwisko ucznia', _focusSurname, context, (val) => val!.isNotEmpty ? null : 'Wprowadź nazwisko'),
+                            SizedBox(height: 5),
+                            MaterialButton(
+                              color: MyColors.greenAccent,
+                              onPressed: () async {
+                                _focusSurname.unfocus();
+                                if (_formkey.currentState!.validate()) {
+                                  _users = await _db.getUsersWithSurnameAndRole(_surnameTextController.text, 'uczeń');
+                                  for (var user in _users) {
+                                    print(user.userID);
+                                  }
+                                  setState(() {
+                                    showUsers = true;
+                                  });
+                                }
+                              },
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                              child: Text(
+                                'Szukaj',
+                                style: TextStyle(fontSize: 3.0 * unitHeightValue),
+                              ),
+                            ),
+                            if (showUsers == true)
+                              Container(
+                                child: SingleChildScrollView(
+                                  child: ConstrainedBox(
+                                    constraints: BoxConstraints(maxHeight: 100),
+                                    child: ListView.builder(
+                                      itemCount: _users.length,
+                                      itemBuilder: (context, findingIndex) {
+                                        return ListTile(
+                                          title: Center(child: Text(_users[findingIndex].name + ' ' + _users[findingIndex].surname)),
+                                          tileColor: _findingSelection == findingIndex ? Colors.blue : null,
+                                          onTap: () {
+                                            setState(() {
+                                              _findingSelection = findingIndex;
+                                            });
+                                          },
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            if (_findingSelection != -1)
+                              Padding(
+                                padding: const EdgeInsets.only(top: 25.0),
+                                child: MaterialButton(
+                                  color: MyColors.greenAccent,
+                                  onPressed: () async {
+                                    await _db.addUserToClass(widget.currentClass.classID, _users[_findingSelection].userID);
+                                    _users.clear();
+                                    showUsers = false;
+                                    onGoBack();
+                                    Navigator.pop(context);
+                                  },
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                  child: Text(
+                                    'Dodaj ucznia',
+                                    style: TextStyle(fontSize: 3.0 * unitHeightValue),
+                                  ),
+                                ),
+                              ),
+                            SizedBox(height: 15),
+                            MaterialButton(
+                              color: MyColors.dodgerBlue,
+                              onPressed: () {
+                                _users.clear();
+                                showUsers = false;
+                                Navigator.pop(context);
+                              },
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                              child: Text(
+                                'Anuluj',
+                                style: TextStyle(fontSize: 3.0 * unitHeightValue, color: Colors.white),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+        );
+      },
     );
   }
 
@@ -177,16 +336,16 @@ class _EditClassState extends State<EditClass> {
         child: Padding(
           padding: const EdgeInsets.only(left: 8.0),
           child: DropdownButtonFormField<String>(
-            value: teacherDropdownValue == '' ? null : teacherDropdownValue,
+            value: _teacherDropdownValue == '' ? null : _teacherDropdownValue,
             icon: Icon(Icons.arrow_drop_down),
             iconSize: 42,
             elevation: 16,
             onChanged: (String? newSelectedTeacher) {
               setState(() {
-                teacherDropdownValue = newSelectedTeacher!;
+                _teacherDropdownValue = newSelectedTeacher!;
               });
             },
-            items: teachers.map((user) => user.surname).toList().map<DropdownMenuItem<String>>((String selectedTeacher) {
+            items: _teachers.map((user) => user.surname).toList().map<DropdownMenuItem<String>>((String selectedTeacher) {
               return DropdownMenuItem<String>(
                 value: selectedTeacher,
                 child: Text(selectedTeacher, style: TextStyle(fontSize: 2.5 * unitHeightValue)),
@@ -203,6 +362,10 @@ class _EditClassState extends State<EditClass> {
     return <Widget>[
       IconButton(
           onPressed: () async {
+            widget.currentClass.name = _nameTextController.text;
+            User teacher = _teachers.firstWhere((element) => element.surname == _teacherDropdownValue);
+            widget.currentClass.supervisingTeacherID = teacher.userID;
+            _db.addClass(widget.currentClass);
             Navigator.pop(context);
           },
           icon: Icon(Icons.save, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),

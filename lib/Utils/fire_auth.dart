@@ -80,29 +80,16 @@ class FireAuth {
     final FirebaseAuth auth = FirebaseAuth.instance;
     final User? user = auth.currentUser;
 
-    FirebaseFirestore.instance
-        .collection('users')
-        .doc(user!.uid)
-        .get()
-        .then((value) => {
-              if (value.get('role') == 'administrator')
-                {
-                  Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (context) => AdminHome()))
-                }
-              else if (value.get('role') == 'nauczyciel')
-                {
-                  Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (context) => TeacherHome()))
-                }
-              else if (value.get('role') == 'uczeń')
-                {
-                  Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (context) => StudentHome()))
-                }
-              else
-                {print('invalid role')}
-            });
+    FirebaseFirestore.instance.collection('users').doc(user!.uid).get().then((value) => {
+          if (value.get('role') == 'administrator')
+            {Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => AdminHome()))}
+          else if (value.get('role') == 'nauczyciel')
+            {Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => TeacherHome()))}
+          else if (value.get('role') == 'uczeń')
+            {Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => StudentHome()))}
+          else
+            {print('invalid role')}
+        });
   }
 }
 
