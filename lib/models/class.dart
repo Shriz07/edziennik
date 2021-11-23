@@ -8,11 +8,10 @@ class Class {
   String supervisingTeacherID;
   late User supervisingTeacher;
 
-  /*Map<String, dynamic> toMap() {
+  Map<String, dynamic> toMap() {
     return {
-      'classID': classID,
       'name': name,
-      'supervisingTeacher': supervisingTeacherID,
+      'supervisingTeacherID': supervisingTeacherID,
     };
   }
 
@@ -20,5 +19,5 @@ class Class {
       : classID = snapshot['classID'],
         name = snapshot['name'],
         supervisingTeacherID = snapshot['supervisingTeacher'],
-        supervisingTeacher = snapshot['supervisingTeacher'];*/
+        supervisingTeacher = snapshot['supervisingTeacher'];
 }
