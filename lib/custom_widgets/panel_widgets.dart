@@ -126,13 +126,14 @@ Widget singleTableCell(info, bottomBorder, context) {
   );
 }
 
-Widget customFormField(controller, hintText, fnode, context) {
+Widget customFormField(controller, hintText, fnode, context, [validator]) {
   double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
   return Padding(
     padding: const EdgeInsets.all(15.0),
     child: TextFormField(
       controller: controller,
       focusNode: fnode,
+      validator: validator,
       style: TextStyle(fontSize: 2.5 * unitHeightValue),
       decoration: InputDecoration(
           hintText: hintText,

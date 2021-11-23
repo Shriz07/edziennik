@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:edziennik/Screens/Admin_panel/class_manage/edit_class.dart';
 import 'package:edziennik/Utils/firestoreDB.dart';
 import 'package:edziennik/custom_widgets/panel_widgets.dart';
+import 'package:edziennik/custom_widgets/popup_dialog.dart';
+import 'package:edziennik/custom_widgets/yes_no_alert.dart';
 import 'package:edziennik/models/class.dart';
 import 'package:edziennik/style/MyColors.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +34,9 @@ class _ClassManageState extends State<ClassManage> {
   }
 
   FutureOr onGoBack(dynamic value) {
-    setState(() {});
+    setState(() {
+      loaded = false;
+    });
   }
 
   void navigateToAnotherScreen(screen) {
@@ -93,12 +97,37 @@ class _ClassManageState extends State<ClassManage> {
           onPressed: () {
             if (_selectedClass != -1) {
               navigateToAnotherScreen(EditClass(currentClass: classes[_selectedClass]));
+            } else {
+              showDialog(
+                  context: context, builder: (context) => PopupDialog(title: 'Informacja', message: 'Najpierw wybierz klasę z listy, którą chcesz edytować.', close: 'Zamknij'));
             }
           },
           icon: Icon(Icons.edit, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
       IconButton(
           onPressed: () {
-            print('Icon 3 pressed');
+            if (_selectedClass != -1) {
+              showDialog(
+                context: context,
+                builder: (context) => YesNoAlert(
+                  message: 'Czy napewno chcesz usunąć klasę ' + classes[_selectedClass].name + '?',
+                  yesAction: () {
+                    Navigator.of(context).pop();
+                    _db.deleteClassWithID(classes[_selectedClass].classID);
+                    setState(
+                      () {
+                        classes.remove(classes[_selectedClass]);
+                      },
+                    );
+                  },
+                  noAction: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              );
+            } else {
+              showDialog(
+                  context: context, builder: (context) => PopupDialog(title: 'Informacja', message: 'Najpierw wybierz klasę z listy, którą chcesz usunąć.', close: 'Zamknij'));
+            }
           },
           icon: Icon(Icons.delete, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
     ];

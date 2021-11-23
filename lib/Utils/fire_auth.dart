@@ -85,7 +85,7 @@ class FireAuth {
             {Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => AdminHome()))}
           else if (value.get('role') == 'nauczyciel')
             {Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => TeacherHome()))}
-          else if (value.get('role') == 'student')
+          else if (value.get('role') == 'uczeń')
             {Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => StudentHome()))}
           else
             {print('invalid role')}
