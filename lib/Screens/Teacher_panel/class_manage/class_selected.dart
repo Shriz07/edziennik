@@ -5,6 +5,7 @@ import 'package:edziennik/Screens/Teacher_panel/events_manage/add_event.dart';
 import 'package:edziennik/Screens/Teacher_panel/note_manage/add_note.dart';
 import 'package:edziennik/Utils/firestoreDB.dart';
 import 'package:edziennik/custom_widgets/panel_widgets.dart';
+import 'package:edziennik/custom_widgets/popup_dialog.dart';
 import 'package:edziennik/models/class.dart';
 import 'package:edziennik/models/subject.dart';
 import 'package:edziennik/models/user.dart';
@@ -166,11 +167,24 @@ class _ClassSelectedState extends State<ClassSelected> {
           ),
           Column(
             children: <Widget>[
-              Icon(Icons.person_add, size: 35.0, color: MyColors.dodgerBlue),
+              IconButton(
+                  onPressed: () {
+                    if (_selectedStudent != -1)
+                      navigateToAnotherScreen(AddDegree());
+                    else
+                      showDialog(
+                          context: context,
+                          builder: (context) => PopupDialog(
+                              title: "Informacja",
+                              message: "Wybierz ucznia z listy!",
+                              close: "Zamknij"));
+                  },
+                  icon: Icon(Icons.add_box,
+                      size: 35.0, color: MyColors.dodgerBlue)),
               SizedBox(height: 25),
-              Icon(Icons.edit, size: 30.0, color: MyColors.dodgerBlue),
+              Icon(Icons.view_list, size: 30.0, color: MyColors.dodgerBlue),
               SizedBox(height: 25),
-              Icon(Icons.delete, size: 35.0, color: MyColors.dodgerBlue),
+              Icon(Icons.note_alt, size: 35.0, color: MyColors.dodgerBlue),
             ],
           )
         ],
