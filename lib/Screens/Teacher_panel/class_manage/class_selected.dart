@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:edziennik/Screens/Teacher_panel/class_manage/add_degree.dart';
 import 'package:edziennik/Screens/Teacher_panel/class_manage/class_presence.dart';
 import 'package:edziennik/Screens/Teacher_panel/events_manage/add_event.dart';
+import 'package:edziennik/Screens/Teacher_panel/note_manage/add_note.dart';
 import 'package:edziennik/Utils/firestoreDB.dart';
 import 'package:edziennik/custom_widgets/panel_widgets.dart';
 import 'package:edziennik/models/class.dart';

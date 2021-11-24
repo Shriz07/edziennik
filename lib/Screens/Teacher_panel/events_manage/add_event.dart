@@ -297,7 +297,11 @@ class _AddEventState extends State<AddEvent> {
         ),
         child: Padding(
           padding: const EdgeInsets.only(left: 8.0),
-          child: TextField(),
+          child: TextField(
+            keyboardType: TextInputType.multiline,
+            minLines: 3,
+            maxLines: null,
+          ),
         ),
       ),
     );
