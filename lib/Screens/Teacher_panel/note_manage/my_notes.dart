@@ -19,7 +19,11 @@ class _MyNotesState extends State<MyNotes> {
   bool loaded = false;
   List<String> subjects = ['matematyka', 'angielski', 'polski'];
   List<String> classes = ['2A', '3D', '6C'];
-  List<String> notes = ['Krzychu pił piwo na lekcji', 'Maciuś brzydko pachnie', 'Kasia ma za duży dekolt'];
+  List<String> notes = [
+    'Krzychu pił piwo na lekcji',
+    'Maciuś brzydko pachnie',
+    'Kasia ma za duży dekolt'
+  ];
   int _selectedNote = -1;
 
   final _nameTextController = TextEditingController();
@@ -47,7 +51,9 @@ class _MyNotesState extends State<MyNotes> {
           appBar: AppBar(
             toolbarHeight: 3 * MediaQuery.of(context).size.height * 1 / 40,
             backgroundColor: MyColors.greenAccent,
-            title: Text('EDziennik', style: TextStyle(color: Colors.black, fontSize: 3 * unitHeightValue)),
+            title: Text('EDziennik',
+                style: TextStyle(
+                    color: Colors.black, fontSize: 3 * unitHeightValue)),
           ),
           body: FutureBuilder<List>(
             future: getSubjects(),
@@ -60,6 +66,8 @@ class _MyNotesState extends State<MyNotes> {
                         SizedBox(height: 25.0),
                         panelTitle('Wystawione uwagi', context),
                         myNotesContainer(),
+                        bottomOptionsMenu(
+                            context, listOfBottomIconsWithActions())
                       ],
                     ),
                   ),
@@ -120,7 +128,9 @@ class _MyNotesState extends State<MyNotes> {
                       return InkWell(
                         child: Center(
                           child: Container(
-                            color: _selectedNote == index ? Colors.blue.withOpacity(0.5) : Colors.transparent,
+                            color: _selectedNote == index
+                                ? Colors.blue.withOpacity(0.5)
+                                : Colors.transparent,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: <Widget>[
@@ -142,11 +152,14 @@ class _MyNotesState extends State<MyNotes> {
           ),
           Column(
             children: <Widget>[
-              Icon(Icons.person_add, size: 4 * unitHeightValue, color: MyColors.dodgerBlue),
+              Icon(Icons.person_add,
+                  size: 4 * unitHeightValue, color: MyColors.dodgerBlue),
               SizedBox(height: 25),
-              Icon(Icons.edit, size: 4 * unitHeightValue, color: MyColors.dodgerBlue),
+              Icon(Icons.edit,
+                  size: 4 * unitHeightValue, color: MyColors.dodgerBlue),
               SizedBox(height: 25),
-              Icon(Icons.delete, size: 4 * unitHeightValue, color: MyColors.dodgerBlue),
+              Icon(Icons.delete,
+                  size: 4 * unitHeightValue, color: MyColors.dodgerBlue),
             ],
           )
         ],
@@ -161,7 +174,8 @@ class _MyNotesState extends State<MyNotes> {
           child: Center(
             child: Text(
               info,
-              style: TextStyle(fontSize: 3 * unitHeightValue, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  fontSize: 3 * unitHeightValue, fontWeight: FontWeight.bold),
             ),
           ),
           decoration: BoxDecoration(
@@ -195,7 +209,8 @@ class _MyNotesState extends State<MyNotes> {
                 subjectDropdownValue = newSelectedSubject!;
               });
             },
-            items: subjects.map<DropdownMenuItem<String>>((String selectedSubject) {
+            items: subjects
+                .map<DropdownMenuItem<String>>((String selectedSubject) {
               return DropdownMenuItem<String>(
                 value: selectedSubject,
                 child: Text(
@@ -233,7 +248,8 @@ class _MyNotesState extends State<MyNotes> {
                 classDropdownValue = newSelectedClass!;
               });
             },
-            items: classes.map<DropdownMenuItem<String>>((String selectedClass) {
+            items:
+                classes.map<DropdownMenuItem<String>>((String selectedClass) {
               return DropdownMenuItem<String>(
                 value: selectedClass,
                 child: Text(
@@ -246,5 +262,23 @@ class _MyNotesState extends State<MyNotes> {
         ),
       ),
     );
+  }
+
+  List<Widget> listOfBottomIconsWithActions() {
+    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
+    return <Widget>[
+      IconButton(
+          onPressed: () async {
+            Navigator.pop(context);
+          },
+          icon: Icon(Icons.save,
+              size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
+      IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(Icons.close_rounded,
+              size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
+    ];
   }
 }
