@@ -33,22 +33,10 @@ class _MyClassesState extends State<MyClasses> {
     return classes;
   }
 
-  FutureOr onGoBack(dynamic value) {
-    setState(() {});
-  }
-
-  void navigateToAnotherScreen(screen) {
-    Route route = MaterialPageRoute(builder: (context) => screen);
-    Navigator.push(context, route).then(onGoBack);
-  }
-
   @override
   Widget build(BuildContext context) {
     double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
-    currentSubject = new Subject(
-        leadingTeacherID: widget.currentSubject.leadingTeacherID,
-        name: widget.currentSubject.name,
-        subjectID: widget.currentSubject.subjectID);
+    currentSubject = new Subject(leadingTeacherID: widget.currentSubject.leadingTeacherID, name: widget.currentSubject.name, subjectID: widget.currentSubject.subjectID);
 
     return MaterialApp(
       title: 'Selecting class',
@@ -61,9 +49,7 @@ class _MyClassesState extends State<MyClasses> {
         appBar: AppBar(
           toolbarHeight: 3 * MediaQuery.of(context).size.height * 1 / 40,
           backgroundColor: MyColors.greenAccent,
-          title: Text('Wybór klasy',
-              style: TextStyle(
-                  color: Colors.black, fontSize: 3 * unitHeightValue)),
+          title: Text('Wybór klasy', style: TextStyle(color: Colors.black, fontSize: 3 * unitHeightValue)),
         ),
         body: FutureBuilder<List>(
           future: getClasses(),
@@ -102,8 +88,7 @@ class _MyClassesState extends State<MyClasses> {
             padding: const EdgeInsets.all(20.0),
             child: Text(
               "Wybierz",
-              style:
-                  TextStyle(fontSize: 3 * unitHeightValue, color: Colors.white),
+              style: TextStyle(fontSize: 3 * unitHeightValue, color: Colors.white),
             ),
           )),
           decoration: BoxDecoration(
@@ -120,13 +105,8 @@ class _MyClassesState extends State<MyClasses> {
           ),
         ),
         onTap: () {
-          print("wybrana klasa");
           if (_selectedClass != -1) {
-            print(classes[_selectedClass].name);
-            print("przedmiot:" + widget.currentSubject.name);
-            navigateToAnotherScreen(ClassSelected(
-                currentClass: classes[_selectedClass],
-                currentSubject: currentSubject));
+            Navigator.push(context, MaterialPageRoute(builder: (context) => ClassSelected(currentClass: classes[_selectedClass], currentSubject: currentSubject)));
           }
         },
       ),
@@ -150,18 +130,11 @@ class _MyClassesState extends State<MyClasses> {
             return InkWell(
               child: Center(
                 child: Container(
-                  color: _selectedClass == index
-                      ? Colors.blue.withOpacity(0.5)
-                      : Colors.transparent,
+                  color: _selectedClass == index ? Colors.blue.withOpacity(0.5) : Colors.transparent,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
                       singleTableCell(classes[index].name, true, context),
-                      // classInfoField(
-                      //     classes[index].supervisingTeacher.name +
-                      //         ' ' +
-                      //         classes[index].supervisingTeacher.surname,
-                      //     true),
                     ],
                   ),
                 ),
