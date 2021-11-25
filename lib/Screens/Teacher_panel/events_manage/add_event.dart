@@ -3,12 +3,17 @@ import 'package:date_field/date_field.dart';
 import 'package:edziennik/Utils/firestoreDB.dart';
 import 'package:edziennik/custom_widgets/panel_widgets.dart';
 import 'package:edziennik/models/class.dart';
+import 'package:edziennik/models/event.dart';
+import 'package:edziennik/models/subject.dart';
 import 'package:edziennik/style/MyColors.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AddEvent extends StatefulWidget {
+  Class currentClass;
+  Subject currentSubject;
+  AddEvent({Key? key, required this.currentClass, required this.currentSubject}) : super(key: key);
+
   @override
   _AddEventState createState() => _AddEventState();
 }
@@ -19,21 +24,15 @@ class _AddEventState extends State<AddEvent> {
   String eventTypeDropdownValue = '';
 
   final FirestoreDB _db = FirestoreDB();
-  final User? user = FirebaseAuth.instance.currentUser;
 
   bool loaded = false;
-  List<String> subjects = ['matematyka', 'angielski', 'polski'];
-  List<String> classes = ['2A', '3D', '6C'];
-  List<String> eventTypes = ['Sprawdzian', 'Kartkowka', 'Test'];
-  List<String> events = ['Sprawdzian 2A', 'Kartkowka 3D', 'Wycieczka 6C'];
+  List<String> eventTypes = ['Sprawdzian', 'Kartkowka', 'Test', 'Inne'];
   int _selectedEvent = -1;
+  late DateTime _selectedDate;
+  bool _dateWasSelected = false;
 
   final _nameTextController = TextEditingController();
   final _focusName = FocusNode();
-
-  Future<List> getSubjects() async {
-    return subjects;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,31 +52,14 @@ class _AddEventState extends State<AddEvent> {
           appBar: AppBar(
             toolbarHeight: 3 * MediaQuery.of(context).size.height * 1 / 40,
             backgroundColor: MyColors.greenAccent,
-            title: Text('EDziennik',
-                style: TextStyle(
-                    color: Colors.black, fontSize: 3 * unitHeightValue)),
+            title: Text('EDziennik', style: TextStyle(color: Colors.black, fontSize: 3 * unitHeightValue)),
           ),
-          body: FutureBuilder<List>(
-            future: getSubjects(),
-            builder: (context, AsyncSnapshot<List> snapshot) {
-              if (snapshot.hasData) {
-                return SafeArea(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: <Widget>[
-                        SizedBox(height: 1.0),
-                        panelTitle('Nowe wydarzenie', context),
-                        addEventContainer(),
-                        bottomOptionsMenu(
-                            context, listOfBottomIconsWithActions())
-                      ],
-                    ),
-                  ),
-                );
-              } else {
-                return Center(child: CircularProgressIndicator());
-              }
-            },
+          body: SafeArea(
+            child: SingleChildScrollView(
+              child: Column(
+                children: <Widget>[SizedBox(height: 1.0), panelTitle('Nowe wydarzenie', context), addEventContainer(), bottomOptionsMenu(context, listOfBottomIconsWithActions())],
+              ),
+            ),
           ),
         ),
       ),
@@ -99,9 +81,9 @@ class _AddEventState extends State<AddEvent> {
             children: <Widget>[
               SizedBox(height: 1),
               formFieldTitle('Przedmiot:', context),
-              customDropdownSubjects(),
+              fieldWithText(widget.currentSubject.name),
               formFieldTitle('Klasa:', context),
-              customDropdownClasses(),
+              fieldWithText(widget.currentClass.name),
               formFieldTitle('Typ wydarzenia: ', context),
               customDropdownEventTypes(),
               formFieldTitle('Data:', context),
@@ -115,65 +97,7 @@ class _AddEventState extends State<AddEvent> {
     );
   }
 
-  Widget myEventsList() {
-    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
-    return Padding(
-      padding: const EdgeInsets.all(15.0),
-      child: Row(
-        children: <Widget>[
-          Flexible(
-            child: Container(
-                height: 250,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: Colors.black, width: 2.0),
-                ),
-                child: ListView.builder(
-                    itemCount: events.length,
-                    itemBuilder: (context, index) {
-                      return InkWell(
-                        child: Center(
-                          child: Container(
-                            color: _selectedEvent == index
-                                ? Colors.blue.withOpacity(0.5)
-                                : Colors.transparent,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: <Widget>[
-                                singleTableCell(events[index], true, context),
-                              ],
-                            ),
-                          ),
-                        ),
-                        // onLongPress: () => {
-                        //   if (_selectedEvent != index)
-                        //     {
-                        //       setState(() {
-                        //         _selectedEvent = index;
-                        //       })
-                        //     }
-                        // },
-                      );
-                    })),
-          ),
-          Column(
-            children: <Widget>[
-              Icon(Icons.person_add,
-                  size: 4 * unitHeightValue, color: MyColors.dodgerBlue),
-              SizedBox(height: 25),
-              Icon(Icons.edit,
-                  size: 4 * unitHeightValue, color: MyColors.dodgerBlue),
-              SizedBox(height: 25),
-              Icon(Icons.delete,
-                  size: 4 * unitHeightValue, color: MyColors.dodgerBlue),
-            ],
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget customDropdownSubjects() {
+  Widget fieldWithText(text) {
     double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return Padding(
       padding: const EdgeInsets.all(15.0),
@@ -186,61 +110,9 @@ class _AddEventState extends State<AddEvent> {
         ),
         child: Padding(
           padding: const EdgeInsets.only(left: 8.0),
-          child: DropdownButtonFormField<String>(
-            value: subjectDropdownValue == '' ? null : subjectDropdownValue,
-            icon: Icon(Icons.arrow_drop_down),
-            iconSize: 28,
-            elevation: 16,
-            onChanged: (String? newSelectedSubject) {
-              setState(() {
-                subjectDropdownValue = newSelectedSubject!;
-              });
-            },
-            items: subjects
-                .map<DropdownMenuItem<String>>((String selectedSubject) {
-              return DropdownMenuItem<String>(
-                value: selectedSubject,
-                child: Text(selectedSubject,
-                    style: TextStyle(fontSize: 2.5 * unitHeightValue)),
-              );
-            }).toList(),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget customDropdownClasses() {
-    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
-    return Padding(
-      padding: const EdgeInsets.all(15.0),
-      child: Container(
-        alignment: AlignmentDirectional.centerStart,
-        width: double.infinity,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: Colors.black, width: 2.0),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.only(left: 8.0),
-          child: DropdownButtonFormField<String>(
-            value: classDropdownValue == '' ? null : classDropdownValue,
-            icon: Icon(Icons.arrow_drop_down),
-            iconSize: 28,
-            elevation: 16,
-            onChanged: (String? newSelectedClass) {
-              setState(() {
-                classDropdownValue = newSelectedClass!;
-              });
-            },
-            items:
-                classes.map<DropdownMenuItem<String>>((String selectedClass) {
-              return DropdownMenuItem<String>(
-                value: selectedClass,
-                child: Text(selectedClass,
-                    style: TextStyle(fontSize: 2.5 * unitHeightValue)),
-              );
-            }).toList(),
+          child: Text(
+            text,
+            style: TextStyle(fontSize: unitHeightValue * 3),
           ),
         ),
       ),
@@ -270,12 +142,10 @@ class _AddEventState extends State<AddEvent> {
                 eventTypeDropdownValue = newSelectedEventType!;
               });
             },
-            items: eventTypes
-                .map<DropdownMenuItem<String>>((String selectedEventType) {
+            items: eventTypes.map<DropdownMenuItem<String>>((String selectedEventType) {
               return DropdownMenuItem<String>(
                 value: selectedEventType,
-                child: Text(selectedEventType,
-                    style: TextStyle(fontSize: 2.5 * unitHeightValue)),
+                child: Text(selectedEventType, style: TextStyle(fontSize: 2.5 * unitHeightValue)),
               );
             }).toList(),
           ),
@@ -298,6 +168,7 @@ class _AddEventState extends State<AddEvent> {
         child: Padding(
           padding: const EdgeInsets.only(left: 8.0),
           child: TextField(
+            controller: _nameTextController,
             keyboardType: TextInputType.multiline,
             minLines: 3,
             maxLines: null,
@@ -331,10 +202,10 @@ class _AddEventState extends State<AddEvent> {
           ),
           mode: DateTimeFieldPickerMode.date,
           autovalidateMode: AutovalidateMode.always,
-          validator: (e) =>
-              (e?.day ?? 0) == 1 ? 'Please not the first day' : null,
           onDateSelected: (DateTime value) {
             print(value);
+            _selectedDate = value;
+            _dateWasSelected = true;
           },
         ),
       ),
@@ -346,16 +217,23 @@ class _AddEventState extends State<AddEvent> {
     return <Widget>[
       IconButton(
           onPressed: () async {
-            Navigator.pop(context);
+            if (_dateWasSelected == true) {
+              Event event = Event(
+                  date: _selectedDate,
+                  type: eventTypeDropdownValue,
+                  description: _nameTextController.text,
+                  subject: widget.currentSubject.name,
+                  classID: widget.currentClass.classID);
+              await _db.addEvent(event);
+              Navigator.pop(context);
+            }
           },
-          icon: Icon(Icons.save,
-              size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
+          icon: Icon(Icons.save, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
       IconButton(
           onPressed: () {
             Navigator.pop(context);
           },
-          icon: Icon(Icons.close_rounded,
-              size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
+          icon: Icon(Icons.close_rounded, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
     ];
   }
 }
