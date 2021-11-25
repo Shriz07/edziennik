@@ -1,47 +1,44 @@
 import 'dart:async';
-import 'package:date_field/date_field.dart';
 import 'package:edziennik/Utils/firestoreDB.dart';
 import 'package:edziennik/custom_widgets/panel_widgets.dart';
-import 'package:edziennik/models/class.dart';
+import 'package:edziennik/custom_widgets/popup_dialog.dart';
+import 'package:edziennik/models/degree.dart';
+import 'package:edziennik/models/subject.dart';
+import 'package:edziennik/models/user.dart';
 import 'package:edziennik/style/MyColors.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 class AddDegree extends StatefulWidget {
+  Subject currentSubject;
+  User currentStudent;
+  Degree degree;
+
+  AddDegree({Key? key, required this.currentStudent, required this.currentSubject, required this.degree});
+
   @override
   _AddDegreeState createState() => _AddDegreeState();
 }
 
 class _AddDegreeState extends State<AddDegree> {
-  String studentDropdownValue = '';
-  String subjectDropdownValue = '';
-  String degreeDropdownValue = '';
+  String _degreeDropdownValue = '';
+  String _weightDropdownValue = '';
 
   final FirestoreDB _db = FirestoreDB();
-  final User? user = FirebaseAuth.instance.currentUser;
 
   bool loaded = false;
-  List<String> subjects = ['matematyka', 'angielski', 'polski'];
-  List<String> classes = ['2A', '3D', '6C'];
   List<String> degrees = ['1', '2', '3', '4', '5'];
-  int _selectedEvent = -1;
-  List<String> students = [
-    'Emilia Kamińska',
-    'Michał Kowalski',
-    'Bartosz Górski',
-    'Monika Kołodziej',
-  ];
+  List<String> weights = ['1', '2', '3'];
 
-  final _nameTextController = TextEditingController();
-  final _focusName = FocusNode();
-
-  Future<List> getSubjects() async {
-    return subjects;
-  }
+  final _commentTextController = TextEditingController();
+  final _focusComment = FocusNode();
 
   @override
   Widget build(BuildContext context) {
+    _degreeDropdownValue = widget.degree.grade;
+    _weightDropdownValue = widget.degree.weight;
+    _commentTextController.text = widget.degree.comment;
     double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return MaterialApp(
       title: 'My events window',
@@ -52,37 +49,25 @@ class _AddDegreeState extends State<AddDegree> {
       ),
       home: GestureDetector(
         onTap: () {
-          _focusName.unfocus();
+          _focusComment.unfocus();
         },
         child: Scaffold(
           appBar: AppBar(
             toolbarHeight: 3 * MediaQuery.of(context).size.height * 1 / 40,
             backgroundColor: MyColors.greenAccent,
-            title: Text('EDziennik',
-                style: TextStyle(
-                    color: Colors.black, fontSize: 3 * unitHeightValue)),
+            title: Text('EDziennik', style: TextStyle(color: Colors.black, fontSize: 3 * unitHeightValue)),
           ),
-          body: FutureBuilder<List>(
-            future: getSubjects(),
-            builder: (context, AsyncSnapshot<List> snapshot) {
-              if (snapshot.hasData) {
-                return SafeArea(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: <Widget>[
-                        SizedBox(height: 1.0),
-                        panelTitle('Dodaj/edytuj ocene', context),
-                        addDegreeContainer(),
-                        bottomOptionsMenu(
-                            context, listOfBottomIconsWithActions())
-                      ],
-                    ),
-                  ),
-                );
-              } else {
-                return Center(child: CircularProgressIndicator());
-              }
-            },
+          body: SafeArea(
+            child: SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  SizedBox(height: 1.0),
+                  panelTitle('Dodaj/edytuj ocene', context),
+                  addDegreeContainer(),
+                  bottomOptionsMenu(context, listOfBottomIconsWithActions())
+                ],
+              ),
+            ),
           ),
         ),
       ),
@@ -102,17 +87,18 @@ class _AddDegreeState extends State<AddDegree> {
         child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
-              SizedBox(height: 1),
-              formFieldTitle('Uczeń: ', context),
-              customDropdownStudents(),
               formFieldTitle('Przedmiot:', context),
-              customDropdownSubjects(),
+              fieldWithText(widget.currentSubject.name),
+              formFieldTitle('Uczeń: ', context),
+              fieldWithText(widget.currentStudent.name + ' ' + widget.currentStudent.surname),
               formFieldTitle('Ocena:', context),
               customDropdownDegrees(),
-              formFieldTitle('Data:', context),
-              dateField(),
+              formFieldTitle('Waga', context),
+              customDropdownWeights(),
               formFieldTitle('Komentarz do oceny:', context),
               customTextField(),
+              formFieldTitle('Data:', context),
+              fieldWithText(DateFormat('dd-MM-yyyy').format(DateTime.parse(DateTime.now().toString()))),
             ],
           ),
         ),
@@ -120,7 +106,7 @@ class _AddDegreeState extends State<AddDegree> {
     );
   }
 
-  Widget customDropdownSubjects() {
+  Widget fieldWithText(text) {
     double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return Padding(
       padding: const EdgeInsets.all(15.0),
@@ -133,24 +119,11 @@ class _AddDegreeState extends State<AddDegree> {
         ),
         child: Padding(
           padding: const EdgeInsets.only(left: 8.0),
-          child: DropdownButtonFormField<String>(
-            value: subjectDropdownValue == '' ? null : subjectDropdownValue,
-            icon: Icon(Icons.arrow_drop_down),
-            iconSize: 28,
-            elevation: 16,
-            onChanged: (String? newSelectedSubject) {
-              setState(() {
-                subjectDropdownValue = newSelectedSubject!;
-              });
-            },
-            items: subjects
-                .map<DropdownMenuItem<String>>((String selectedSubject) {
-              return DropdownMenuItem<String>(
-                value: selectedSubject,
-                child: Text(selectedSubject,
-                    style: TextStyle(fontSize: 2.5 * unitHeightValue)),
-              );
-            }).toList(),
+          child: Center(
+            child: Text(
+              text,
+              style: TextStyle(fontSize: unitHeightValue * 3),
+            ),
           ),
         ),
       ),
@@ -171,21 +144,19 @@ class _AddDegreeState extends State<AddDegree> {
         child: Padding(
           padding: const EdgeInsets.only(left: 8.0),
           child: DropdownButtonFormField<String>(
-            value: degreeDropdownValue == '' ? null : degreeDropdownValue,
+            value: _degreeDropdownValue == '' ? null : _degreeDropdownValue,
             icon: Icon(Icons.arrow_drop_down),
             iconSize: 28,
             elevation: 16,
             onChanged: (String? newSelectedClass) {
               setState(() {
-                degreeDropdownValue = newSelectedClass!;
+                _degreeDropdownValue = newSelectedClass!;
               });
             },
-            items:
-                degrees.map<DropdownMenuItem<String>>((String selectedDegree) {
+            items: degrees.map<DropdownMenuItem<String>>((String selectedDegree) {
               return DropdownMenuItem<String>(
                 value: selectedDegree,
-                child: Text(selectedDegree,
-                    style: TextStyle(fontSize: 2.5 * unitHeightValue)),
+                child: Text(selectedDegree, style: TextStyle(fontSize: 2.5 * unitHeightValue)),
               );
             }).toList(),
           ),
@@ -194,7 +165,7 @@ class _AddDegreeState extends State<AddDegree> {
     );
   }
 
-  Widget customDropdownStudents() {
+  Widget customDropdownWeights() {
     double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return Padding(
       padding: const EdgeInsets.all(15.0),
@@ -208,21 +179,19 @@ class _AddDegreeState extends State<AddDegree> {
         child: Padding(
           padding: const EdgeInsets.only(left: 8.0),
           child: DropdownButtonFormField<String>(
-            value: studentDropdownValue == '' ? null : studentDropdownValue,
+            value: _weightDropdownValue == '' ? null : _weightDropdownValue,
             icon: Icon(Icons.arrow_drop_down),
             iconSize: 28,
             elevation: 16,
-            onChanged: (String? newSelectedEventType) {
+            onChanged: (String? newSelectedClass) {
               setState(() {
-                studentDropdownValue = newSelectedEventType!;
+                _weightDropdownValue = newSelectedClass!;
               });
             },
-            items: students
-                .map<DropdownMenuItem<String>>((String selectedStudent) {
+            items: weights.map<DropdownMenuItem<String>>((String selectedWeight) {
               return DropdownMenuItem<String>(
-                value: selectedStudent,
-                child: Text(selectedStudent,
-                    style: TextStyle(fontSize: 2.5 * unitHeightValue)),
+                value: selectedWeight,
+                child: Text(selectedWeight, style: TextStyle(fontSize: 2.5 * unitHeightValue)),
               );
             }).toList(),
           ),
@@ -245,44 +214,13 @@ class _AddDegreeState extends State<AddDegree> {
         child: Padding(
           padding: const EdgeInsets.only(left: 8.0),
           child: TextField(
+            focusNode: _focusComment,
+            controller: _commentTextController,
             keyboardType: TextInputType.multiline,
             minLines: 3,
             maxLines: null,
+            style: TextStyle(fontSize: 2.5 * unitHeightValue),
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget dateField() {
-    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
-    return Padding(
-      padding: const EdgeInsets.only(left: 15, right: 15, top: 10),
-      child: Container(
-        child: DateTimeFormField(
-          dateTextStyle: TextStyle(fontSize: 2.5 * unitHeightValue),
-          decoration: InputDecoration(
-            hintStyle: TextStyle(fontSize: 2.5 * unitHeightValue),
-            labelStyle: TextStyle(fontSize: 2.5 * unitHeightValue),
-            errorStyle: TextStyle(color: Colors.redAccent),
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.black, width: 2.0),
-            ),
-            border: const OutlineInputBorder(
-              borderRadius: const BorderRadius.all(
-                Radius.circular(15.0),
-              ),
-            ),
-            suffixIcon: Icon(Icons.event_note),
-            labelText: 'Wybierz date',
-          ),
-          mode: DateTimeFieldPickerMode.date,
-          autovalidateMode: AutovalidateMode.always,
-          validator: (e) =>
-              (e?.day ?? 0) == 1 ? 'Please not the first day' : null,
-          onDateSelected: (DateTime value) {
-            print(value);
-          },
         ),
       ),
     );
@@ -293,16 +231,23 @@ class _AddDegreeState extends State<AddDegree> {
     return <Widget>[
       IconButton(
           onPressed: () async {
+            if (_degreeDropdownValue != '' && _commentTextController.text != '' && _weightDropdownValue != '') {
+              widget.degree.userID = widget.currentStudent.userID;
+              widget.degree.comment = _commentTextController.text;
+              widget.degree.grade = _degreeDropdownValue;
+              widget.degree.weight = _weightDropdownValue;
+              await _db.addDegree(widget.degree, widget.currentSubject.subjectID);
+            } else {
+              showDialog(context: context, builder: (context) => PopupDialog(title: "Informacja", message: "Wypełnij wszystkie pola.", close: "Zamknij"));
+            }
             Navigator.pop(context);
           },
-          icon: Icon(Icons.save,
-              size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
+          icon: Icon(Icons.save, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
       IconButton(
           onPressed: () {
             Navigator.pop(context);
           },
-          icon: Icon(Icons.close_rounded,
-              size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
+          icon: Icon(Icons.close_rounded, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
     ];
   }
 }
