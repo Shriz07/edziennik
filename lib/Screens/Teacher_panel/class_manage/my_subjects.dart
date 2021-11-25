@@ -31,15 +31,6 @@ class _MySubjectsState extends State<MySubjects> {
     return subjects;
   }
 
-  FutureOr onGoBack(dynamic value) {
-    setState(() {});
-  }
-
-  void navigateToAnotherScreen(screen) {
-    Route route = MaterialPageRoute(builder: (context) => screen);
-    Navigator.push(context, route).then(onGoBack);
-  }
-
   @override
   Widget build(BuildContext context) {
     double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
@@ -54,9 +45,7 @@ class _MySubjectsState extends State<MySubjects> {
         appBar: AppBar(
           toolbarHeight: 3 * MediaQuery.of(context).size.height * 1 / 40,
           backgroundColor: MyColors.greenAccent,
-          title: Text('Wybór przedmiotu',
-              style: TextStyle(
-                  color: Colors.black, fontSize: 3 * unitHeightValue)),
+          title: Text('Wybór przedmiotu', style: TextStyle(color: Colors.black, fontSize: 3 * unitHeightValue)),
         ),
         body: FutureBuilder<List>(
           future: getSubjects(),
@@ -95,8 +84,7 @@ class _MySubjectsState extends State<MySubjects> {
             padding: const EdgeInsets.all(20.0),
             child: Text(
               "Wybierz",
-              style:
-                  TextStyle(fontSize: 3 * unitHeightValue, color: Colors.white),
+              style: TextStyle(fontSize: 3 * unitHeightValue, color: Colors.white),
             ),
           )),
           decoration: BoxDecoration(
@@ -114,9 +102,7 @@ class _MySubjectsState extends State<MySubjects> {
         ),
         onTap: () {
           if (_selectedSubject != -1) {
-            print(subjects[_selectedSubject].name);
-            navigateToAnotherScreen(
-                MyClasses(currentSubject: subjects[_selectedSubject]));
+            Navigator.push(context, MaterialPageRoute(builder: (context) => MyClasses(currentSubject: subjects[_selectedSubject])));
           }
         },
       ),
@@ -140,9 +126,7 @@ class _MySubjectsState extends State<MySubjects> {
             return InkWell(
               child: Center(
                 child: Container(
-                  color: _selectedSubject == index
-                      ? Colors.blue.withOpacity(0.5)
-                      : Colors.transparent,
+                  color: _selectedSubject == index ? Colors.blue.withOpacity(0.5) : Colors.transparent,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
