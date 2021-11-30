@@ -14,6 +14,12 @@ class FirestoreDB extends ChangeNotifier {
   final CollectionReference _gradesCollectionReference = FirebaseFirestore.instance.collection('degrees');
   final CollectionReference _notesCollectionReference = FirebaseFirestore.instance.collection('notes');
 
+  /*
+  ##############################################################################
+  ######################       NOTES FUNCTIONS      ############################
+  ##############################################################################
+  */
+
   Future addNoteToUser(userID, note) async {
     try {
       final snapshot = await _notesCollectionReference.doc(userID).get();
@@ -56,7 +62,13 @@ class FirestoreDB extends ChangeNotifier {
     }
   }
 
-  Future getUserGradesFromSubject(userID, subjectID) async {
+  /*
+  ##############################################################################
+  ######################       DEGREES FUNCTIONS      ############################
+  ##############################################################################
+  */
+
+  Future getUserDegreesFromSubject(userID, subjectID) async {
     try {
       var grades = await _gradesCollectionReference.doc(userID).collection(subjectID).get();
       return grades.docs.map((snapshot) => Degree.fromMap(snapshot.data(), snapshot.id)).toList();
@@ -84,6 +96,12 @@ class FirestoreDB extends ChangeNotifier {
     }
   }
 
+  /*
+  ##############################################################################
+  ######################       SUBJECTS FUNCTIONS      #########################
+  ##############################################################################
+  */
+
   Future addUserPresence(subjectID, userID, date, wasPresent) async {
     try {
       final snapshot = await _subjectsCollectionReference.doc(subjectID).collection(userID).get();
@@ -98,6 +116,71 @@ class FirestoreDB extends ChangeNotifier {
     }
   }
 
+  Future getTeachersSubjects(String uid) async {
+    try {
+      List<Subject> subjects = [];
+      await _subjectsCollectionReference.get().then(
+            (docs) => {
+              for (var doc in docs.docs)
+                {
+                  if (doc.get('leadingTeacherID') == uid)
+                    {
+                      subjects.add(new Subject(subjectID: doc.id, name: doc.get('name'), leadingTeacherID: doc.get('leadingTeacherID'))),
+                    }
+                }
+            },
+          );
+      return subjects;
+    } catch (e) {
+      print(e.toString());
+      return e.toString();
+    }
+  }
+
+  Future getSubjects() async {
+    try {
+      List<Subject> subjects = [];
+      await _subjectsCollectionReference.get().then((docs) => {
+            for (var doc in docs.docs)
+              {
+                subjects.add(new Subject(subjectID: doc.id, name: doc.get('name'), leadingTeacherID: doc.get('leadingTeacherID'))),
+              }
+          });
+      return subjects;
+    } catch (e) {
+      print(e.toString());
+      return e.toString();
+    }
+  }
+
+  Future addSubject(Subject subject) async {
+    try {
+      if (subject.subjectID != '') {
+        await _subjectsCollectionReference.doc(subject.subjectID).set(subject.toMap());
+      } else {
+        await _subjectsCollectionReference.add(subject.toMap());
+      }
+    } catch (e) {
+      print(e.toString());
+      return e.toString();
+    }
+  }
+
+  Future deleteSubject(Subject subject) async {
+    try {
+      await _subjectsCollectionReference.doc(subject.subjectID).delete();
+    } catch (e) {
+      print(e.toString());
+      return e.toString();
+    }
+  }
+
+  /*
+  ##############################################################################
+  ######################       EVENTS FUNCTIONS      ###########################
+  ##############################################################################
+  */
+
   Future addEvent(Event event) async {
     try {
       _eventsCollectionReference.add(event.toMap());
@@ -106,6 +189,12 @@ class FirestoreDB extends ChangeNotifier {
       return e.toString();
     }
   }
+
+  /*
+  ##############################################################################
+  ######################       USERS FUNCTIONS      ############################
+  ##############################################################################
+  */
 
   Future getUsers() async {
     try {
@@ -161,6 +250,49 @@ class FirestoreDB extends ChangeNotifier {
     }
   }
 
+  Future getUsersWithSurnameAndRole(surname, role) async {
+    try {
+      List<User> users = [];
+      await _userCollectionReference.get().then(
+            (docs) => {
+              for (var doc in docs.docs)
+                {
+                  if (doc.get('role') == role && doc.get('surname') == surname)
+                    {users.add(new User(userID: doc.get('uid'), name: doc.get('name'), surname: doc.get('surname'), role: doc.get('role')))}
+                }
+            },
+          );
+      return users;
+    } catch (e) {
+      print(e.toString());
+      return e.toString();
+    }
+  }
+
+  Future updateUser(User user) async {
+    try {
+      await _userCollectionReference.doc(user.userID).set(user.toMap());
+    } catch (e) {
+      print(e.toString());
+      return e.toString();
+    }
+  }
+
+  Future deleteUser(User user) async {
+    try {
+      await _userCollectionReference.doc(user.userID).delete();
+    } catch (e) {
+      print(e.toString());
+      return e.toString();
+    }
+  }
+
+  /*
+  ##############################################################################
+  ######################       CLASS FUNCTIONS      ############################
+  ##############################################################################
+  */
+
   Future getClasses() async {
     try {
       List<Class> classes = [];
@@ -200,27 +332,6 @@ class FirestoreDB extends ChangeNotifier {
     }
   }
 
-  Future getTeachersSubjects(String uid) async {
-    try {
-      List<Subject> subjects = [];
-      await _subjectsCollectionReference.get().then(
-            (docs) => {
-              for (var doc in docs.docs)
-                {
-                  if (doc.get('leadingTeacherID') == uid)
-                    {
-                      subjects.add(new Subject(subjectID: doc.id, name: doc.get('name'), leadingTeacherID: doc.get('leadingTeacherID'))),
-                    }
-                }
-            },
-          );
-      return subjects;
-    } catch (e) {
-      print(e.toString());
-      return e.toString();
-    }
-  }
-
   Future deleteClassWithID(classID) async {
     try {
       await _classCollectionReference.doc(classID).delete();
@@ -239,25 +350,6 @@ class FirestoreDB extends ChangeNotifier {
             },
           );
       return listOfIDs;
-    } catch (e) {
-      print(e.toString());
-      return e.toString();
-    }
-  }
-
-  Future getUsersWithSurnameAndRole(surname, role) async {
-    try {
-      List<User> users = [];
-      await _userCollectionReference.get().then(
-            (docs) => {
-              for (var doc in docs.docs)
-                {
-                  if (doc.get('role') == role && doc.get('surname') == surname)
-                    {users.add(new User(userID: doc.get('uid'), name: doc.get('name'), surname: doc.get('surname'), role: doc.get('role')))}
-                }
-            },
-          );
-      return users;
     } catch (e) {
       print(e.toString());
       return e.toString();
@@ -289,62 +381,6 @@ class FirestoreDB extends ChangeNotifier {
       } else {
         await _classCollectionReference.add(cl.toMap());
       }
-    } catch (e) {
-      print(e.toString());
-      return e.toString();
-    }
-  }
-
-  Future getSubjects() async {
-    try {
-      List<Subject> subjects = [];
-      await _subjectsCollectionReference.get().then((docs) => {
-            for (var doc in docs.docs)
-              {
-                subjects.add(new Subject(subjectID: doc.id, name: doc.get('name'), leadingTeacherID: doc.get('leadingTeacherID'))),
-              }
-          });
-      return subjects;
-    } catch (e) {
-      print(e.toString());
-      return e.toString();
-    }
-  }
-
-  Future addSubject(Subject subject) async {
-    try {
-      if (subject.subjectID != '') {
-        await _subjectsCollectionReference.doc(subject.subjectID).set(subject.toMap());
-      } else {
-        await _subjectsCollectionReference.add(subject.toMap());
-      }
-    } catch (e) {
-      print(e.toString());
-      return e.toString();
-    }
-  }
-
-  Future deleteSubject(Subject subject) async {
-    try {
-      await _subjectsCollectionReference.doc(subject.subjectID).delete();
-    } catch (e) {
-      print(e.toString());
-      return e.toString();
-    }
-  }
-
-  Future updateUser(User user) async {
-    try {
-      await _userCollectionReference.doc(user.userID).set(user.toMap());
-    } catch (e) {
-      print(e.toString());
-      return e.toString();
-    }
-  }
-
-  Future deleteUser(User user) async {
-    try {
-      await _userCollectionReference.doc(user.userID).delete();
     } catch (e) {
       print(e.toString());
       return e.toString();

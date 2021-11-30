@@ -32,7 +32,7 @@ class _StudentGradesState extends State<StudentDegrees> {
   Future<List> getDegrees() async {
     if (!loaded) {
       degrees.clear();
-      degrees = await _db.getUserGradesFromSubject(widget.currentStudent.userID, widget.currentSubject.subjectID);
+      degrees = await _db.getUserDegreesFromSubject(widget.currentStudent.userID, widget.currentSubject.subjectID);
       loaded = true;
     }
 
