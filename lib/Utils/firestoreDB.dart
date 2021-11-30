@@ -1,7 +1,4 @@
-import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:edziennik/Screens/Teacher_panel/class_manage/add_degree.dart';
 import 'package:edziennik/models/class.dart';
 import 'package:edziennik/models/degree.dart';
 import 'package:edziennik/models/event.dart';
@@ -15,11 +12,54 @@ class FirestoreDB extends ChangeNotifier {
   final CollectionReference _subjectsCollectionReference = FirebaseFirestore.instance.collection('subjects');
   final CollectionReference _eventsCollectionReference = FirebaseFirestore.instance.collection('events');
   final CollectionReference _gradesCollectionReference = FirebaseFirestore.instance.collection('degrees');
+  final CollectionReference _notesCollectionReference = FirebaseFirestore.instance.collection('notes');
+
+  Future addNoteToUser(userID, note) async {
+    try {
+      final snapshot = await _notesCollectionReference.doc(userID).get();
+      if (snapshot.exists) {
+        await _notesCollectionReference.doc(userID).update({
+          'notes': FieldValue.arrayUnion([note])
+        });
+      } else {
+        await _notesCollectionReference.doc(userID).set({'notes': []});
+      }
+    } catch (e) {
+      print(e.toString());
+      return e.toString();
+    }
+  }
+
+  Future deleteNoteFromUser(userID, note) async {
+    try {
+      await _notesCollectionReference.doc(userID).update({
+        'notes': FieldValue.arrayRemove([note])
+      });
+    } catch (e) {
+      print(e.toString());
+      return e.toString();
+    }
+  }
+
+  Future getUserNotes(userID) async {
+    List<String> notes = [];
+    try {
+      var all;
+      await _notesCollectionReference.doc(userID).get().then((value) => {
+            all = value.get('notes'),
+            for (var note in all) {notes.add(note)}
+          });
+      return notes;
+    } catch (e) {
+      print(e.toString());
+      return notes;
+    }
+  }
 
   Future getUserGradesFromSubject(userID, subjectID) async {
     try {
       var grades = await _gradesCollectionReference.doc(userID).collection(subjectID).get();
-      return grades.docs.map((snapshot) => Degree.fromMap(snapshot.data())).toList();
+      return grades.docs.map((snapshot) => Degree.fromMap(snapshot.data(), snapshot.id)).toList();
     } catch (e) {
       print(e.toString());
       return e.toString();
@@ -28,11 +68,14 @@ class FirestoreDB extends ChangeNotifier {
 
   Future addDegree(Degree degree, subjectID) async {
     try {
-      final snapshot = await _gradesCollectionReference.doc(degree.userID).get();
-      if (snapshot.exists) {
-        await _gradesCollectionReference.doc(degree.userID).collection(subjectID).add(degree.toMap());
+      final snapshot = await _gradesCollectionReference.doc(degree.userID).collection(subjectID).get();
+      if (snapshot.docs.isNotEmpty) {
+        if (degree.degreeID == '') {
+          await _gradesCollectionReference.doc(degree.userID).collection(subjectID).add(degree.toMap());
+        } else {
+          await _gradesCollectionReference.doc(degree.userID).collection(subjectID).doc(degree.degreeID).update(degree.toMap());
+        }
       } else {
-        print('dasd');
         await _gradesCollectionReference.doc(degree.userID).collection(subjectID).add(degree.toMap());
       }
     } catch (e) {
