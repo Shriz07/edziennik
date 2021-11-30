@@ -35,13 +35,18 @@ class _AddDegreeState extends State<AddDegree> {
   final _focusComment = FocusNode();
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
     _degreeDropdownValue = widget.degree.grade;
     _weightDropdownValue = widget.degree.weight;
     _commentTextController.text = widget.degree.comment;
+  }
+
+  @override
+  Widget build(BuildContext context) {
     double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return MaterialApp(
-      title: 'My events window',
+      title: 'Add degree',
       theme: ThemeData(
         textTheme: GoogleFonts.rubikTextTheme(
           Theme.of(context).textTheme,
@@ -237,10 +242,10 @@ class _AddDegreeState extends State<AddDegree> {
               widget.degree.grade = _degreeDropdownValue;
               widget.degree.weight = _weightDropdownValue;
               await _db.addDegree(widget.degree, widget.currentSubject.subjectID);
+              Navigator.pop(context);
             } else {
               showDialog(context: context, builder: (context) => PopupDialog(title: "Informacja", message: "Wypełnij wszystkie pola.", close: "Zamknij"));
             }
-            Navigator.pop(context);
           },
           icon: Icon(Icons.save, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
       IconButton(

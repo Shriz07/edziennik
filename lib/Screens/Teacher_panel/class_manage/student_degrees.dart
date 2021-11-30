@@ -31,6 +31,7 @@ class _StudentGradesState extends State<StudentDegrees> {
 
   Future<List> getDegrees() async {
     if (!loaded) {
+      degrees.clear();
       degrees = await _db.getUserGradesFromSubject(widget.currentStudent.userID, widget.currentSubject.subjectID);
       loaded = true;
     }
@@ -39,7 +40,9 @@ class _StudentGradesState extends State<StudentDegrees> {
   }
 
   FutureOr onGoBack(dynamic value) {
-    setState(() {});
+    setState(() {
+      loaded = false;
+    });
   }
 
   void navigateToAnotherScreen(screen) {
@@ -97,21 +100,17 @@ class _StudentGradesState extends State<StudentDegrees> {
     return <Widget>[
       IconButton(
           onPressed: () async {
-            Degree grade = new Degree(userID: widget.currentStudent.userID, grade: '3', date: DateTime.now(), comment: 'Odpowiedź', weight: '2');
-            _db.addDegree(grade, widget.currentSubject.subjectID);
-            Navigator.pop(context);
+            navigateToAnotherScreen(AddDegree(
+                currentStudent: widget.currentStudent,
+                currentSubject: widget.currentSubject,
+                degree: new Degree(userID: '', grade: '', date: DateTime.now(), comment: '', weight: '')));
           },
           icon: Icon(Icons.add_box, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
       IconButton(
           onPressed: () {
             if (_selectedDegree != -1) {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => AddDegree(currentStudent: widget.currentStudent, currentSubject: widget.currentSubject, degree: degrees[_selectedDegree])));
-              //navigateToAnotherScreen(AddDegree(currentStudent: widget.currentStudent, currentSubject: widget.currentSubject, degree: degrees[_selectedDegree]));
+              navigateToAnotherScreen(AddDegree(currentStudent: widget.currentStudent, currentSubject: widget.currentSubject, degree: degrees[_selectedDegree]));
             }
-            Navigator.pop(context);
           },
           icon: Icon(Icons.edit, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
       IconButton(

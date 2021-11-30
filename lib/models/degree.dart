@@ -9,13 +9,15 @@ class Degree {
   DateTime date;
   String comment;
   String weight;
+  String degreeID = '';
 
-  Degree.fromMap(Map snapshot)
+  Degree.fromMap(Map snapshot, String id)
       : userID = snapshot['userID'],
         grade = snapshot['grade'],
         date = snapshot['date'].toDate(),
         comment = snapshot['comment'],
-        weight = snapshot['weight'];
+        weight = snapshot['weight'],
+        degreeID = id;
 
   Map<String, dynamic> toMap() {
     return {
