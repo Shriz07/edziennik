@@ -22,9 +22,7 @@ class TeacherPanel extends StatelessWidget {
         appBar: AppBar(
           toolbarHeight: 3 * MediaQuery.of(context).size.height * 1 / 40,
           backgroundColor: MyColors.greenAccent,
-          title: Text('EDziennik Nauczyciel',
-              style: TextStyle(
-                  color: Colors.black, fontSize: 3 * unitHeightValue)),
+          title: Text('EDziennik Nauczyciel', style: TextStyle(color: Colors.black, fontSize: 3 * unitHeightValue)),
         ),
         body: Container(
           alignment: AlignmentDirectional.center,
@@ -34,16 +32,10 @@ class TeacherPanel extends StatelessWidget {
               panelTitle('Nauczyciel [ID]', context),
               SizedBox(height: 30.0),
               panelOption('Moje przedmioty', () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => MySubjects()));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => MySubjects()));
               }, context),
               panelOption('Uwagi', () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => MyNotes()));
-              }, context),
-              panelOption('Wydarzenia', () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => MyEvents()));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => MyNotes()));
               }, context),
             ],
           ),
