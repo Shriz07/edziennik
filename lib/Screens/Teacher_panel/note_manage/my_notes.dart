@@ -1,7 +1,10 @@
 import 'dart:async';
+import 'package:edziennik/Screens/Teacher_panel/note_manage/user_notes.dart';
 import 'package:edziennik/Utils/firestoreDB.dart';
 import 'package:edziennik/custom_widgets/panel_widgets.dart';
+import 'package:edziennik/custom_widgets/popup_dialog.dart';
 import 'package:edziennik/models/class.dart';
+import 'package:edziennik/models/user.dart';
 import 'package:edziennik/style/MyColors.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -12,26 +15,16 @@ class MyNotes extends StatefulWidget {
 }
 
 class _MyNotesState extends State<MyNotes> {
-  String classDropdownValue = '';
-  String subjectDropdownValue = '';
+  List<User> _users = [];
+  bool showUsers = false;
+  int _findingSelection = -1;
+  final _formkey = GlobalKey<FormState>();
 
   final FirestoreDB _db = FirestoreDB();
-  bool loaded = false;
-  List<String> subjects = ['matematyka', 'angielski', 'polski'];
-  List<String> classes = ['2A', '3D', '6C'];
-  List<String> notes = [
-    'Krzychu pił piwo na lekcji',
-    'Maciuś brzydko pachnie',
-    'Kasia ma za duży dekolt'
-  ];
   int _selectedNote = -1;
 
-  final _nameTextController = TextEditingController();
-  final _focusName = FocusNode();
-
-  Future<List> getSubjects() async {
-    return subjects;
-  }
+  final _surnameTextController = TextEditingController();
+  final _focusSurname = FocusNode();
 
   @override
   Widget build(BuildContext context) {
@@ -45,37 +38,25 @@ class _MyNotesState extends State<MyNotes> {
       ),
       home: GestureDetector(
         onTap: () {
-          _focusName.unfocus();
+          _focusSurname.unfocus();
         },
         child: Scaffold(
           appBar: AppBar(
             toolbarHeight: 3 * MediaQuery.of(context).size.height * 1 / 40,
             backgroundColor: MyColors.greenAccent,
-            title: Text('EDziennik',
-                style: TextStyle(
-                    color: Colors.black, fontSize: 3 * unitHeightValue)),
+            title: Text('EDziennik', style: TextStyle(color: Colors.black, fontSize: 3 * unitHeightValue)),
           ),
-          body: FutureBuilder<List>(
-            future: getSubjects(),
-            builder: (context, AsyncSnapshot<List> snapshot) {
-              if (snapshot.hasData) {
-                return SafeArea(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: <Widget>[
-                        SizedBox(height: 25.0),
-                        panelTitle('Wystawione uwagi', context),
-                        myNotesContainer(),
-                        bottomOptionsMenu(
-                            context, listOfBottomIconsWithActions())
-                      ],
-                    ),
-                  ),
-                );
-              } else {
-                return Center(child: CircularProgressIndicator());
-              }
-            },
+          body: SafeArea(
+            child: SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  SizedBox(height: 25.0),
+                  panelTitle('Dodawanie uwagi', context),
+                  myNotesContainer(),
+                  bottomApproveBtn(),
+                ],
+              ),
+            ),
           ),
         ),
       ),
@@ -83,10 +64,11 @@ class _MyNotesState extends State<MyNotes> {
   }
 
   Widget myNotesContainer() {
+    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return Padding(
       padding: const EdgeInsets.all(15.0),
       child: Container(
-        height: MediaQuery.of(context).size.height * 1 / 1.5,
+        height: MediaQuery.of(context).size.height * 1 / 2,
         width: double.infinity,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
@@ -95,74 +77,69 @@ class _MyNotesState extends State<MyNotes> {
         child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
-              SizedBox(height: 15),
-              formFieldTitle('Przedmiot:', context),
-              customDropdownSubjects(),
-              formFieldTitle('Klasa:', context),
-              customDropdownClasses(),
-              formFieldTitle('Uwagi: ', context),
-              myNotesList(),
+              SizedBox(height: 25),
+              Form(
+                key: _formkey,
+                child: Column(
+                  children: <Widget>[
+                    Text(
+                      'Znajdź ucznia',
+                      style: TextStyle(fontSize: 3.0 * unitHeightValue),
+                    ),
+                    SizedBox(height: 25),
+                    customFormField(_surnameTextController, 'Nazwisko ucznia', _focusSurname, context, (val) => val!.isNotEmpty ? null : 'Wprowadź nazwisko'),
+                    SizedBox(height: 5),
+                    MaterialButton(
+                      color: MyColors.greenAccent,
+                      onPressed: () async {
+                        _focusSurname.unfocus();
+                        if (_formkey.currentState!.validate()) {
+                          _users = await _db.getUsersWithSurnameAndRole(_surnameTextController.text, 'uczeń');
+                          if (_users.isEmpty) {
+                            await showDialog(
+                                context: context, builder: (context) => PopupDialog(title: 'Informacja', message: 'Nie znaleziono ucznia o podanym nazwisku.', close: 'Zamknij'));
+                          }
+                          setState(() {
+                            showUsers = true;
+                          });
+                        }
+                      },
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                      child: Text(
+                        'Szukaj',
+                        style: TextStyle(fontSize: 3.0 * unitHeightValue),
+                      ),
+                    ),
+                    if (showUsers == true)
+                      SingleChildScrollView(
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints(maxHeight: 100),
+                          child: ListView.builder(
+                            itemCount: _users.length,
+                            itemBuilder: (context, findingIndex) {
+                              return ListTile(
+                                title: Center(
+                                    child: Text(
+                                  _users[findingIndex].name + ' ' + _users[findingIndex].surname,
+                                  style: TextStyle(fontSize: 2.5 * unitHeightValue),
+                                )),
+                                tileColor: _findingSelection == findingIndex ? Colors.blue : null,
+                                onTap: () {
+                                  setState(() {
+                                    _findingSelection = findingIndex;
+                                  });
+                                },
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget myNotesList() {
-    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
-    return Padding(
-      padding: const EdgeInsets.all(15.0),
-      child: Row(
-        children: <Widget>[
-          Flexible(
-            child: Container(
-                height: 250,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: Colors.black, width: 2.0),
-                ),
-                child: ListView.builder(
-                    itemCount: notes.length,
-                    itemBuilder: (context, index) {
-                      return InkWell(
-                        child: Center(
-                          child: Container(
-                            color: _selectedNote == index
-                                ? Colors.blue.withOpacity(0.5)
-                                : Colors.transparent,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: <Widget>[
-                                noteName(notes[index]),
-                              ],
-                            ),
-                          ),
-                        ),
-                        // onLongPress: () => {
-                        //   if (_selectedNote != index)
-                        //     {
-                        //       setState(() {
-                        //         _selectedNote = index;
-                        //       })
-                        //     }
-                        // },
-                      );
-                    })),
-          ),
-          Column(
-            children: <Widget>[
-              Icon(Icons.person_add,
-                  size: 4 * unitHeightValue, color: MyColors.dodgerBlue),
-              SizedBox(height: 25),
-              Icon(Icons.edit,
-                  size: 4 * unitHeightValue, color: MyColors.dodgerBlue),
-              SizedBox(height: 25),
-              Icon(Icons.delete,
-                  size: 4 * unitHeightValue, color: MyColors.dodgerBlue),
-            ],
-          )
-        ],
       ),
     );
   }
@@ -174,8 +151,7 @@ class _MyNotesState extends State<MyNotes> {
           child: Center(
             child: Text(
               info,
-              style: TextStyle(
-                  fontSize: 3 * unitHeightValue, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 3 * unitHeightValue, fontWeight: FontWeight.bold),
             ),
           ),
           decoration: BoxDecoration(
@@ -186,99 +162,43 @@ class _MyNotesState extends State<MyNotes> {
     );
   }
 
-  Widget customDropdownSubjects() {
+  Widget bottomApproveBtn() {
     double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return Padding(
-      padding: const EdgeInsets.all(15.0),
-      child: Container(
-        alignment: AlignmentDirectional.centerStart,
-        width: double.infinity,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: Colors.black, width: 2.0),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.only(left: 8.0),
-          child: DropdownButtonFormField<String>(
-            value: subjectDropdownValue == '' ? null : subjectDropdownValue,
-            icon: Icon(Icons.arrow_drop_down),
-            iconSize: 42,
-            elevation: 16,
-            onChanged: (String? newSelectedSubject) {
-              setState(() {
-                subjectDropdownValue = newSelectedSubject!;
-              });
-            },
-            items: subjects
-                .map<DropdownMenuItem<String>>((String selectedSubject) {
-              return DropdownMenuItem<String>(
-                value: selectedSubject,
-                child: Text(
-                  selectedSubject,
-                  style: TextStyle(fontSize: 3 * unitHeightValue),
-                ),
-              );
-            }).toList(),
+      padding: const EdgeInsets.only(left: 70.0, right: 70.0, top: 30.0),
+      child: InkWell(
+        child: Container(
+          width: MediaQuery.of(context).size.width * 1 / 2,
+          child: Center(
+              child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Text(
+              "Wybierz",
+              style: TextStyle(fontSize: 3 * unitHeightValue, color: Colors.white),
+            ),
+          )),
+          decoration: BoxDecoration(
+            color: MyColors.dodgerBlue,
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.5),
+                spreadRadius: 5,
+                blurRadius: 7,
+                offset: Offset(0, 3),
+              ),
+            ],
           ),
         ),
+        onTap: () {
+          if (_findingSelection == -1) {
+            showDialog(
+                context: context, builder: (context) => PopupDialog(title: 'Informacja', message: 'Najpierw wybierz ucznia, któremu chcesz wystawić uwagę.', close: 'Zamknij'));
+          } else {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => UserNotes(user: _users[_findingSelection])));
+          }
+        },
       ),
     );
-  }
-
-  Widget customDropdownClasses() {
-    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
-    return Padding(
-      padding: const EdgeInsets.all(15.0),
-      child: Container(
-        alignment: AlignmentDirectional.centerStart,
-        width: double.infinity,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: Colors.black, width: 2.0),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.only(left: 8.0),
-          child: DropdownButtonFormField<String>(
-            value: classDropdownValue == '' ? null : classDropdownValue,
-            icon: Icon(Icons.arrow_drop_down),
-            iconSize: 42,
-            elevation: 16,
-            onChanged: (String? newSelectedClass) {
-              setState(() {
-                classDropdownValue = newSelectedClass!;
-              });
-            },
-            items:
-                classes.map<DropdownMenuItem<String>>((String selectedClass) {
-              return DropdownMenuItem<String>(
-                value: selectedClass,
-                child: Text(
-                  selectedClass,
-                  style: TextStyle(fontSize: 3 * unitHeightValue),
-                ),
-              );
-            }).toList(),
-          ),
-        ),
-      ),
-    );
-  }
-
-  List<Widget> listOfBottomIconsWithActions() {
-    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
-    return <Widget>[
-      IconButton(
-          onPressed: () async {
-            Navigator.pop(context);
-          },
-          icon: Icon(Icons.save,
-              size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
-      IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: Icon(Icons.close_rounded,
-              size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
-    ];
   }
 }
