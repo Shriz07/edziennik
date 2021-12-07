@@ -1,15 +1,11 @@
 class User {
-  User({
-    required this.userID,
-    required this.name,
-    required this.surname,
-    required this.role,
-  });
+  User({required this.userID, required this.name, required this.surname, required this.role, required this.classID});
 
   String userID;
   String name;
   String surname;
   String role;
+  String classID;
 
   Map<String, dynamic> toMap() {
     return {
@@ -17,6 +13,7 @@ class User {
       'name': name,
       'surname': surname,
       'role': role,
+      'classID': classID,
     };
   }
 
@@ -24,5 +21,6 @@ class User {
       : userID = snapshot['uid'],
         name = snapshot['name'],
         surname = snapshot['surname'],
-        role = snapshot['role'];
+        role = snapshot['role'],
+        classID = snapshot['classID'];
 }

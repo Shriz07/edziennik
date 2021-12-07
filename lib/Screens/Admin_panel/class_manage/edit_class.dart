@@ -1,5 +1,6 @@
 import 'package:edziennik/Utils/firestoreDB.dart';
 import 'package:edziennik/custom_widgets/panel_widgets.dart';
+import 'package:edziennik/custom_widgets/popup_dialog.dart';
 import 'package:edziennik/models/class.dart';
 import 'package:edziennik/models/user.dart';
 import 'package:edziennik/style/MyColors.dart';
@@ -196,7 +197,9 @@ class _EditClassState extends State<EditClass> {
       if (_selectedStudent == -1) {
         print('Nie wybrano studenta');
       } else {
+        _students[_selectedStudent].classID = '';
         _db.deleteUserFromClass(widget.currentClass.classID, _students[_selectedStudent].userID);
+        _db.updateUser(_students[_selectedStudent]);
         setState(() {
           loaded = false;
         });
@@ -227,7 +230,7 @@ class _EditClassState extends State<EditClass> {
                         child: Column(
                           children: <Widget>[
                             Text(
-                              'Znajdź ucznia',
+                              'Znajdź ucznia po nazwisku',
                               style: TextStyle(fontSize: 3.0 * unitHeightValue),
                             ),
                             SizedBox(height: 25),
@@ -281,11 +284,18 @@ class _EditClassState extends State<EditClass> {
                                 child: MaterialButton(
                                   color: MyColors.greenAccent,
                                   onPressed: () async {
-                                    await _db.addUserToClass(widget.currentClass.classID, _users[_findingSelection].userID);
-                                    _users.clear();
-                                    showUsers = false;
-                                    onGoBack();
-                                    Navigator.pop(context);
+                                    if (_users[_findingSelection].classID == '') {
+                                      _users[_findingSelection].classID = widget.currentClass.classID;
+                                      await _db.addUserToClass(widget.currentClass.classID, _users[_findingSelection].userID);
+                                      await _db.updateUser(_users[_findingSelection]);
+                                      _users.clear();
+                                      showUsers = false;
+                                      onGoBack();
+                                      Navigator.pop(context);
+                                    } else {
+                                      await showDialog(
+                                          context: context, builder: (context) => PopupDialog(title: 'Informacja', message: 'Uczeń należy już do innej klasy.', close: 'Zamknij'));
+                                    }
                                   },
                                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                                   child: Text(

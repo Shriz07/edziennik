@@ -203,7 +203,7 @@ class FirestoreDB extends ChangeNotifier {
             (docs) => {
               for (var doc in docs.docs)
                 {
-                  users.add(new User(userID: doc.get('uid'), name: doc.get('name'), surname: doc.get('surname'), role: doc.get('role'))),
+                  users.add(new User(userID: doc.get('uid'), name: doc.get('name'), surname: doc.get('surname'), role: doc.get('role'), classID: doc.get('classID'))),
                 }
             },
           );
@@ -223,7 +223,7 @@ class FirestoreDB extends ChangeNotifier {
                 {
                   if (doc.get('role') == role)
                     {
-                      users.add(new User(userID: doc.id, name: doc.get('name'), surname: doc.get('surname'), role: doc.get('role'))),
+                      users.add(new User(userID: doc.id, name: doc.get('name'), surname: doc.get('surname'), role: doc.get('role'), classID: doc.get('classID'))),
                     }
                 }
             },
@@ -240,7 +240,7 @@ class FirestoreDB extends ChangeNotifier {
       late User user;
       await _userCollectionReference.doc(uid).get().then(
             (snapshot) => {
-              user = new User(userID: snapshot['uid'], name: snapshot['name'], surname: snapshot['surname'], role: snapshot['role']),
+              user = new User(userID: snapshot['uid'], name: snapshot['name'], surname: snapshot['surname'], role: snapshot['role'], classID: snapshot['classID']),
             },
           );
       return user;
@@ -258,7 +258,7 @@ class FirestoreDB extends ChangeNotifier {
               for (var doc in docs.docs)
                 {
                   if (doc.get('role') == role && doc.get('surname') == surname)
-                    {users.add(new User(userID: doc.get('uid'), name: doc.get('name'), surname: doc.get('surname'), role: doc.get('role')))}
+                    {users.add(new User(userID: doc.get('uid'), name: doc.get('name'), surname: doc.get('surname'), role: doc.get('role'), classID: doc.get('classID')))}
                 }
             },
           );
