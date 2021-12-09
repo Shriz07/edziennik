@@ -145,7 +145,8 @@ class _ClassPresenceState extends State<ClassPresence> {
         child: new ListView(
             children: values.keys.map((String key) {
           return new CheckboxListTile(
-              title: Text(students.firstWhere((element) => element.userID == key).name + " " + students.firstWhere((element) => element.userID == key).surname),
+              title: Text(students.firstWhere((element) => element.userID == key).name + " " + students.firstWhere((element) => element.userID == key).surname,
+                  style: TextStyle(fontSize: 2.5 * unitHeightValue)),
               value: values[key],
               onChanged: (bool? value) {
                 setState(() {

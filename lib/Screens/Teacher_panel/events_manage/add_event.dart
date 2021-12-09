@@ -172,6 +172,7 @@ class _AddEventState extends State<AddEvent> {
             keyboardType: TextInputType.multiline,
             minLines: 3,
             maxLines: null,
+            style: TextStyle(fontSize: 2.5 * unitHeightValue),
           ),
         ),
       ),

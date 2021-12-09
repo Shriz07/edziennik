@@ -115,6 +115,7 @@ class _ClassSelectedState extends State<ClassSelected> {
   }
 
   Widget studentsInClassSelection() {
+    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return Padding(
       padding: const EdgeInsets.all(15.0),
       child: Row(
@@ -167,7 +168,7 @@ class _ClassSelectedState extends State<ClassSelected> {
                     } else
                       showDialog(context: context, builder: (context) => PopupDialog(title: "Informacja", message: "Wybierz ucznia z listy!", close: "Zamknij"));
                   },
-                  icon: Icon(Icons.add_box, size: 35.0, color: MyColors.dodgerBlue)),
+                  icon: Icon(Icons.add_box, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
               SizedBox(height: 25),
               IconButton(
                   onPressed: () {
@@ -176,9 +177,9 @@ class _ClassSelectedState extends State<ClassSelected> {
                           context, MaterialPageRoute(builder: (context) => StudentDegrees(currentStudent: students[_selectedStudent], currentSubject: widget.currentSubject)));
                     }
                   },
-                  icon: Icon(Icons.view_list, size: 30.0, color: MyColors.dodgerBlue)),
+                  icon: Icon(Icons.view_list, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
               SizedBox(height: 25),
-              Icon(Icons.note_alt, size: 35.0, color: MyColors.dodgerBlue),
+              Icon(Icons.note_alt, size: 4 * unitHeightValue, color: MyColors.dodgerBlue),
             ],
           )
         ],
