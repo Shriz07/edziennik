@@ -1,4 +1,5 @@
 import 'package:edziennik/style/MyColors.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'pages/multi_example.dart';
@@ -32,7 +33,9 @@ class _StartPageState extends State<StartPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Builder(builder: (BuildContext context) => TableMultiExample()),
+        child: Builder(
+            builder: (BuildContext context) =>
+                TableMultiExample(uid: FirebaseAuth.instance.currentUser!.uid)),
       ),
     );
   }

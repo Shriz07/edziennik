@@ -191,6 +191,30 @@ class FirestoreDB extends ChangeNotifier {
     }
   }
 
+  Future getEventsInClass(classID) async {
+    try {
+      List<Event> events = [];
+      await _eventsCollectionReference.get().then((docs) => {
+            for (var doc in docs.docs)
+              {
+                if (doc.get('classID') == classID)
+                  {
+                    events.add(Event(
+                        date: DateTime.parse(doc.get('date')),
+                        type: doc.get('type'),
+                        description: doc.get('description'),
+                        subject: doc.get('subject'),
+                        classID: classID))
+                  }
+              }
+          });
+      return events;
+    } catch (e) {
+      print(e.toString());
+      return e.toString();
+    }
+  }
+
   Future getSubjects() async {
     try {
       List<Subject> subjects = [];
