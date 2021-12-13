@@ -1,34 +1,31 @@
 import 'dart:async';
 import 'package:edziennik/Utils/firestoreDB.dart';
 import 'package:edziennik/custom_widgets/panel_widgets.dart';
-import 'package:edziennik/models/class.dart';
-import 'package:edziennik/models/degree.dart';
 import 'package:edziennik/models/subject.dart';
 import 'package:edziennik/models/user.dart';
 import 'package:edziennik/style/MyColors.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
 
-class MyDegrees extends StatefulWidget {
+class MyPresences extends StatefulWidget {
   User currentStudent;
 
-  MyDegrees({Key? key, required this.currentStudent});
+  MyPresences({Key? key, required this.currentStudent});
 
   @override
-  _MyDegreesState createState() => _MyDegreesState();
+  _MyPresencesState createState() => _MyPresencesState();
 }
 
-class _MyDegreesState extends State<MyDegrees> {
+class _MyPresencesState extends State<MyPresences> {
   String classDropdownValue = '';
   String subjectDropdownValue = '';
-  List<Degree> degrees = [];
   final FirestoreDB _db = FirestoreDB();
   int _selectedDegree = -1;
 
   bool subjectLoaded = false;
   List<Subject> subjects = [];
   int _selectedNote = -1;
+  Map<String, dynamic> precenses = {};
 
   final _nameTextController = TextEditingController();
   final _focusName = FocusNode();
@@ -41,11 +38,10 @@ class _MyDegreesState extends State<MyDegrees> {
     return subjects;
   }
 
-  Future getDegrees(subjectID) async {
-    degrees.clear();
-    degrees = await _db.getUserDegreesFromSubject(
-        widget.currentStudent.userID, subjectID);
-    return degrees;
+  Future getPresences(subjectID) async {
+    precenses =
+        await _db.getUserPresences(subjectID, widget.currentStudent.userID);
+    return precenses;
   }
 
   @override
@@ -84,7 +80,7 @@ class _MyDegreesState extends State<MyDegrees> {
                           child: Column(
                             children: <Widget>[
                               SizedBox(height: 25.0),
-                              panelTitle('Wystawione oceny', context),
+                              panelTitle('Obecności', context),
                               myDegreesContainer(),
                             ],
                           ),
@@ -121,7 +117,7 @@ class _MyDegreesState extends State<MyDegrees> {
               SizedBox(height: 15),
               formFieldTitle('Przedmiot:', context),
               customDropdownSubjects(),
-              formFieldTitle('Oceny: ', context),
+              formFieldTitle('Obecności: ', context),
               myDegreesList(),
             ],
           ),
@@ -137,42 +133,27 @@ class _MyDegreesState extends State<MyDegrees> {
       child: Row(
         children: <Widget>[
           Flexible(
-            child: Container(
-                height: 250,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: Colors.black, width: 2.0),
-                ),
-                child: ListView.builder(
-                    itemCount: degrees.length,
-                    itemBuilder: (context, index) {
-                      return InkWell(
-                        child: Center(
-                          child: Container(
-                            color: _selectedNote == index
-                                ? Colors.blue.withOpacity(0.5)
-                                : Colors.transparent,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: <Widget>[
-                                degreeInfo(
-                                    DateFormat('dd-MM-yyyy').format(
-                                        DateTime.parse(
-                                            degrees[index].date.toString())),
-                                    true,
-                                    2),
-                                degreeInfo(degrees[index].grade, true, 1),
-                                degreeInfo(
-                                    degrees[index].comment.split(' ').first,
-                                    true,
-                                    2),
-                              ],
-                            ),
-                          ),
-                        ),
-                      );
-                    })),
-          ),
+              child: Container(
+            height: 250,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: Colors.black, width: 2.0),
+            ),
+            child: new ListView.builder(
+              itemCount: precenses.length,
+              itemBuilder: (BuildContext context, int index) {
+                String key = precenses.keys.elementAt(index);
+                return new Column(children: [
+                  new ListTile(
+                    title: Text('$key'),
+                    subtitle: precenses[key] == true
+                        ? Text('obecny')
+                        : Text('nieobecny'),
+                  )
+                ]);
+              },
+            ),
+          ))
         ],
       ),
     );
@@ -220,7 +201,8 @@ class _MyDegreesState extends State<MyDegrees> {
             iconSize: 42,
             elevation: 16,
             onChanged: (String? newSelectedSubject) async {
-              degrees = await getDegrees(newSelectedSubject);
+              precenses = await getPresences(newSelectedSubject);
+              print(precenses);
               setState(() {
                 subjectDropdownValue = newSelectedSubject!;
               });

@@ -27,7 +27,7 @@ class StudentHome extends StatefulWidget {
 class _MyStatefulWidgetState extends State<StudentHome> {
   int _selectedIndex = 0;
   static final List<Widget> _widgetOptions = <Widget>[
-    StudentPanel(),
+    StudentPanel(uid: FirebaseAuth.instance.currentUser!.uid),
     Calendar(),
     Profile(uid: FirebaseAuth.instance.currentUser!.uid),
   ];

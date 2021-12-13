@@ -1,12 +1,20 @@
 import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:edziennik/Utils/firestoreDB.dart';
 import 'package:edziennik/custom_widgets/panel_widgets.dart';
 import 'package:edziennik/models/class.dart';
+import 'package:edziennik/models/event.dart';
+import 'package:edziennik/models/subject.dart';
+import 'package:edziennik/models/user.dart';
 import 'package:edziennik/style/MyColors.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class MyNotes extends StatefulWidget {
+  User currentStudent;
+
+  MyNotes({Key? key, required this.currentStudent});
+
   @override
   _MyNotesState createState() => _MyNotesState();
 }
@@ -14,22 +22,21 @@ class MyNotes extends StatefulWidget {
 class _MyNotesState extends State<MyNotes> {
   String classDropdownValue = '';
   String subjectDropdownValue = '';
-
+  final CollectionReference _notesCollectionReference =
+      FirebaseFirestore.instance.collection('notes');
   final FirestoreDB _db = FirestoreDB();
   bool loaded = false;
-  List<String> subjects = ['matematyka', 'angielski', 'polski'];
-  List<String> notes = [
-    'Krzychu pił piwo na lekcji',
-    'Maciuś brzydko pachnie',
-    'Kasia ma za duży dekolt'
-  ];
+  List<String> notes = [];
   int _selectedNote = -1;
 
   final _nameTextController = TextEditingController();
   final _focusName = FocusNode();
 
-  Future<List> getSubjects() async {
-    return subjects;
+  Future<List> getNotes() async {
+    if (!loaded) {
+      notes = await _db.getUserNotes(widget.currentStudent.userID);
+    }
+    return notes;
   }
 
   @override
@@ -55,7 +62,7 @@ class _MyNotesState extends State<MyNotes> {
                     color: Colors.black, fontSize: 3 * unitHeightValue)),
           ),
           body: FutureBuilder<List>(
-            future: getSubjects(),
+            future: getNotes(),
             builder: (context, AsyncSnapshot<List> snapshot) {
               if (snapshot.hasData) {
                 return SafeArea(
@@ -82,23 +89,11 @@ class _MyNotesState extends State<MyNotes> {
   Widget myNotesContainer() {
     return Padding(
       padding: const EdgeInsets.all(15.0),
-      child: Container(
-        height: MediaQuery.of(context).size.height * 1 / 1.5,
-        width: double.infinity,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: Colors.black, width: 2.0),
-        ),
-        child: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              SizedBox(height: 15),
-              formFieldTitle('Przedmiot:', context),
-              customDropdownSubjects(),
-              formFieldTitle('Uwagi: ', context),
-              myNotesList(),
-            ],
-          ),
+      child: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            myNotesList(),
+          ],
         ),
       ),
     );
@@ -129,19 +124,11 @@ class _MyNotesState extends State<MyNotes> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: <Widget>[
-                                noteName(notes[index]),
+                                eventName(notes[index]),
                               ],
                             ),
                           ),
                         ),
-                        // onLongPress: () => {
-                        //   if (_selectedNote != index)
-                        //     {
-                        //       setState(() {
-                        //         _selectedNote = index;
-                        //       })
-                        //     }
-                        // },
                       );
                     })),
           ),
@@ -150,7 +137,7 @@ class _MyNotesState extends State<MyNotes> {
     );
   }
 
-  Widget noteName(info) {
+  Widget eventName(info) {
     double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return Expanded(
       child: Container(
@@ -166,45 +153,6 @@ class _MyNotesState extends State<MyNotes> {
               bottom: BorderSide(color: Colors.grey),
             ),
           )),
-    );
-  }
-
-  Widget customDropdownSubjects() {
-    double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
-    return Padding(
-      padding: const EdgeInsets.all(15.0),
-      child: Container(
-        alignment: AlignmentDirectional.centerStart,
-        width: double.infinity,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: Colors.black, width: 2.0),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.only(left: 8.0),
-          child: DropdownButtonFormField<String>(
-            value: subjectDropdownValue == '' ? null : subjectDropdownValue,
-            icon: Icon(Icons.arrow_drop_down),
-            iconSize: 42,
-            elevation: 16,
-            onChanged: (String? newSelectedSubject) {
-              setState(() {
-                subjectDropdownValue = newSelectedSubject!;
-              });
-            },
-            items: subjects
-                .map<DropdownMenuItem<String>>((String selectedSubject) {
-              return DropdownMenuItem<String>(
-                value: selectedSubject,
-                child: Text(
-                  selectedSubject,
-                  style: TextStyle(fontSize: 3 * unitHeightValue),
-                ),
-              );
-            }).toList(),
-          ),
-        ),
-      ),
     );
   }
 }
