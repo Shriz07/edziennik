@@ -36,36 +36,25 @@ class StudentPanel extends StatelessWidget {
             if (snapshot.hasData) {
               return Scaffold(
                 appBar: AppBar(
-                  toolbarHeight:
-                      3 * MediaQuery.of(context).size.height * 1 / 40,
+                  toolbarHeight: 3 * MediaQuery.of(context).size.height * 1 / 40,
                   backgroundColor: MyColors.greenAccent,
-                  title: Text('EDziennik Uczeń',
-                      style: TextStyle(
-                          color: Colors.black, fontSize: 3 * unitHeightValue)),
+                  title: Text('EDziennik Uczeń', style: TextStyle(color: Colors.black, fontSize: 3 * unitHeightValue)),
                 ),
                 body: Container(
                   alignment: AlignmentDirectional.center,
                   child: Column(
                     children: <Widget>[
                       SizedBox(height: 20.0),
-                      panelTitle('Uczeń [ID]', context),
+                      panelTitle('Panel ucznia', context),
                       SizedBox(height: 30.0),
                       panelOption('Oceny', () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    MyDegrees(currentStudent: user)));
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => MyDegrees(currentStudent: user)));
                       }, context),
                       panelOption('Uwagi', () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => MyNotes(currentStudent: user)));
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => MyNotes(currentStudent: user)));
                       }, context),
                       panelOption('Obecności', () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => MyPresences(currentStudent: user)));
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => MyPresences(currentStudent: user)));
                       }, context),
                     ],
                   ),
