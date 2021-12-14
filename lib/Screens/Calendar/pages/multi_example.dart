@@ -119,7 +119,7 @@ class _TableMultiExampleState extends State<TableMultiExample> {
                   },
                 ),
                 ElevatedButton(
-                  child: Text('Clear selection'),
+                  child: Text('Wyczyść'),
                   onPressed: () {
                     setState(() {
                       _selectedDays.clear();

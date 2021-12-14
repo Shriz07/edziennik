@@ -28,6 +28,7 @@ class _ClassManageState extends State<ClassManage> {
       for (var cl in classes) {
         cl.supervisingTeacher = await _db.getUserWithID(cl.supervisingTeacherID);
       }
+      classes.sort((a, b) => a.name.compareTo(b.name));
     }
     loaded = true;
     return classes;
@@ -187,7 +188,7 @@ class _ClassManageState extends State<ClassManage> {
                   ),
                 ),
               ),
-              onLongPress: () => {
+              onTap: () => {
                 if (_selectedClass != index)
                   {
                     setState(() {

@@ -27,7 +27,8 @@ class _MyClassesState extends State<MyClasses> {
 
   Future<List> getClasses() async {
     if (!loaded) {
-      classes = await _db.getTeachersClasses(user!.uid);
+      classes = await _db.getClasses();
+      classes.sort((a, b) => a.name.compareTo(b.name));
     }
     loaded = true;
     return classes;
@@ -60,7 +61,7 @@ class _MyClassesState extends State<MyClasses> {
                 child: Column(
                   children: <Widget>[
                     SizedBox(height: 25.0),
-                    panelTitle('Moje klasy', context),
+                    panelTitle('Wybór klasy', context),
                     // classesListHeader(),
                     classesListContainer(),
                     bottomApproveBtn(),
@@ -139,7 +140,7 @@ class _MyClassesState extends State<MyClasses> {
                   ),
                 ),
               ),
-              onLongPress: () => {
+              onTap: () => {
                 if (_selectedClass != index)
                   {
                     setState(() {

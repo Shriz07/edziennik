@@ -3,6 +3,7 @@ import 'package:edziennik/Screens/Teacher_panel/class_manage/add_degree.dart';
 import 'package:edziennik/Screens/Teacher_panel/class_manage/class_presence.dart';
 import 'package:edziennik/Screens/Teacher_panel/class_manage/student_degrees.dart';
 import 'package:edziennik/Screens/Teacher_panel/events_manage/add_event.dart';
+import 'package:edziennik/Screens/Teacher_panel/note_manage/user_notes.dart';
 import 'package:edziennik/Utils/firestoreDB.dart';
 import 'package:edziennik/custom_widgets/panel_widgets.dart';
 import 'package:edziennik/custom_widgets/popup_dialog.dart';
@@ -142,7 +143,7 @@ class _ClassSelectedState extends State<ClassSelected> {
                             ),
                           ),
                         ),
-                        onLongPress: () => {
+                        onTap: () => {
                           if (_selectedStudent != index)
                             {
                               setState(() {
@@ -179,7 +180,13 @@ class _ClassSelectedState extends State<ClassSelected> {
                   },
                   icon: Icon(Icons.view_list, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
               SizedBox(height: 25),
-              Icon(Icons.note_alt, size: 4 * unitHeightValue, color: MyColors.dodgerBlue),
+              IconButton(
+                  onPressed: () {
+                    if (_selectedStudent != -1) {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => UserNotes(user: students[_selectedStudent])));
+                    }
+                  },
+                  icon: Icon(Icons.note_alt, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
             ],
           )
         ],

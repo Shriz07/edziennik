@@ -39,8 +39,7 @@ class _MyPresencesState extends State<MyPresences> {
   }
 
   Future getPresences(subjectID) async {
-    precenses =
-        await _db.getUserPresences(subjectID, widget.currentStudent.userID);
+    precenses = await _db.getUserPresences(subjectID, widget.currentStudent.userID);
     return precenses;
   }
 
@@ -64,12 +63,9 @@ class _MyPresencesState extends State<MyPresences> {
             if (snapshot.hasData) {
               return Scaffold(
                 appBar: AppBar(
-                  toolbarHeight:
-                      3 * MediaQuery.of(context).size.height * 1 / 40,
+                  toolbarHeight: 3 * MediaQuery.of(context).size.height * 1 / 40,
                   backgroundColor: MyColors.greenAccent,
-                  title: Text('EDziennik',
-                      style: TextStyle(
-                          color: Colors.black, fontSize: 3 * unitHeightValue)),
+                  title: Text('EDziennik', style: TextStyle(color: Colors.black, fontSize: 3 * unitHeightValue)),
                 ),
                 body: FutureBuilder<List>(
                   future: getSubjects(),
@@ -105,7 +101,6 @@ class _MyPresencesState extends State<MyPresences> {
     return Padding(
       padding: const EdgeInsets.all(15.0),
       child: Container(
-        height: MediaQuery.of(context).size.height * 1 / 1.5,
         width: double.infinity,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
@@ -145,10 +140,10 @@ class _MyPresencesState extends State<MyPresences> {
                 String key = precenses.keys.elementAt(index);
                 return new Column(children: [
                   new ListTile(
-                    title: Text('$key'),
-                    subtitle: precenses[key] == true
-                        ? Text('obecny')
-                        : Text('nieobecny'),
+                    title: Text(
+                      '$key - ' + (precenses[key] == true ? 'obecny' : 'nieobecny'),
+                      style: TextStyle(fontSize: 2.5 * unitHeightValue),
+                    ),
                   )
                 ]);
               },
@@ -167,8 +162,7 @@ class _MyPresencesState extends State<MyPresences> {
         child: Center(
           child: Text(
             info,
-            style: TextStyle(
-                fontSize: 2.5 * unitHeightValue, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 2.5 * unitHeightValue, fontWeight: FontWeight.bold),
           ),
         ),
         decoration: bottomBorder == true
@@ -207,8 +201,7 @@ class _MyPresencesState extends State<MyPresences> {
                 subjectDropdownValue = newSelectedSubject!;
               });
             },
-            items: subjects
-                .map<DropdownMenuItem<String>>((Subject selectedSubject) {
+            items: subjects.map<DropdownMenuItem<String>>((Subject selectedSubject) {
               return DropdownMenuItem<String>(
                 value: selectedSubject.subjectID,
                 child: Text(

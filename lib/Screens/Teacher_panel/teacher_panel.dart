@@ -29,7 +29,7 @@ class TeacherPanel extends StatelessWidget {
           child: Column(
             children: <Widget>[
               SizedBox(height: 20.0),
-              panelTitle('Nauczyciel [ID]', context),
+              panelTitle('Panel nauczyciela', context),
               SizedBox(height: 30.0),
               panelOption('Moje przedmioty', () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => MySubjects()));

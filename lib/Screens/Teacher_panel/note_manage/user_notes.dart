@@ -117,7 +117,7 @@ class _UserNotesState extends State<UserNotes> {
                         ),
                       ),
                     ),
-                    onLongPress: () => {
+                    onTap: () => {
                       if (_selectedNote != index)
                         {
                           setState(() {
@@ -168,6 +168,7 @@ class _UserNotesState extends State<UserNotes> {
                                   await _db.addNoteToUser(widget.user.userID, _noteTextController.text);
                                   Navigator.pop(context);
                                 }
+                                _noteTextController.text = '';
                               },
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                               child: Text(
@@ -178,6 +179,7 @@ class _UserNotesState extends State<UserNotes> {
                             MaterialButton(
                               color: MyColors.greenAccent,
                               onPressed: () async {
+                                _noteTextController.text = '';
                                 Navigator.pop(context);
                               },
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),

@@ -22,8 +22,7 @@ class MyNotes extends StatefulWidget {
 class _MyNotesState extends State<MyNotes> {
   String classDropdownValue = '';
   String subjectDropdownValue = '';
-  final CollectionReference _notesCollectionReference =
-      FirebaseFirestore.instance.collection('notes');
+  final CollectionReference _notesCollectionReference = FirebaseFirestore.instance.collection('notes');
   final FirestoreDB _db = FirestoreDB();
   bool loaded = false;
   List<String> notes = [];
@@ -57,9 +56,7 @@ class _MyNotesState extends State<MyNotes> {
           appBar: AppBar(
             toolbarHeight: 3 * MediaQuery.of(context).size.height * 1 / 40,
             backgroundColor: MyColors.greenAccent,
-            title: Text('EDziennik',
-                style: TextStyle(
-                    color: Colors.black, fontSize: 3 * unitHeightValue)),
+            title: Text('EDziennik', style: TextStyle(color: Colors.black, fontSize: 3 * unitHeightValue)),
           ),
           body: FutureBuilder<List>(
             future: getNotes(),
@@ -107,7 +104,7 @@ class _MyNotesState extends State<MyNotes> {
         children: <Widget>[
           Flexible(
             child: Container(
-                height: 250,
+                height: MediaQuery.of(context).size.height * 1 / 1.9,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(color: Colors.black, width: 2.0),
@@ -118,9 +115,7 @@ class _MyNotesState extends State<MyNotes> {
                       return InkWell(
                         child: Center(
                           child: Container(
-                            color: _selectedNote == index
-                                ? Colors.blue.withOpacity(0.5)
-                                : Colors.transparent,
+                            color: _selectedNote == index ? Colors.blue.withOpacity(0.5) : Colors.transparent,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: <Widget>[
@@ -144,8 +139,7 @@ class _MyNotesState extends State<MyNotes> {
           child: Center(
             child: Text(
               info,
-              style: TextStyle(
-                  fontSize: 3 * unitHeightValue, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 3 * unitHeightValue, fontWeight: FontWeight.bold),
             ),
           ),
           decoration: BoxDecoration(

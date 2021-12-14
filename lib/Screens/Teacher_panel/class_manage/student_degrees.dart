@@ -149,7 +149,7 @@ class _StudentGradesState extends State<StudentDegrees> {
                   ),
                 ),
               ),
-              onLongPress: () => {
+              onTap: () => {
                 if (_selectedDegree != index)
                   {
                     setState(() {

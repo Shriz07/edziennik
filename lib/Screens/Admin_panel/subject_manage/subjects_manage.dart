@@ -196,7 +196,7 @@ class _SubjectsManageState extends State<SubjectsManage> {
                   ),
                 ),
               ),
-              onLongPress: () => {
+              onTap: () => {
                 if (_selectedSubject != index)
                   {
                     setState(() {

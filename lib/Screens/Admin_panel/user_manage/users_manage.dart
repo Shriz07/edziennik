@@ -204,7 +204,7 @@ class _UsersManageState extends State<UsersManage> {
                   ),
                 ),
               ),
-              onLongPress: () => {
+              onTap: () => {
                 if (_selectedItem != index)
                   {
                     setState(() {

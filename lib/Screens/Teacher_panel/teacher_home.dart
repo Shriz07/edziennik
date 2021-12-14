@@ -28,7 +28,6 @@ class _MyStatefulWidgetState extends State<TeacherHome> {
   int _selectedIndex = 0;
   static final List<Widget> _widgetOptions = <Widget>[
     TeacherPanel(),
-    Calendar(),
     Profile(uid: FirebaseAuth.instance.currentUser!.uid),
   ];
 
@@ -51,7 +50,6 @@ class _MyStatefulWidgetState extends State<TeacherHome> {
             barBackgroundColor: Colors.greenAccent,
             tabs: [
               TabData(iconData: Icons.home, title: 'Menu'),
-              TabData(iconData: Icons.calendar_today, title: 'Kalendarz'),
               TabData(iconData: Icons.person, title: 'Profil'),
             ],
             onTabChangedListener: (position) {

@@ -140,7 +140,7 @@ class _MySubjectsState extends State<MySubjects> {
                   ),
                 ),
               ),
-              onLongPress: () => {
+              onTap: () => {
                 if (_selectedSubject != index)
                   {
                     setState(() {

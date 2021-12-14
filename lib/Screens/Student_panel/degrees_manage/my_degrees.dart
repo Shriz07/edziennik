@@ -43,8 +43,7 @@ class _MyDegreesState extends State<MyDegrees> {
 
   Future getDegrees(subjectID) async {
     degrees.clear();
-    degrees = await _db.getUserDegreesFromSubject(
-        widget.currentStudent.userID, subjectID);
+    degrees = await _db.getUserDegreesFromSubject(widget.currentStudent.userID, subjectID);
     return degrees;
   }
 
@@ -68,12 +67,9 @@ class _MyDegreesState extends State<MyDegrees> {
             if (snapshot.hasData) {
               return Scaffold(
                 appBar: AppBar(
-                  toolbarHeight:
-                      3 * MediaQuery.of(context).size.height * 1 / 40,
+                  toolbarHeight: 3 * MediaQuery.of(context).size.height * 1 / 40,
                   backgroundColor: MyColors.greenAccent,
-                  title: Text('EDziennik',
-                      style: TextStyle(
-                          color: Colors.black, fontSize: 3 * unitHeightValue)),
+                  title: Text('EDziennik', style: TextStyle(color: Colors.black, fontSize: 3 * unitHeightValue)),
                 ),
                 body: FutureBuilder<List>(
                   future: getSubjects(),
@@ -109,7 +105,6 @@ class _MyDegreesState extends State<MyDegrees> {
     return Padding(
       padding: const EdgeInsets.all(15.0),
       child: Container(
-        height: MediaQuery.of(context).size.height * 1 / 1.5,
         width: double.infinity,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
@@ -149,23 +144,13 @@ class _MyDegreesState extends State<MyDegrees> {
                       return InkWell(
                         child: Center(
                           child: Container(
-                            color: _selectedNote == index
-                                ? Colors.blue.withOpacity(0.5)
-                                : Colors.transparent,
+                            color: _selectedNote == index ? Colors.blue.withOpacity(0.5) : Colors.transparent,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: <Widget>[
-                                degreeInfo(
-                                    DateFormat('dd-MM-yyyy').format(
-                                        DateTime.parse(
-                                            degrees[index].date.toString())),
-                                    true,
-                                    2),
+                                degreeInfo(DateFormat('dd-MM-yyyy').format(DateTime.parse(degrees[index].date.toString())), true, 2),
                                 degreeInfo(degrees[index].grade, true, 1),
-                                degreeInfo(
-                                    degrees[index].comment.split(' ').first,
-                                    true,
-                                    2),
+                                degreeInfo(degrees[index].comment.split(' ').first, true, 2),
                               ],
                             ),
                           ),
@@ -186,8 +171,7 @@ class _MyDegreesState extends State<MyDegrees> {
         child: Center(
           child: Text(
             info,
-            style: TextStyle(
-                fontSize: 2.5 * unitHeightValue, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 2.5 * unitHeightValue, fontWeight: FontWeight.bold),
           ),
         ),
         decoration: bottomBorder == true
@@ -225,8 +209,7 @@ class _MyDegreesState extends State<MyDegrees> {
                 subjectDropdownValue = newSelectedSubject!;
               });
             },
-            items: subjects
-                .map<DropdownMenuItem<String>>((Subject selectedSubject) {
+            items: subjects.map<DropdownMenuItem<String>>((Subject selectedSubject) {
               return DropdownMenuItem<String>(
                 value: selectedSubject.subjectID,
                 child: Text(

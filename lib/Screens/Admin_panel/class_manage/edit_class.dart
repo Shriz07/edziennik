@@ -163,7 +163,7 @@ class _EditClassState extends State<EditClass> {
                             ),
                           ),
                         ),
-                        onLongPress: () => {
+                        onTap: () => {
                           if (_selectedStudent != index)
                             {
                               setState(() {

@@ -39,8 +39,7 @@ class CalendarHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final text = headerStyle.titleTextFormatter?.call(focusedMonth, locale) ??
-        DateFormat.yMMMM(locale).format(focusedMonth);
+    final text = headerStyle.titleTextFormatter?.call(focusedMonth, locale) ?? DateFormat.yMMMM(locale).format(focusedMonth);
 
     return Container(
       decoration: headerStyle.decoration,
@@ -64,14 +63,11 @@ class CalendarHeader extends StatelessWidget {
                   child: Text(
                     text,
                     style: headerStyle.titleTextStyle,
-                    textAlign: headerStyle.titleCentered
-                        ? TextAlign.center
-                        : TextAlign.start,
+                    textAlign: headerStyle.titleCentered ? TextAlign.center : TextAlign.start,
                   ),
                 ),
           ),
-          if (headerStyle.formatButtonVisible &&
-              availableCalendarFormats.length > 1)
+          if (headerStyle.formatButtonVisible && availableCalendarFormats.length > 1)
             Padding(
               padding: const EdgeInsets.only(left: 8.0),
               child: FormatButton(
