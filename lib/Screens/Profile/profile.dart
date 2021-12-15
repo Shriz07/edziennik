@@ -28,6 +28,7 @@ class _ProfileState extends State<Profile> {
   Widget build(BuildContext context) {
     double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Profile page',
       theme: ThemeData(
         textTheme: GoogleFonts.rubikTextTheme(

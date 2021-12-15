@@ -76,6 +76,7 @@ class _UsersManageState extends State<UsersManage> {
   Widget build(BuildContext context) {
     double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Users manage',
       theme: ThemeData(
         textTheme: GoogleFonts.rubikTextTheme(
@@ -117,11 +118,6 @@ class _UsersManageState extends State<UsersManage> {
   List<Widget> listOfBottomIconsWithActions() {
     double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return <Widget>[
-      IconButton(
-          onPressed: () {
-            navigateToAnotherScreen(AddUser());
-          },
-          icon: Icon(Icons.person_add_alt_1, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
       IconButton(
           onPressed: () {
             if (_selectedItem == -1) {

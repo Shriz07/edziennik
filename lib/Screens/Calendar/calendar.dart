@@ -8,6 +8,7 @@ class Calendar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Calendar',
       home: Scaffold(
         appBar: AppBar(
@@ -33,9 +34,7 @@ class _StartPageState extends State<StartPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Builder(
-            builder: (BuildContext context) =>
-                TableMultiExample(uid: FirebaseAuth.instance.currentUser!.uid)),
+        child: Builder(builder: (BuildContext context) => TableMultiExample(uid: FirebaseAuth.instance.currentUser!.uid)),
       ),
     );
   }

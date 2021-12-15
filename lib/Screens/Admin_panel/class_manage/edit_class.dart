@@ -65,6 +65,7 @@ class _EditClassState extends State<EditClass> {
   Widget build(BuildContext context) {
     double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Class edit',
       theme: ThemeData(
         textTheme: GoogleFonts.rubikTextTheme(

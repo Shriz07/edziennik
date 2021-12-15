@@ -41,6 +41,7 @@ class _MyStatefulWidgetState extends State<AdminHome> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         body: Center(
           child: _widgetOptions.elementAt(_selectedIndex),

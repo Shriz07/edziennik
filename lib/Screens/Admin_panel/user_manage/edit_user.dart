@@ -36,6 +36,7 @@ class _EditUserState extends State<EditUser> {
   Widget build(BuildContext context) {
     double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'User edit',
       theme: ThemeData(
         textTheme: GoogleFonts.rubikTextTheme(

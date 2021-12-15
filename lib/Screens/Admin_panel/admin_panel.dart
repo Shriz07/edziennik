@@ -11,6 +11,7 @@ class AdminPanel extends StatelessWidget {
   Widget build(BuildContext context) {
     double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Admin panel',
       theme: ThemeData(
         textTheme: GoogleFonts.rubikTextTheme(
