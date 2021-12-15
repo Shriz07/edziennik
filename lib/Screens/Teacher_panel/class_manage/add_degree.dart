@@ -46,6 +46,7 @@ class _AddDegreeState extends State<AddDegree> {
   Widget build(BuildContext context) {
     double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Add degree',
       theme: ThemeData(
         textTheme: GoogleFonts.rubikTextTheme(

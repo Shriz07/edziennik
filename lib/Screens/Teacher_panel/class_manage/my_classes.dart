@@ -40,6 +40,7 @@ class _MyClassesState extends State<MyClasses> {
     currentSubject = new Subject(leadingTeacherID: widget.currentSubject.leadingTeacherID, name: widget.currentSubject.name, subjectID: widget.currentSubject.subjectID);
 
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Selecting class',
       theme: ThemeData(
         textTheme: GoogleFonts.rubikTextTheme(

@@ -41,6 +41,7 @@ class _UserNotesState extends State<UserNotes> {
   Widget build(BuildContext context) {
     double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'User notes',
       theme: ThemeData(
         textTheme: GoogleFonts.rubikTextTheme(

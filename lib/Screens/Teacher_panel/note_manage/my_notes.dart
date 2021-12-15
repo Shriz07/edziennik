@@ -30,6 +30,7 @@ class _MyNotesState extends State<MyNotes> {
   Widget build(BuildContext context) {
     double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'My notes window',
       theme: ThemeData(
         textTheme: GoogleFonts.rubikTextTheme(

@@ -53,6 +53,7 @@ class _StudentGradesState extends State<StudentDegrees> {
   Widget build(BuildContext context) {
     double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'User grades',
       theme: ThemeData(
         textTheme: GoogleFonts.rubikTextTheme(

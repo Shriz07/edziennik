@@ -35,6 +35,7 @@ class _MySubjectsState extends State<MySubjects> {
   Widget build(BuildContext context) {
     double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Selecting class',
       theme: ThemeData(
         textTheme: GoogleFonts.rubikTextTheme(

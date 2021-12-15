@@ -40,6 +40,7 @@ class _ClassSelectedState extends State<ClassSelected> {
   Widget build(BuildContext context) {
     double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Class window',
       theme: ThemeData(
         textTheme: GoogleFonts.rubikTextTheme(

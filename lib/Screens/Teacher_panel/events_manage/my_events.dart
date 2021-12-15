@@ -21,12 +21,7 @@ class _MyEventsState extends State<MyEvents> {
   List<String> classes = ['2A', '3D', '6C'];
   List<String> events = ['Sprawdzian 2A', 'Kartkowka 3D', 'Wycieczka 6C'];
   int _selectedEvent = -1;
-  List<String> students = [
-    'Emilia Kamińska',
-    'Michał Kowalski',
-    'Bartosz Górski',
-    'Monika Kołodziej'
-  ];
+  List<String> students = ['Emilia Kamińska', 'Michał Kowalski', 'Bartosz Górski', 'Monika Kołodziej'];
 
   final _nameTextController = TextEditingController();
   final _focusName = FocusNode();
@@ -39,6 +34,7 @@ class _MyEventsState extends State<MyEvents> {
   Widget build(BuildContext context) {
     double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'My events window',
       theme: ThemeData(
         textTheme: GoogleFonts.rubikTextTheme(
@@ -53,9 +49,7 @@ class _MyEventsState extends State<MyEvents> {
           appBar: AppBar(
             toolbarHeight: 3 * MediaQuery.of(context).size.height * 1 / 40,
             backgroundColor: MyColors.greenAccent,
-            title: Text('EDziennik',
-                style: TextStyle(
-                    color: Colors.black, fontSize: 3 * unitHeightValue)),
+            title: Text('EDziennik', style: TextStyle(color: Colors.black, fontSize: 3 * unitHeightValue)),
           ),
           body: FutureBuilder<List>(
             future: getSubjects(),
@@ -68,8 +62,7 @@ class _MyEventsState extends State<MyEvents> {
                         SizedBox(height: 25.0),
                         panelTitle('Moje wydarzenia', context),
                         myEventsContainer(),
-                        bottomOptionsMenu(
-                            context, listOfBottomIconsWithActions())
+                        bottomOptionsMenu(context, listOfBottomIconsWithActions())
                       ],
                     ),
                   ),
@@ -130,9 +123,7 @@ class _MyEventsState extends State<MyEvents> {
                       return InkWell(
                         child: Center(
                           child: Container(
-                            color: _selectedEvent == index
-                                ? Colors.blue.withOpacity(0.5)
-                                : Colors.transparent,
+                            color: _selectedEvent == index ? Colors.blue.withOpacity(0.5) : Colors.transparent,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: <Widget>[
@@ -154,14 +145,11 @@ class _MyEventsState extends State<MyEvents> {
           ),
           Column(
             children: <Widget>[
-              Icon(Icons.person_add,
-                  size: 4 * unitHeightValue, color: MyColors.dodgerBlue),
+              Icon(Icons.person_add, size: 4 * unitHeightValue, color: MyColors.dodgerBlue),
               SizedBox(height: 25),
-              Icon(Icons.edit,
-                  size: 4 * unitHeightValue, color: MyColors.dodgerBlue),
+              Icon(Icons.edit, size: 4 * unitHeightValue, color: MyColors.dodgerBlue),
               SizedBox(height: 25),
-              Icon(Icons.delete,
-                  size: 4 * unitHeightValue, color: MyColors.dodgerBlue),
+              Icon(Icons.delete, size: 4 * unitHeightValue, color: MyColors.dodgerBlue),
             ],
           )
         ],
@@ -192,12 +180,10 @@ class _MyEventsState extends State<MyEvents> {
                 subjectDropdownValue = newSelectedSubject!;
               });
             },
-            items: subjects
-                .map<DropdownMenuItem<String>>((String selectedSubject) {
+            items: subjects.map<DropdownMenuItem<String>>((String selectedSubject) {
               return DropdownMenuItem<String>(
                 value: selectedSubject,
-                child: Text(selectedSubject,
-                    style: TextStyle(fontSize: 2.5 * unitHeightValue)),
+                child: Text(selectedSubject, style: TextStyle(fontSize: 2.5 * unitHeightValue)),
               );
             }).toList(),
           ),
@@ -229,12 +215,10 @@ class _MyEventsState extends State<MyEvents> {
                 classDropdownValue = newSelectedClass!;
               });
             },
-            items:
-                classes.map<DropdownMenuItem<String>>((String selectedClass) {
+            items: classes.map<DropdownMenuItem<String>>((String selectedClass) {
               return DropdownMenuItem<String>(
                 value: selectedClass,
-                child: Text(selectedClass,
-                    style: TextStyle(fontSize: 2.5 * unitHeightValue)),
+                child: Text(selectedClass, style: TextStyle(fontSize: 2.5 * unitHeightValue)),
               );
             }).toList(),
           ),
@@ -250,14 +234,12 @@ class _MyEventsState extends State<MyEvents> {
           onPressed: () async {
             Navigator.pop(context);
           },
-          icon: Icon(Icons.save,
-              size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
+          icon: Icon(Icons.save, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
       IconButton(
           onPressed: () {
             Navigator.pop(context);
           },
-          icon: Icon(Icons.close_rounded,
-              size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
+          icon: Icon(Icons.close_rounded, size: 4 * unitHeightValue, color: MyColors.dodgerBlue)),
     ];
   }
 }
